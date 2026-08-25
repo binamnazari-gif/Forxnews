@@ -80,6 +80,39 @@ header{position:sticky;top:0;z-index:30;background:rgba(13,20,32,.97);backdrop-f
 .body p{margin:0 0 9px}
 .body p:last-child{margin-bottom:0}
 
+/* ---------- نمای جدولی ---------- */
+.calhead{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);
+  border-bottom:0;border-radius:12px 12px 0 0;padding:10px 14px}
+.calhead b{font-size:14px}
+.calhead span{margin-inline-start:auto;font-size:11.5px;color:var(--muted);font-family:var(--mono);direction:ltr}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:0 0 12px 12px;background:var(--surface);
+  -webkit-overflow-scrolling:touch}
+table.cal{width:100%;min-width:440px;border-collapse:collapse;font-size:12.5px}
+table.cal th{background:var(--surface-2);color:var(--muted);font-size:10.5px;font-weight:700;
+  padding:8px 6px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+table.cal td{padding:9px 6px;text-align:center;border-bottom:1px solid rgba(36,49,73,.55);vertical-align:middle}
+table.cal tr.row{cursor:pointer}
+table.cal tr.row:hover td{background:rgba(27,38,55,.7)}
+table.cal tr.past td{opacity:.45}
+table.cal tr.hi td:first-child{box-shadow:inset 3px 0 0 var(--high)}
+table.cal tr.md td:first-child{box-shadow:inset 3px 0 0 var(--med)}
+tr.dayrow td{background:var(--bg);font-weight:700;font-size:12px;text-align:start;padding:9px 12px;color:var(--text)}
+tr.dayrow span{color:var(--dim);font-family:var(--mono);font-size:11px;margin-inline-start:8px}
+td.ttd{font-family:var(--mono);font-weight:600;direction:ltr;white-space:nowrap;font-size:13px}
+td.curtd{white-space:nowrap;font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--muted)}
+td.curtd i{font-style:normal;font-size:14px;margin-inline-end:3px;vertical-align:-1px}
+td.evt{text-align:start;font-weight:600;line-height:1.55;min-width:150px}
+td.evt small{display:block;font-weight:400;color:var(--dim);font-size:10px;direction:ltr;letter-spacing:0}
+td.numtd{font-family:var(--mono);direction:ltr;white-space:nowrap;color:var(--muted);font-size:12px}
+td.numtd.up{color:var(--up)} td.numtd.down{color:var(--down)}
+.imp{display:inline-flex;gap:3px;direction:ltr}
+.imp span{width:6px;height:6px;border-radius:2px;background:#2b3850}
+.imp.hi span.on{background:var(--high)}
+.imp.md span.on{background:var(--med)}
+.imp.lo span.on{background:var(--low)}
+tr.det td{text-align:start;background:rgba(13,20,32,.6);padding:12px 14px}
+tr.det .body{margin:0;padding:0;border:0}
+
 .state{text-align:center;padding:44px 16px;color:var(--muted);font-size:14px}
 .state b{display:block;color:var(--text);margin-bottom:6px;font-size:15px}
 .note{font-size:11.5px;color:var(--dim);text-align:center;padding:16px 8px;line-height:1.9}
@@ -91,6 +124,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(13,20,32,.97);backdrop-f
 <header>
   <div class="wrap head-row">
     <div class="brand"><b>رادار خبر</b><span>تقویم اقتصادی فارکس‌فکتوری</span></div>
+    <button class="iconbtn" id="viewBtn">جدول</button>
     <button class="iconbtn" id="tzBtn">وقت دستگاه</button>
     <button class="iconbtn" id="refBtn">تازه‌سازی</button>
   </div>
@@ -283,7 +317,8 @@ function lookup(title){
 }
 
 /* ===================== state ===================== */
-const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', open:new Set(), last:0};
+const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards', open:new Set(), last:0};
+const FLAG = {USD:"🇺🇸",EUR:"🇪🇺",GBP:"🇬🇧",JPY:"🇯🇵",CHF:"🇨🇭",CAD:"🇨🇦",AUD:"🇦🇺",NZD:"🇳🇿",CNY:"🇨🇳",All:"🌐"};
 const key = e => e.title + '|' + e.country + '|' + e.date;
 
 /* ===================== data ===================== */
@@ -326,12 +361,12 @@ function loadPrefs(){
   try{
     const p = JSON.parse(localStorage.getItem('ffprefs') || 'null');
     if(p){ S.imp = p.imp || S.imp; S.scope = p.scope || S.scope; S.tz = p.tz || S.tz;
-           S.curs = new Set(p.curs || []); }
+           S.view = p.view || S.view; S.curs = new Set(p.curs || []); }
   }catch(e){}
 }
 function savePrefs(){
   try{ localStorage.setItem('ffprefs', JSON.stringify(
-    {imp:S.imp, scope:S.scope, tz:S.tz, curs:[...S.curs]})); }catch(e){}
+    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, curs:[...S.curs]})); }catch(e){}
 }
 
 /* ===================== time ===================== */
@@ -407,11 +442,16 @@ function bodyHTML(e, info){
 }
 
 function render(){
+  if(S.view === 'table') renderTable(); else renderCards();
+  renderNext();
+}
+
+function renderCards(){
   const list = document.getElementById('list');
   const evs = S.events.filter(passes);
   if(!evs.length){
     list.innerHTML = '<div class="state"><b>خبری با این فیلترها نیست</b>فیلتر اهمیت یا بازه را بازتر کن.</div>';
-    renderNext(); return;
+    return;
   }
   const now = Date.now(), today = dayKey(new Date()), tmr = dayKey(new Date(Date.now()+864e5));
   let html = '', cur = '';
@@ -432,7 +472,64 @@ function render(){
       (open ? '<div class="body">'+bodyHTML(e, info)+'</div>' : '')+'</button>';
   }
   list.innerHTML = html;
-  renderNext();
+}
+
+function impDots(imp){
+  const cls = impClass(imp), n = rank(imp);
+  let s = '<span class="imp '+cls+'">';
+  for(let i=1;i<=3;i++) s += '<span'+(i <= n ? ' class="on"' : '')+'></span>';
+  return s + '</span>';
+}
+
+function renderTable(){
+  const list = document.getElementById('list');
+  const evs = S.events.filter(passes);
+  if(!evs.length){
+    list.innerHTML = '<div class="state"><b>خبری با این فیلترها نیست</b>فیلتر اهمیت یا بازه را بازتر کن.</div>';
+    return;
+  }
+  const now = Date.now(), today = dayKey(new Date()), tmr = dayKey(new Date(Date.now()+864e5));
+  const hasActual = evs.some(e => e.actual);
+  const cols = hasActual ? 7 : 6;
+
+  let rows = '', cur = '';
+  for(const e of evs){
+    const d = new Date(e.date), dk = dayKey(d);
+    if(dk !== cur){
+      cur = dk;
+      const lbl = dk === today ? 'امروز' : dk === tmr ? 'فردا' : weekday(d);
+      rows += '<tr class="dayrow"><td colspan="'+cols+'">'+lbl+'<span>'+dateFa(d)+'</span></td></tr>';
+    }
+    const k = key(e), info = lookup(e.title), diff = d.getTime()-now;
+    let actTd = '';
+    if(hasActual){
+      let cls = '';
+      if(e.actual){
+        const f = num(e.forecast), a = num(e.actual);
+        if(!isNaN(f) && !isNaN(a)) cls = a > f ? ' up' : a < f ? ' down' : '';
+      }
+      actTd = '<td class="numtd'+cls+'">'+esc(e.actual || '–')+'</td>';
+    }
+    rows += '<tr class="row '+impClass(e.impact)+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'">'+
+      '<td class="ttd">'+fmtTime(d)+'</td>'+
+      '<td class="curtd"><i>'+(FLAG[e.country] || '')+'</i>'+esc(e.country)+'</td>'+
+      '<td>'+impDots(e.impact)+'</td>'+
+      '<td class="evt">'+esc(info ? info.fa : e.title)+'<small>'+esc(e.title)+'</small></td>'+
+      '<td class="numtd">'+esc(e.previous || '–')+'</td>'+
+      '<td class="numtd">'+esc(e.forecast || '–')+'</td>'+
+      actTd + '</tr>';
+    if(S.open.has(k))
+      rows += '<tr class="det"><td colspan="'+cols+'"><div class="body">'+bodyHTML(e, info)+'</div></td></tr>';
+  }
+
+  const anchor = new Date(S.scope === 'today' ? Date.now() : evs[0].date);
+  list.innerHTML =
+    '<div class="calhead"><b>تقویم اقتصادی</b>'+
+      '<span>'+weekday(anchor)+' · '+dateFa(anchor)+'</span></div>'+
+    '<div class="tablewrap"><table class="cal"><thead><tr>'+
+      '<th>زمان</th><th>ارز</th><th>اهمیت</th><th>رویداد</th><th>قبلی</th><th>پیش‌بینی</th>'+
+      (hasActual ? '<th>واقعی</th>' : '')+
+    '</tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
 function renderNext(){
@@ -456,10 +553,15 @@ setInterval(() => {
 
 /* ===================== interactions ===================== */
 document.getElementById('list').addEventListener('click', ev => {
-  const btn = ev.target.closest('.ev'); if(!btn) return;
-  const k = btn.dataset.k;
+  const el = ev.target.closest('.ev, tr.row'); if(!el) return;
+  const k = el.dataset.k;
   S.open.has(k) ? S.open.delete(k) : S.open.add(k);
   render();
+});
+document.getElementById('viewBtn').addEventListener('click', e => {
+  S.view = S.view === 'cards' ? 'table' : 'cards';
+  e.target.textContent = S.view === 'table' ? 'کارت' : 'جدول';
+  savePrefs(); render();
 });
 document.getElementById('scopeFilters').addEventListener('click', ev => {
   const c = ev.target.closest('.chip'); if(!c) return;
@@ -503,6 +605,7 @@ function syncChips(){
   document.querySelectorAll('#scopeFilters .chip[data-imp]')
     .forEach(x => x.setAttribute('aria-pressed', x.dataset.imp === S.imp));
   document.getElementById('tzBtn').textContent = S.tz === 'tehran' ? 'وقت تهران' : 'وقت دستگاه';
+  document.getElementById('viewBtn').textContent = S.view === 'table' ? 'کارت' : 'جدول';
 }
 
 async function boot(manual){
