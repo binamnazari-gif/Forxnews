@@ -1,1 +1,66 @@
+name: Update calendar
 
+on:
+  schedule:
+    - cron: "0 */6 * * *"     # هر ۶ ساعت
+  workflow_dispatch:           # اجرای دستی از تب Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-calendar
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Forex Factory weekly feed
+        run: |
+          set -e
+          ok=0
+          for url in \
+            "https://nfs.faireconomy.media/ff_calendar_thisweek.json" \
+            "https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json"
+          do
+            for try in 1 2 3; do
+              echo "تلاش $try برای $url"
+              if curl -fsSL --max-time 30 \
+                   -H "User-Agent: Mozilla/5.0 (radar-khabar github action)" \
+                   -H "Accept: application/json" \
+                   "$url" -o tmp.json; then
+                if python3 -c "import json,sys; d=json.load(open('tmp.json')); sys.exit(0 if isinstance(d,list) and len(d)>0 else 1)"; then
+                  ok=1; break
+                fi
+                echo "پاسخ معتبر نبود"
+              fi
+              sleep 45
+            done
+            [ "$ok" = "1" ] && break
+          done
+          if [ "$ok" != "1" ]; then
+            echo "فید در دسترس نبود؛ فایل قبلی دست‌نخورده می‌ماند."
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json
+          d = json.load(open('tmp.json'))
+          json.dump(d, open('calendar.json','w'), ensure_ascii=False, separators=(',',':'))
+          print('رویداد ذخیره‌شده:', len(d))
+          PY
+          rm -f tmp.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add calendar.json
+          if git diff --staged --quiet; then
+            echo "تغییری نبود."
+          else
+            git commit -m "calendar: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
