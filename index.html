@@ -159,7 +159,7 @@ tr.det .body{margin:0;padding:0;border:0}
   </div>
   <div class="filters" id="curFilters"></div>
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
-  <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال</p>
+  <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال<span id="upd"></span></p>
 </div>
 
 <script>
@@ -655,6 +655,17 @@ async function boot(manual){
 
 loadPrefs(); syncChips(); boot(false);
 setInterval(() => { if(!document.hidden) boot(false); }, 15*60*1000);
+
+/* زمان آخرین به‌روزرسانی خودکار (فایلی که Actions می‌سازد) */
+fetch('./updated.json?t=' + Math.floor(Date.now()/6e5), {cache:'no-store'})
+  .then(r => r.ok ? r.json() : null)
+  .then(o => {
+    if(!o || !o.updated) return;
+    const d = new Date(o.updated), h = Math.round((Date.now()-d)/36e5);
+    document.getElementById('upd').textContent =
+      ' · به‌روزرسانی خودکار: ' + (h < 1 ? 'کمتر از یک ساعت پیش' : h + ' ساعت پیش');
+  })
+  .catch(() => {});
 </script>
 </body>
 </html>
