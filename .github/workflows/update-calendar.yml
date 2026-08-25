@@ -2,7 +2,7 @@ name: Update calendar
 
 on:
   schedule:
-    - cron: "17 */2 * * *"     # هر ۲ ساعت
+    - cron: "17 * * * *"       # هر ساعت
   workflow_dispatch:
   push:
     paths:
