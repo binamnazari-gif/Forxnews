@@ -13,6 +13,9 @@
   --bg:#0d1420; --surface:#151e2e; --surface-2:#1b2637; --line:#243149;
   --text:#e7ecf5; --muted:#8695ae; --dim:#5d6b83;
   --high:#f0a73c; --med:#5aa9e6; --low:#4a5a75;
+  --r-high:#e2564c; --r-med:#e79a3a; --r-low:#5b6b86;
+  --t-high:rgba(226,86,76,.13); --t-med:rgba(231,154,58,.10); --t-low:transparent;
+  --b-high:rgba(226,86,76,.38); --b-med:rgba(231,154,58,.30);
   --up:#35c9a1; --down:#e8697c;
   --mono: ui-monospace,"SF Mono","Menlo","Consolas",monospace;
 }
@@ -39,6 +42,12 @@ header{position:sticky;top:0;z-index:30;background:rgba(13,20,32,.97);backdrop-f
 .next{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);
   border-radius:14px;padding:12px 14px;margin:12px 0 10px;position:relative;overflow:hidden}
 .next::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--high)}
+.next.hi{background:var(--t-high);border-color:var(--b-high)}
+.next.hi::before{background:var(--r-high)}
+.next.hi .cd{color:var(--r-high)}
+.next.md{background:var(--t-med);border-color:var(--b-med)}
+.next.md::before{background:var(--r-med)}
+.next.md .cd{color:var(--r-med)}
 .next .lbl{font-size:10.5px;color:var(--dim)}
 .next .ttl{font-weight:700;font-size:14.5px;margin-top:1px}
 .next .cd{margin-inline-start:auto;font-family:var(--mono);font-size:21px;font-weight:600;color:var(--high);direction:ltr}
@@ -60,9 +69,13 @@ header{position:sticky;top:0;z-index:30;background:rgba(13,20,32,.97);backdrop-f
   grid-template-columns:50px 1fr;gap:0 12px;cursor:pointer;transition:border-color .15s,opacity .2s}
 .ev:hover{border-color:#31415f}
 .ev.past{opacity:.4}
-.ev.hi{border-inline-start:3px solid var(--high)}
-.ev.md{border-inline-start:3px solid var(--med)}
-.ev.lo{border-inline-start:3px solid var(--low)}
+.ev.hi{background:var(--t-high);border-color:var(--b-high);border-inline-start:3px solid var(--r-high)}
+.ev.md{background:var(--t-med);border-color:var(--b-med);border-inline-start:3px solid var(--r-med)}
+.ev.lo{border-inline-start:3px solid var(--r-low)}
+.ev.hi:hover{background:rgba(226,86,76,.19);border-color:rgba(226,86,76,.55)}
+.ev.md:hover{background:rgba(231,154,58,.16);border-color:rgba(231,154,58,.45)}
+.ev.hi.soon{background:rgba(226,86,76,.26);border-color:var(--r-high);box-shadow:0 0 0 1px rgba(226,86,76,.25)}
+.ev.hi.soon .tcol .rel{color:var(--r-high)}
 .tcol{display:flex;flex-direction:column;gap:3px}
 .tcol .t{font-family:var(--mono);font-size:15px;font-weight:600;direction:ltr}
 .tcol .rel{font-size:10px;color:var(--dim);white-space:nowrap}
@@ -93,9 +106,14 @@ table.cal th{background:var(--surface-2);color:var(--muted);font-size:10.5px;fon
 table.cal td{padding:9px 6px;text-align:center;border-bottom:1px solid rgba(36,49,73,.55);vertical-align:middle}
 table.cal tr.row{cursor:pointer}
 table.cal tr.row:hover td{background:rgba(27,38,55,.7)}
+table.cal tr.hi td{background:var(--t-high)}
+table.cal tr.md td{background:var(--t-med)}
+table.cal tr.hi.soon td{background:rgba(226,86,76,.24)}
+table.cal tr.hi:hover td{background:rgba(226,86,76,.2)}
+table.cal tr.md:hover td{background:rgba(231,154,58,.17)}
 table.cal tr.past td{opacity:.45}
-table.cal tr.hi td:first-child{box-shadow:inset 3px 0 0 var(--high)}
-table.cal tr.md td:first-child{box-shadow:inset 3px 0 0 var(--med)}
+table.cal tr.hi td:first-child{box-shadow:inset 3px 0 0 var(--r-high)}
+table.cal tr.md td:first-child{box-shadow:inset 3px 0 0 var(--r-med)}
 tr.dayrow td{background:var(--bg);font-weight:700;font-size:12px;text-align:start;padding:9px 12px;color:var(--text)}
 tr.dayrow span{color:var(--dim);font-family:var(--mono);font-size:11px;margin-inline-start:8px}
 td.ttd{font-family:var(--mono);font-weight:600;direction:ltr;white-space:nowrap;font-size:13px}
@@ -107,9 +125,9 @@ td.numtd{font-family:var(--mono);direction:ltr;white-space:nowrap;color:var(--mu
 td.numtd.up{color:var(--up)} td.numtd.down{color:var(--down)}
 .imp{display:inline-flex;gap:3px;direction:ltr}
 .imp span{width:6px;height:6px;border-radius:2px;background:#2b3850}
-.imp.hi span.on{background:var(--high)}
-.imp.md span.on{background:var(--med)}
-.imp.lo span.on{background:var(--low)}
+.imp.hi span.on{background:var(--r-high)}
+.imp.md span.on{background:var(--r-med)}
+.imp.lo span.on{background:var(--r-low)}
 tr.det td{text-align:start;background:rgba(13,20,32,.6);padding:12px 14px}
 tr.det .body{margin:0;padding:0;border:0}
 
@@ -463,7 +481,8 @@ function renderCards(){
       html += '<div class="day"><b>'+lbl+'</b><span>'+dateFa(d)+'</span><i></i></div>';
     }
     const k = key(e), info = lookup(e.title), open = S.open.has(k), diff = d.getTime()-now;
-    html += '<button class="ev '+impClass(e.impact)+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" aria-expanded="'+open+'">'+
+    const soon = rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '';
+    html += '<button class="ev '+impClass(e.impact)+soon+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" aria-expanded="'+open+'">'+
       '<div class="tcol"><span class="t">'+fmtTime(d)+'</span><span class="rel" data-cd="'+d.getTime()+'">'+relTime(diff)+'</span></div>'+
       '<div><div class="ev-head"><span class="cur">'+esc(e.country)+'</span><span class="en">'+esc(e.title)+'</span></div>'+
       '<div class="fa">'+esc(info ? info.fa : e.title)+'</div>'+
@@ -510,7 +529,9 @@ function renderTable(){
       }
       actTd = '<td class="numtd'+cls+'">'+esc(e.actual || '–')+'</td>';
     }
-    rows += '<tr class="row '+impClass(e.impact)+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'">'+
+    rows += '<tr class="row '+impClass(e.impact)+
+      (rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '')+
+      (diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'">'+
       '<td class="ttd">'+fmtTime(d)+'</td>'+
       '<td class="curtd"><i>'+(FLAG[e.country] || '')+'</i>'+esc(e.country)+'</td>'+
       '<td>'+impDots(e.impact)+'</td>'+
@@ -538,7 +559,7 @@ function renderNext(){
                     .sort((a,b) => new Date(a.date)-new Date(b.date))[0];
   if(!n){ box.innerHTML = ''; return; }
   const t = new Date(n.date).getTime(), info = lookup(n.title);
-  box.innerHTML = '<div class="next"><div>'+
+  box.innerHTML = '<div class="next '+impClass(n.impact)+'"><div>'+
     '<div class="lbl">خبر مهم بعدی · '+esc(n.country)+' · '+fmtTime(new Date(t))+'</div>'+
     '<div class="ttl">'+esc(info ? info.fa : n.title)+'</div></div>'+
     '<div class="cd" data-cd-big="'+t+'">'+countdown(t-now)+'</div></div>';
