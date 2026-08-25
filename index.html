@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1420">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>رادار خبر</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d1420'/%3E%3Cpath d='M12 42h8V30h-8zm14 0h8V18h-8zm14 0h8V24h-8z' fill='%23f0a73c'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0d1420; --surface:#151e2e; --surface-2:#1b2637; --line:#243149;
+  --text:#e7ecf5; --muted:#8695ae; --dim:#5d6b83;
+  --high:#f0a73c; --med:#5aa9e6; --low:#4a5a75;
+  --up:#35c9a1; --down:#e8697c;
+  --mono: ui-monospace,"SF Mono","Menlo","Consolas",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"Vazirmatn",Tahoma,system-ui,sans-serif;
+  font-size:15px; line-height:1.7; -webkit-font-smoothing:antialiased; padding-bottom:40px;
+}
+.wrap{max-width:600px;margin:0 auto;padding:0 14px}
+
+header{position:sticky;top:0;z-index:30;background:rgba(13,20,32,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.head-row{display:flex;align-items:center;gap:8px;padding:11px 0 9px}
+.brand{margin-inline-end:auto;line-height:1.2}
+.brand b{font-size:18px;font-weight:800;display:block}
+.brand span{font-size:10.5px;color:var(--dim)}
+.iconbtn{background:var(--surface-2);border:1px solid var(--line);color:var(--muted);border-radius:9px;
+  padding:6px 10px;font-family:inherit;font-size:11.5px;cursor:pointer}
+.iconbtn:hover{color:var(--text)}
+.iconbtn:disabled{opacity:.45}
+.iconbtn:focus-visible,.chip:focus-visible,.ev:focus-visible{outline:2px solid var(--high);outline-offset:2px}
+
+.next{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:12px 14px;margin:12px 0 10px;position:relative;overflow:hidden}
+.next::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--high)}
+.next .lbl{font-size:10.5px;color:var(--dim)}
+.next .ttl{font-weight:700;font-size:14.5px;margin-top:1px}
+.next .cd{margin-inline-start:auto;font-family:var(--mono);font-size:21px;font-weight:600;color:var(--high);direction:ltr}
+
+.filters{display:flex;gap:6px;overflow-x:auto;padding:3px 0 9px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;
+  padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--surface-2);color:var(--text);border-color:#3c4f72}
+.chip.cur[aria-pressed="true"]{color:var(--high);border-color:var(--high)}
+
+.day{position:sticky;top:53px;z-index:20;display:flex;align-items:baseline;gap:8px;padding:14px 0 8px;background:var(--bg)}
+.day b{font-size:13px}
+.day span{font-size:11px;color:var(--dim);font-family:var(--mono)}
+.day i{flex:1;height:1px;background:var(--line)}
+
+.ev{width:100%;text-align:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:10px 12px;margin-bottom:8px;color:inherit;font-family:inherit;display:grid;
+  grid-template-columns:50px 1fr;gap:0 12px;cursor:pointer;transition:border-color .15s,opacity .2s}
+.ev:hover{border-color:#31415f}
+.ev.past{opacity:.4}
+.ev.hi{border-inline-start:3px solid var(--high)}
+.ev.md{border-inline-start:3px solid var(--med)}
+.ev.lo{border-inline-start:3px solid var(--low)}
+.tcol{display:flex;flex-direction:column;gap:3px}
+.tcol .t{font-family:var(--mono);font-size:15px;font-weight:600;direction:ltr}
+.tcol .rel{font-size:10px;color:var(--dim);white-space:nowrap}
+.cur{font-family:var(--mono);font-size:11px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:5px;padding:1px 5px;color:var(--muted)}
+.ev-head{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.en{font-size:10.5px;color:var(--dim);direction:ltr;text-align:start}
+.fa{font-size:15px;font-weight:700;margin-top:2px}
+.why{font-size:12.5px;color:var(--muted);margin-top:2px}
+.vals{display:flex;gap:14px;margin-top:6px;font-size:11px;color:var(--muted)}
+.vals b{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--text);direction:ltr;display:inline-block}
+.vals .up b{color:var(--up)} .vals .down b{color:var(--down)}
+.body{grid-column:1/-1;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:13.5px;color:#c9d3e2}
+.body h4{margin:0 0 2px;font-size:11px;color:var(--high);font-weight:700}
+.body p{margin:0 0 9px}
+.body p:last-child{margin-bottom:0}
+
+.state{text-align:center;padding:44px 16px;color:var(--muted);font-size:14px}
+.state b{display:block;color:var(--text);margin-bottom:6px;font-size:15px}
+.note{font-size:11.5px;color:var(--dim);text-align:center;padding:16px 8px;line-height:1.9}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap head-row">
+    <div class="brand"><b>رادار خبر</b><span>تقویم اقتصادی فارکس‌فکتوری</span></div>
+    <button class="iconbtn" id="tzBtn">وقت دستگاه</button>
+    <button class="iconbtn" id="refBtn">تازه‌سازی</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="nextBox"></div>
+  <div class="filters" id="scopeFilters">
+    <button class="chip" data-scope="today">امروز</button>
+    <button class="chip" data-scope="week" aria-pressed="true">کل هفته</button>
+    <button class="chip" data-imp="high">فقط پرتأثیر</button>
+    <button class="chip" data-imp="med" aria-pressed="true">متوسط و بالا</button>
+    <button class="chip" data-imp="all">همه</button>
+  </div>
+  <div class="filters" id="curFilters"></div>
+  <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
+  <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال</p>
+</div>
+
+<script>
+/* ============ دیکشنری فارسی رویدادها: [نام, این چیه و چرا مهمه, اثر بالاتر از انتظار] ============ */
+const D = {
+"cpi":["شاخص قیمت مصرف‌کننده","تورم مصرف‌کننده؛ اصلی‌ترین ورودی تصمیم نرخ بهره بانک مرکزی.","تورم داغ‌تر → انتظار نرخ بهره بالاتر → تقویت ارز و فشار فروش روی طلا."],
+"core cpi":["شاخص قیمت مصرف‌کننده هسته","تورم بدون خوراک و انرژی؛ بانک‌های مرکزی بیشتر به همین نگاه می‌کنند.","بالاتر از انتظار → سیاست انقباضی‌تر → ارز قوی‌تر، طلا زیر فشار."],
+"cpi flash estimate":["برآورد اولیه تورم","اولین تخمین تورم منطقه یورو؛ زودتر از رقم نهایی بازار را حرکت می‌دهد.","بالاتر از انتظار → یورو قوی‌تر."],
+"trimmed mean cpi":["تورم میانگین تعدیل‌شده","معیار تورم پایدارِ موردنظر بانک مرکزی استرالیا.","بالاتر از انتظار → احتمال نرخ بهره بالاتر → تقویت ارز."],
+"ppi":["شاخص قیمت تولیدکننده","تورم در سطح تولید؛ پیش‌نشانه تورم مصرف‌کننده.","بالاتر از انتظار → انتظار تورم بیشتر → تقویت ارز."],
+"core ppi":["شاخص قیمت تولیدکننده هسته","تورم تولید بدون اقلام پرنوسان.","بالاتر از انتظار → ارز قوی‌تر."],
+"pce price index":["شاخص قیمت مخارج مصرف شخصی","معیار تورم موردعلاقه فدرال‌رزرو.","بالاتر از انتظار → دلار قوی‌تر، طلا زیر فشار."],
+"core pce price index":["شاخص قیمت PCE هسته","دقیق‌ترین معیار تورمی که فدرال‌رزرو تصمیمش را با آن می‌گیرد؛ از مهم‌ترین خبرهای ماه.","بالاتر از انتظار → کاهش امید به کاهش نرخ بهره → دلار قوی، طلا نزولی."],
+"import prices":["قیمت کالاهای وارداتی","تورم وارداتی؛ اثر نرخ ارز روی قیمت‌ها.","بالاتر از انتظار → فشار تورمی بیشتر."],
+"inflation expectations":["انتظارات تورمی","تصور مردم و بازار از تورم آینده؛ بانک مرکزی روی لنگر بودنش حساس است.","بالاتر از انتظار → نگرانی بانک مرکزی → ارز قوی‌تر."],
+"non-farm employment change":["اشتغال غیرکشاورزی (NFP)","تعداد شغل‌های ایجادشده در آمریکا؛ پرنوسان‌ترین خبر ماه برای دلار و طلا.","خیلی بهتر از انتظار → دلار جهش، طلا افت شدید."],
+"adp non-farm employment change":["اشتغال بخش خصوصی ADP","پیش‌درآمد NFP از داده حقوق‌ودستمزد شرکت‌ها.","بالاتر از انتظار → انتظار NFP قوی → دلار قوی‌تر."],
+"adp weekly employment change":["اشتغال هفتگی ADP","نبض هفتگی بازار کار آمریکا؛ داده کم‌وزن ولی پرتکرار.","بالاتر از انتظار → دلار کمی قوی‌تر."],
+"employment change":["تغییر اشتغال","خالص شغل‌های ایجادشده؛ سلامت بازار کار.","بالاتر از انتظار → تقویت ارز."],
+"unemployment rate":["نرخ بیکاری","درصد جویندگان کار؛ نیمه دوم مأموریت بانک مرکزی.","پایین‌تر از انتظار (بازار کار داغ) → ارز قوی‌تر."],
+"unemployment claims":["مدعیان بیکاری هفتگی","تعداد درخواست‌های جدید بیمه بیکاری؛ سریع‌ترین نشانه ضعف بازار کار.","پایین‌تر از انتظار → بازار کار قوی → دلار قوی‌تر."],
+"average hourly earnings":["میانگین دستمزد ساعتی","رشد دستمزد؛ سوخت تورم خدماتی.","بالاتر از انتظار → نگرانی تورمی → ارز قوی‌تر."],
+"wage price index":["شاخص دستمزد","رشد دستمزدها؛ ورودی مهم تورم.","بالاتر از انتظار → تقویت ارز."],
+"jolts job openings":["فرصت‌های شغلی JOLTS","تعداد جایگاه‌های خالی؛ معیار تقاضای نیروی کار.","بالاتر از انتظار → بازار کار سفت → دلار قوی‌تر."],
+"challenger job cuts":["اخراج‌های اعلام‌شده Challenger","تعداد تعدیل نیروی اعلامی شرکت‌های آمریکایی.","بالاتر از انتظار → ضعف بازار کار → دلار ضعیف‌تر."],
+"prelim benchmark payrolls revision":["تجدیدنظر معیار اشتغال","بازنگری سالانه آمار اشتغال؛ می‌تواند تصویر بازار کار را کاملاً عوض کند.","تجدیدنظر منفی بزرگ → دلار ضعیف، طلا صعودی."],
+"claimant count change":["تغییر مدعیان بیکاری","تعداد متقاضیان مزایای بیکاری در بریتانیا.","کمتر از انتظار → پوند قوی‌تر."],
+"retail sales":["خرده‌فروشی","مخارج مصرف‌کننده؛ موتور اصلی رشد اقتصادی.","بالاتر از انتظار → اقتصاد قوی → تقویت ارز."],
+"core retail sales":["خرده‌فروشی هسته","خرده‌فروشی بدون خودرو؛ تصویر تمیزتر از مصرف.","بالاتر از انتظار → تقویت ارز."],
+"gdp":["تولید ناخالص داخلی","نرخ رشد کل اقتصاد؛ گسترده‌ترین معیار سلامت اقتصادی.","بالاتر از انتظار → تقویت ارز."],
+"gdp price index":["شاخص قیمت تولید ناخالص داخلی","تورم در کل اقتصاد، نه فقط سبد مصرف.","بالاتر از انتظار → فشار تورمی → تقویت ارز."],
+"manufacturing pmi":["شاخص مدیران خرید تولیدی","نظرسنجی مدیران خرید صنعت؛ بالای ۵۰ یعنی رشد، زیر ۵۰ یعنی انقباض.","بالاتر از انتظار → تقویت ارز."],
+"services pmi":["شاخص مدیران خرید خدمات","بخش خدمات سهم بزرگ‌تری از اقتصاد دارد، پس معمولاً مهم‌تر از تولیدی است.","بالاتر از انتظار → تقویت ارز."],
+"composite pmi":["شاخص مدیران خرید مرکب","ترکیب تولید و خدمات؛ عکس کلی اقتصاد.","بالاتر از انتظار → تقویت ارز."],
+"construction pmi":["شاخص مدیران خرید ساختمان","فعالیت بخش ساخت‌وساز.","بالاتر از انتظار → تقویت ارز."],
+"ism manufacturing pmi":["شاخص ISM تولیدی","معتبرترین نظرسنجی صنعت آمریکا.","بالاتر از انتظار → دلار قوی‌تر."],
+"ism services pmi":["شاخص ISM خدمات","نبض بخش خدمات آمریکا؛ حرکت‌ساز برای دلار.","بالاتر از انتظار → دلار قوی‌تر."],
+"ism manufacturing prices":["قیمت‌های پرداختی ISM","فشار هزینه در زنجیره تأمین؛ پیش‌نگر تورم.","بالاتر از انتظار → نگرانی تورمی."],
+"chicago pmi":["شاخص PMI شیکاگو","فعالیت اقتصادی منطقه شیکاگو؛ پیش‌درآمد ISM.","بالاتر از انتظار → دلار کمی قوی‌تر."],
+"empire state manufacturing index":["شاخص تولیدی نیویورک","اولین نظرسنجی صنعتی هر ماه در آمریکا.","بالاتر از انتظار → دلار قوی‌تر."],
+"philly fed manufacturing index":["شاخص تولیدی فیلادلفیا","نظرسنجی صنعتی منطقه‌ای با سابقه اثرگذاری.","بالاتر از انتظار → دلار قوی‌تر."],
+"richmond manufacturing index":["شاخص تولیدی ریچموند","نظرسنجی صنعتی منطقه‌ای؛ کم‌اثر.","بالاتر از انتظار → اثر جزئی مثبت روی دلار."],
+"industrial production":["تولید صنعتی","خروجی کارخانه‌ها، معادن و خدمات شهری.","بالاتر از انتظار → تقویت ارز."],
+"factory orders":["سفارش‌های کارخانه","تقاضای آینده برای تولیدات صنعتی.","بالاتر از انتظار → تقویت ارز."],
+"durable goods orders":["سفارش کالاهای بادوام","سفارش کالاهای بلندعمر؛ نشانه اعتماد کسب‌وکارها به آینده.","بالاتر از انتظار → تقویت ارز."],
+"core durable goods orders":["سفارش کالاهای بادوام هسته","بدون حمل‌ونقل؛ کم‌نوسان‌تر و قابل‌اتکاتر.","بالاتر از انتظار → تقویت ارز."],
+"building permits":["مجوزهای ساخت","پیش‌نگر فعالیت ساخت‌وساز چند ماه آینده.","بالاتر از انتظار → تقویت ارز."],
+"housing starts":["شروع ساخت مسکن","تعداد پروژه‌های مسکونی آغازشده.","بالاتر از انتظار → تقویت ارز."],
+"new home sales":["فروش خانه‌های نوساز","حساس به نرخ وام مسکن؛ نبض بخش مسکن.","بالاتر از انتظار → دلار قوی‌تر."],
+"existing home sales":["فروش خانه‌های دست‌دوم","بخش عمده بازار مسکن آمریکا.","بالاتر از انتظار → دلار قوی‌تر."],
+"pending home sales":["فروش‌های در انتظار مسکن","قراردادهای امضاشده؛ پیش‌نگر فروش نهایی.","بالاتر از انتظار → دلار قوی‌تر."],
+"hpi":["شاخص قیمت مسکن","روند قیمت خانه؛ اثرگذار بر ثروت خانوار.","بالاتر از انتظار → اثر مثبت ملایم."],
+"s&p/cs composite-20 hpi":["شاخص قیمت مسکن کیس-شیلر","قیمت مسکن در ۲۰ کلان‌شهر آمریکا.","بالاتر از انتظار → اثر مثبت ملایم روی دلار."],
+"cb consumer confidence":["اعتماد مصرف‌کننده کنفرانس‌بورد","حال‌وهوای مصرف‌کننده آمریکایی؛ پیش‌نگر خرج‌کردن.","بالاتر از انتظار → دلار قوی‌تر."],
+"consumer confidence":["اعتماد مصرف‌کننده","خوش‌بینی خانوارها به اقتصاد و درآمد آینده.","بالاتر از انتظار → تقویت ارز."],
+"uom consumer sentiment":["احساسات مصرف‌کننده میشیگان","نظرسنجی دانشگاه میشیگان از خانوارها.","بالاتر از انتظار → دلار قوی‌تر."],
+"uom inflation expectations":["انتظارات تورمی میشیگان","تصور خانوارها از تورم سال آینده؛ فدرال‌رزرو دقیق دنبالش می‌کند.","بالاتر از انتظار → نگرانی تورمی → دلار قوی‌تر."],
+"gfk consumer climate":["فضای مصرف‌کننده GfK","اعتماد مصرف‌کننده آلمان.","بالاتر از انتظار → یورو کمی قوی‌تر."],
+"ifo business climate":["فضای کسب‌وکار ifo","نظرسنجی مهم از شرکت‌های آلمانی؛ بارومتر اقتصاد اروپا.","بالاتر از انتظار → یورو قوی‌تر."],
+"zew economic sentiment":["احساسات اقتصادی ZEW","نظر تحلیلگران و سرمایه‌گذاران نهادی درباره ۶ ماه آینده.","بالاتر از انتظار → یورو قوی‌تر."],
+"sentix investor confidence":["اعتماد سرمایه‌گذاران Sentix","نظرسنجی سرمایه‌گذاران منطقه یورو.","بالاتر از انتظار → یورو کمی قوی‌تر."],
+"kof economic barometer":["بارومتر اقتصادی KOF","پیش‌نگر اقتصاد سوئیس.","بالاتر از انتظار → فرانک کمی قوی‌تر."],
+"nbb business climate":["فضای کسب‌وکار بلژیک","نظرسنجی صنعتی بلژیک؛ کم‌اثر.","اثر جزئی."],
+"ubs economic expectations":["انتظارات اقتصادی UBS","چشم‌انداز اقتصاد سوئیس.","اثر جزئی."],
+"business confidence":["اعتماد کسب‌وکار","خوش‌بینی شرکت‌ها به شرایط آینده.","بالاتر از انتظار → تقویت ارز."],
+"trade balance":["تراز تجاری","اختلاف صادرات و واردات؛ تقاضای خارجی برای ارز کشور.","مازاد بیشتر از انتظار → تقویت ارز."],
+"goods trade balance":["تراز تجاری کالا","بخش کالایی تجارت؛ زودتر از تراز کامل منتشر می‌شود.","مازاد بیشتر → تقویت ارز."],
+"current account":["حساب جاری","تراز کل مبادلات با دنیا شامل خدمات و درآمد سرمایه.","مازاد بیشتر → تقویت ارز."],
+"retail sales y/y":["خرده‌فروشی سالانه","رشد مصرف نسبت به سال قبل.","بالاتر از انتظار → تقویت ارز."],
+"personal income":["درآمد شخصی","درآمد خانوارها؛ سوخت مصرف آینده.","بالاتر از انتظار → اثر مثبت ملایم."],
+"personal spending":["مخارج شخصی","خرج واقعی خانوارها؛ حدود دو‌سوم اقتصاد آمریکا.","بالاتر از انتظار → دلار قوی‌تر."],
+"household spending":["مخارج خانوار","مصرف خانوارها.","بالاتر از انتظار → تقویت ارز."],
+"consumer spending":["مخارج مصرف‌کننده","خرید خانوارها.","بالاتر از انتظار → تقویت ارز."],
+"consumer credit":["اعتبار مصرفی","میزان وام‌گیری خانوارها.","بالاتر از انتظار → تقاضای قوی."],
+"corporate profits":["سود شرکت‌ها","سودآوری بنگاه‌ها؛ پیش‌نگر سرمایه‌گذاری و استخدام.","بالاتر از انتظار → اثر مثبت ملایم."],
+"private capital expenditure":["مخارج سرمایه‌ای بخش خصوصی","سرمایه‌گذاری شرکت‌ها در تجهیزات و ساختمان.","بالاتر از انتظار → تقویت ارز."],
+"construction work done":["حجم کار ساختمانی","فعالیت ساخت‌وساز؛ ورودی محاسبه GDP.","بالاتر از انتظار → تقویت ارز."],
+"wholesale inventories":["موجودی انبار عمده‌فروشان","انباشت کالا؛ ورودی GDP.","تفسیرش دوپهلوست: می‌تواند نشانه تقاضای ضعیف باشد."],
+"business inventories":["موجودی انبار کسب‌وکارها","سطح ذخیره کالا در اقتصاد.","اثر معمولاً محدود."],
+"mi leading index":["شاخص پیش‌نگر ملبورن","پیش‌بینی روند اقتصاد استرالیا.","اثر جزئی."],
+"cb leading index":["شاخص پیش‌نگر کنفرانس‌بورد","ترکیبی از داده‌های پیش‌نگر اقتصاد.","اثر جزئی."],
+"federal funds rate":["نرخ بهره فدرال‌رزرو","تصمیم نرخ بهره آمریکا؛ مهم‌ترین رویداد ممکن برای دلار و طلا.","نرخ بالاتر یا لحن سخت‌گیرانه → دلار جهشی، طلا نزولی."],
+"fomc statement":["بیانیه FOMC","متن تصمیم فدرال‌رزرو؛ تغییر واژه‌ها به‌اندازه خود نرخ مهم است.","لحن انقباضی → دلار قوی، طلا زیر فشار."],
+"fomc press conference":["نشست خبری فدرال‌رزرو","پرسش‌وپاسخ با رئیس فدرال‌رزرو؛ معمولاً پرنوسان‌ترین نیم‌ساعت ماه.","لحن سخت‌گیرانه → دلار قوی، طلا نزولی."],
+"fomc meeting minutes":["صورت‌جلسه FOMC","جزئیات بحث اعضا در نشست قبلی؛ نشان می‌دهد اختلاف‌نظرها کجاست.","لحن انقباضی → دلار قوی‌تر."],
+"fomc economic projections":["پیش‌بینی‌های اقتصادی فدرال‌رزرو","نمودار نقطه‌ای (Dot Plot) مسیر آینده نرخ بهره را نشان می‌دهد.","دات‌پلات بالاتر → دلار قوی، طلا نزولی."],
+"main refinancing rate":["نرخ بهره بانک مرکزی اروپا","تصمیم نرخ بهره منطقه یورو.","نرخ بالاتر → یورو قوی‌تر."],
+"ecb press conference":["نشست خبری بانک مرکزی اروپا","توضیح تصمیم و چشم‌انداز؛ حرکت‌ساز اصلی یورو.","لحن انقباضی → یورو قوی‌تر."],
+"ecb monetary policy meeting accounts":["صورت‌جلسه بانک مرکزی اروپا","جزئیات مباحث نشست قبلی.","لحن انقباضی → یورو کمی قوی‌تر."],
+"official bank rate":["نرخ بهره بانک انگلستان","تصمیم نرخ بهره بریتانیا.","نرخ بالاتر → پوند قوی‌تر."],
+"mpc official bank rate votes":["آرای کمیته سیاست پولی","شمارش رأی اعضا؛ نشان می‌دهد تصمیم بعدی به کدام سمت می‌چرخد.","آرای بیشتر برای افزایش → پوند قوی‌تر."],
+"monetary policy summary":["خلاصه سیاست پولی","جمع‌بندی دلایل تصمیم بانک مرکزی.","لحن انقباضی → تقویت ارز."],
+"boj policy rate":["نرخ بهره بانک ژاپن","تصمیم نرخ بهره ژاپن؛ سال‌ها لنگر ین بوده است.","نرخ بالاتر → ین قوی‌تر."],
+"boj press conference":["نشست خبری بانک ژاپن","سیگنال‌های رئیس بانک درباره خروج از سیاست فوق‌انبساطی.","لحن انقباضی → ین قوی‌تر."],
+"boj core cpi":["تورم هسته بانک ژاپن","معیار تورمی خودِ بانک مرکزی ژاپن.","بالاتر از انتظار → ین کمی قوی‌تر."],
+"cash rate":["نرخ بهره بانک مرکزی استرالیا","تصمیم نرخ بهره استرالیا.","نرخ بالاتر → دلار استرالیا قوی‌تر."],
+"rba rate statement":["بیانیه نرخ بهره RBA","متن تصمیم و چشم‌انداز بانک مرکزی استرالیا.","لحن انقباضی → تقویت AUD."],
+"overnight rate":["نرخ بهره بانک مرکزی کانادا","تصمیم نرخ بهره کانادا.","نرخ بالاتر → دلار کانادا قوی‌تر."],
+"boc rate statement":["بیانیه نرخ بهره BOC","توضیح تصمیم بانک مرکزی کانادا.","لحن انقباضی → تقویت CAD."],
+"boc press conference":["نشست خبری بانک مرکزی کانادا","پرسش‌وپاسخ درباره مسیر نرخ بهره.","لحن انقباضی → تقویت CAD."],
+"snb policy rate":["نرخ بهره بانک ملی سوئیس","تصمیم نرخ بهره سوئیس.","نرخ بالاتر → فرانک قوی‌تر."],
+"official cash rate":["نرخ بهره بانک مرکزی نیوزیلند","تصمیم نرخ بهره نیوزیلند.","نرخ بالاتر → NZD قوی‌تر."],
+"monetary policy meeting minutes":["صورت‌جلسه نشست سیاست پولی","جزئیات بحث اعضای بانک مرکزی در نشست قبلی.","لحن انقباضی → تقویت ارز."],
+"monetary policy report":["گزارش سیاست پولی","گزارش دوره‌ای بانک مرکزی از تورم و رشد.","لحن انقباضی → تقویت ارز."],
+"m3 money supply":["حجم پول M3","رشد نقدینگی منطقه یورو.","بالاتر از انتظار → نشانه تقاضای اعتباری."],
+"private loans":["وام‌دهی بخش خصوصی","سرعت اعتباردهی بانک‌ها به اقتصاد.","بالاتر از انتظار → اقتصاد سرحال‌تر."],
+"crude oil inventories":["ذخایر نفت خام آمریکا","تغییر هفتگی موجودی نفت؛ حرکت‌ساز برای WTI و دلار کانادا.","افزایش بیشتر از انتظار → نفت نزولی → فشار روی CAD."],
+"natural gas storage":["ذخایر گاز طبیعی","تغییر هفتگی موجودی گاز آمریکا.","افزایش بیشتر از انتظار → گاز نزولی."],
+"api weekly statistical bulletin":["گزارش هفتگی API","برآورد اولیه ذخایر نفت، شب قبل از آمار رسمی.","افزایش ذخایر → فشار روی قیمت نفت."],
+"jackson hole symposium":["نشست جکسون هول","گردهمایی سالانه بانک‌های مرکزی؛ محل اعلام چرخش‌های بزرگ سیاست پولی.","اشاره به سیاست انقباضی → دلار قوی، طلا نزولی."],
+"bank holiday":["تعطیلی بانکی","بازار آن کشور تعطیل است؛ نقدشوندگی کم و اسپرد بالا.","حرکت‌های ساختگی و نوسان بی‌دلیل محتمل است."],
+"tankan manufacturing index":["شاخص تانکان تولیدی","نظرسنجی بانک ژاپن از شرکت‌های بزرگ.","بالاتر از انتظار → ین قوی‌تر."],
+"tokyo core cpi":["تورم هسته توکیو","پیش‌نگر تورم سراسری ژاپن، چون یک ماه زودتر می‌آید.","بالاتر از انتظار → ین قوی‌تر."],
+"national core cpi":["تورم هسته سراسری ژاپن","تورم رسمی ژاپن.","بالاتر از انتظار → ین قوی‌تر."],
+"sppi":["شاخص قیمت خدمات تولیدکننده","تورم بخش خدمات ژاپن؛ بانک ژاپن به آن حساس است.","بالاتر از انتظار → ین کمی قوی‌تر."],
+"ivey pmi":["شاخص PMI آیوی","نظرسنجی مدیران خرید کانادا.","بالاتر از انتظار → CAD قوی‌تر."],
+"caixin manufacturing pmi":["PMI تولیدی کایشین","نظرسنجی شرکت‌های خصوصی و کوچک چین؛ برای اقتصاد جهانی و AUD مهم است.","بالاتر از انتظار → AUD و کامودیتی‌ها مثبت."],
+"nbs manufacturing pmi":["PMI تولیدی رسمی چین","نظرسنجی رسمی شرکت‌های بزرگ دولتی چین.","بالاتر از انتظار → تقاضای جهانی بهتر → AUD مثبت."],
+"new loans":["وام‌های جدید بانکی چین","حجم اعتبار تزریق‌شده به اقتصاد چین.","بالاتر از انتظار → محرک رشد → کامودیتی مثبت."],
+"fixed asset investment":["سرمایه‌گذاری در دارایی ثابت","سرمایه‌گذاری زیرساختی و صنعتی چین.","بالاتر از انتظار → تقاضای فلزات بیشتر."],
+"unemployment change":["تغییر تعداد بیکاران","افزایش یا کاهش بیکاران ثبت‌شده.","کمتر از انتظار → تقویت ارز."],
+"final employment change":["تغییر نهایی اشتغال","رقم بازبینی‌شده اشتغال.","اثر معمولاً محدود."],
+"mortgage applications":["درخواست‌های وام مسکن","تقاضای هفتگی وام خانه؛ آینه نرخ بهره.","اثر معمولاً محدود."],
+"10-y bond auction":["حراج اوراق ۱۰ ساله","بازده و تقاضای اوراق دولتی؛ سنجه اشتهای ریسک و انتظارات تورمی.","بازده بالاتر → فشار روی طلا و سهام."],
+"treasury sec speaks":["سخنرانی وزیر خزانه‌داری","اظهارنظر درباره بدهی، دلار و سیاست مالی آمریکا.","اشاره به دلار قوی → تقویت دلار."]
+};
+
+/* پیشوندهای منطقه‌ای و پسوندهای دوره‌ای */
+const REGION = {german:"آلمان",french:"فرانسه",italian:"ایتالیا",spanish:"اسپانیا",belgian:"بلژیک",
+  dutch:"هلند",greek:"یونان",swiss:"سوئیس",tokyo:"توکیو",national:"سراسری",german_:"آلمان"};
+const QUAL = {prelim:"مقدماتی",flash:"اولیه",final:"نهایی",revised:"بازبینی‌شده",advance:"پیشاپیش",
+  "second estimate":"برآورد دوم","third estimate":"برآورد سوم",monthly:"ماهانه",weekly:"هفتگی",annual:"سالانه"};
+const PERIOD = {"m/m":"ماهانه","y/y":"سالانه","q/q":"فصلی","q/y":"فصلی-سالانه","w/w":"هفتگی"};
+
+function lookup(title){
+  let t = title.toLowerCase().trim();
+  let pre = [], per = "";
+
+  const pm = t.match(/\s(m\/m|y\/y|q\/q|q\/y|w\/w)$/);
+  if(pm){ per = PERIOD[pm[1]]; t = t.slice(0, pm.index).trim(); }
+
+  // پیشوند منطقه‌ای
+  for(const r in REGION){
+    if(t.startsWith(r + " ")){ pre.push(REGION[r]); t = t.slice(r.length+1); break; }
+  }
+  // پیشوند کیفی (مقدماتی/نهایی/…)
+  for(const q in QUAL){
+    if(t.startsWith(q + " ")){ pre.push(QUAL[q]); t = t.slice(q.length+1); break; }
+  }
+
+  let hit = D[t];
+
+  // الگوهای عمومی
+  if(!hit && /\bspeaks$/.test(t)){
+    const who = title.replace(/\s+speaks$/i,'');
+    return {fa:"سخنرانی " + who, why:"لحن و اشاره به مسیر نرخ بهره می‌تواند بازار را حرکت دهد.",
+            eff:"لحن انقباضی معمولاً ارز را تقویت و طلا را تضعیف می‌کند."};
+  }
+  if(!hit && /bond auction$/.test(t)){
+    return {fa:"حراج اوراق قرضه" + (pre.length ? " " + pre.join(" ") : ""),
+            why:"بازده و تقاضای اوراق دولتی؛ سنجه اشتهای ریسک و انتظار تورم.",
+            eff:"بازده بالاتر → فشار روی طلا و سهام."};
+  }
+  if(!hit && /holiday$/.test(t)){
+    return {fa:"تعطیلی بازار" + (pre.length ? " " + pre.join(" ") : ""),
+            why:"بازار آن کشور تعطیل است؛ نقدشوندگی پایین و اسپرد بالا.",
+            eff:"نوسان‌های بی‌پشتوانه محتمل است؛ معامله محتاطانه."};
+  }
+  if(!hit) return null;
+
+  const label = (pre.length ? pre.join(" ") + " — " : "") + hit[0] + (per ? " (" + per + ")" : "");
+  return {fa:label, why:hit[1], eff:hit[2]};
+}
+
+/* ===================== state ===================== */
+const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', open:new Set(), last:0};
+const key = e => e.title + '|' + e.country + '|' + e.date;
+
+/* ===================== data ===================== */
+const FEED = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+const SOURCES = [
+  FEED,
+  'https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json',
+  'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED),
+  'https://corsproxy.io/?url=' + encodeURIComponent(FEED)
+];
+async function loadEvents(){
+  let err;
+  for(const url of SOURCES){
+    try{
+      const r = await fetch(url, {cache:'no-store'});
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      const txt = await r.text();
+      const a = txt.indexOf('[');
+      if(a < 0) throw new Error('پاسخ نامعتبر');
+      const data = JSON.parse(txt.slice(a, txt.lastIndexOf(']')+1));
+      if(!Array.isArray(data) || !data.length) throw new Error('خالی');
+      save(data);
+      return data.filter(e => e && e.date && e.title);
+    }catch(e){ err = e; }
+  }
+  const cached = restore();
+  if(cached) return cached;
+  throw err || new Error('در دسترس نیست');
+}
+/* کش محلی: اگر شبکه نبود، همان داده هفته را نشان بده */
+function save(d){ try{ localStorage.setItem('ffcal', JSON.stringify({t:Date.now(), d})); }catch(e){} }
+function restore(){
+  try{
+    const o = JSON.parse(localStorage.getItem('ffcal') || 'null');
+    if(o && Date.now() - o.t < 8*864e5) return o.d;
+  }catch(e){}
+  return null;
+}
+function loadPrefs(){
+  try{
+    const p = JSON.parse(localStorage.getItem('ffprefs') || 'null');
+    if(p){ S.imp = p.imp || S.imp; S.scope = p.scope || S.scope; S.tz = p.tz || S.tz;
+           S.curs = new Set(p.curs || []); }
+  }catch(e){}
+}
+function savePrefs(){
+  try{ localStorage.setItem('ffprefs', JSON.stringify(
+    {imp:S.imp, scope:S.scope, tz:S.tz, curs:[...S.curs]})); }catch(e){}
+}
+
+/* ===================== time ===================== */
+const tzOpt = () => S.tz === 'tehran' ? {timeZone:'Asia/Tehran'} : {};
+const fmtTime = d => new Intl.DateTimeFormat('en-GB', Object.assign({hour:'2-digit',minute:'2-digit',hour12:false}, tzOpt())).format(d);
+const dayKey = d => new Intl.DateTimeFormat('en-CA', Object.assign({year:'numeric',month:'2-digit',day:'2-digit'}, tzOpt())).format(d);
+const weekday = d => new Intl.DateTimeFormat('fa-IR', Object.assign({weekday:'long'}, tzOpt())).format(d);
+const dateFa = d => new Intl.DateTimeFormat('fa-IR-u-nu-latn', Object.assign({day:'numeric',month:'long'}, tzOpt())).format(d);
+
+function relTime(ms){
+  const m = Math.round(Math.abs(ms)/60000);
+  if(m < 1) return 'همین حالا';
+  const h = Math.floor(m/60), d = Math.floor(h/24);
+  let s = d >= 1 ? d + ' روز' : h >= 1 ? h + ' ساعت' : m + ' دقیقه';
+  return ms > 0 ? s + ' دیگر' : s + ' پیش';
+}
+function countdown(ms){
+  if(ms <= 0) return 'شروع شد';
+  const t = Math.floor(ms/1000), p = n => String(n).padStart(2,'0');
+  const d = Math.floor(t/86400), h = Math.floor(t%86400/3600), m = Math.floor(t%3600/60), s = t%60;
+  return d ? d + 'd ' + p(h) + ':' + p(m) : p(h) + ':' + p(m) + ':' + p(s);
+}
+
+/* ===================== filters ===================== */
+const rank = i => i === 'High' ? 3 : i === 'Medium' ? 2 : 1;
+function passes(e){
+  const r = rank(e.impact);
+  if(S.imp === 'high' && r < 3) return false;
+  if(S.imp === 'med' && r < 2) return false;
+  if(S.curs.size && !S.curs.has(e.country)) return false;
+  if(S.scope === 'today' && dayKey(new Date(e.date)) !== dayKey(new Date())) return false;
+  return true;
+}
+
+/* ===================== render ===================== */
+const esc = s => String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+const impClass = i => i === 'High' ? 'hi' : i === 'Medium' ? 'md' : 'lo';
+const num = v => parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+
+function valsHTML(e){
+  const out = [];
+  if(e.actual){
+    const f = num(e.forecast), a = num(e.actual);
+    const cls = (!isNaN(f) && !isNaN(a)) ? (a > f ? 'up' : a < f ? 'down' : '') : '';
+    out.push('<span class="'+cls+'">واقعی <b>'+esc(e.actual)+'</b></span>');
+  }
+  if(e.forecast) out.push('<span>پیش‌بینی <b>'+esc(e.forecast)+'</b></span>');
+  if(e.previous) out.push('<span>قبلی <b>'+esc(e.previous)+'</b></span>');
+  return out.length ? '<div class="vals">'+out.join('')+'</div>' : '';
+}
+
+function bodyHTML(e, info){
+  let html = '';
+  if(info){
+    html += '<h4>این خبر چیست</h4><p>'+esc(info.why)+'</p>';
+    html += '<h4>اثر روی بازار</h4><p>'+esc(info.eff)+'</p>';
+  }else{
+    html += '<p>این رویداد در دیکشنری نیست. عنوان انگلیسی‌اش را در فارکس‌فکتوری ببین.</p>';
+  }
+  if(e.forecast && e.previous){
+    const f = num(e.forecast), p = num(e.previous);
+    if(!isNaN(f) && !isNaN(p)){
+      const dir = f > p ? 'بهتر از دوره قبل' : f < p ? 'ضعیف‌تر از دوره قبل' : 'هم‌سطح دوره قبل';
+      html += '<h4>انتظار بازار</h4><p>بازار رقمی '+dir+' انتظار دارد ('+esc(e.previous)+' → '+esc(e.forecast)+'). '+
+              'انحراف از پیش‌بینی است که حرکت می‌سازد، نه خودِ عدد.</p>';
+    }
+  }
+  if(rank(e.impact) === 3){
+    html += '<h4>نکته اجرایی</h4><p>در دقایق اطراف این خبر اسپرد باز می‌شود و استاپ‌ها راحت شکار می‌شوند. '+
+            'اگر پوزیشن باز داری، حجم و استاپ را قبلش تنظیم کن.</p>';
+  }
+  return html;
+}
+
+function render(){
+  const list = document.getElementById('list');
+  const evs = S.events.filter(passes);
+  if(!evs.length){
+    list.innerHTML = '<div class="state"><b>خبری با این فیلترها نیست</b>فیلتر اهمیت یا بازه را بازتر کن.</div>';
+    renderNext(); return;
+  }
+  const now = Date.now(), today = dayKey(new Date()), tmr = dayKey(new Date(Date.now()+864e5));
+  let html = '', cur = '';
+  for(const e of evs){
+    const d = new Date(e.date), dk = dayKey(d);
+    if(dk !== cur){
+      cur = dk;
+      const lbl = dk === today ? 'امروز' : dk === tmr ? 'فردا' : weekday(d);
+      html += '<div class="day"><b>'+lbl+'</b><span>'+dateFa(d)+'</span><i></i></div>';
+    }
+    const k = key(e), info = lookup(e.title), open = S.open.has(k), diff = d.getTime()-now;
+    html += '<button class="ev '+impClass(e.impact)+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" aria-expanded="'+open+'">'+
+      '<div class="tcol"><span class="t">'+fmtTime(d)+'</span><span class="rel" data-cd="'+d.getTime()+'">'+relTime(diff)+'</span></div>'+
+      '<div><div class="ev-head"><span class="cur">'+esc(e.country)+'</span><span class="en">'+esc(e.title)+'</span></div>'+
+      '<div class="fa">'+esc(info ? info.fa : e.title)+'</div>'+
+      (info ? '<div class="why">'+esc(info.why)+'</div>' : '')+
+      valsHTML(e)+'</div>'+
+      (open ? '<div class="body">'+bodyHTML(e, info)+'</div>' : '')+'</button>';
+  }
+  list.innerHTML = html;
+  renderNext();
+}
+
+function renderNext(){
+  const box = document.getElementById('nextBox'), now = Date.now();
+  const n = S.events.filter(e => rank(e.impact) >= 2 && new Date(e.date).getTime() > now)
+                    .sort((a,b) => new Date(a.date)-new Date(b.date))[0];
+  if(!n){ box.innerHTML = ''; return; }
+  const t = new Date(n.date).getTime(), info = lookup(n.title);
+  box.innerHTML = '<div class="next"><div>'+
+    '<div class="lbl">خبر مهم بعدی · '+esc(n.country)+' · '+fmtTime(new Date(t))+'</div>'+
+    '<div class="ttl">'+esc(info ? info.fa : n.title)+'</div></div>'+
+    '<div class="cd" data-cd-big="'+t+'">'+countdown(t-now)+'</div></div>';
+}
+
+setInterval(() => {
+  const now = Date.now();
+  document.querySelectorAll('[data-cd]').forEach(el => el.textContent = relTime(+el.dataset.cd - now));
+  const b = document.querySelector('[data-cd-big]');
+  if(b) b.textContent = countdown(+b.dataset.cdBig - now);
+}, 1000);
+
+/* ===================== interactions ===================== */
+document.getElementById('list').addEventListener('click', ev => {
+  const btn = ev.target.closest('.ev'); if(!btn) return;
+  const k = btn.dataset.k;
+  S.open.has(k) ? S.open.delete(k) : S.open.add(k);
+  render();
+});
+document.getElementById('scopeFilters').addEventListener('click', ev => {
+  const c = ev.target.closest('.chip'); if(!c) return;
+  if(c.dataset.scope){
+    S.scope = c.dataset.scope;
+    document.querySelectorAll('#scopeFilters .chip[data-scope]').forEach(x => x.setAttribute('aria-pressed', x === c));
+  }else{
+    S.imp = c.dataset.imp;
+    document.querySelectorAll('#scopeFilters .chip[data-imp]').forEach(x => x.setAttribute('aria-pressed', x === c));
+  }
+  savePrefs(); render();
+});
+document.getElementById('curFilters').addEventListener('click', ev => {
+  const c = ev.target.closest('.chip'); if(!c) return;
+  const cu = c.dataset.cur;
+  S.curs.has(cu) ? S.curs.delete(cu) : S.curs.add(cu);
+  c.setAttribute('aria-pressed', S.curs.has(cu));
+  savePrefs(); render();
+});
+document.getElementById('tzBtn').addEventListener('click', e => {
+  S.tz = S.tz === 'device' ? 'tehran' : 'device';
+  e.target.textContent = S.tz === 'tehran' ? 'وقت تهران' : 'وقت دستگاه';
+  savePrefs(); render();
+});
+document.getElementById('refBtn').addEventListener('click', () => boot(true));
+document.addEventListener('visibilitychange', () => {
+  if(!document.hidden && Date.now() - S.last > 15*60*1000) boot(false);
+});
+
+/* ===================== boot ===================== */
+function buildCurFilters(){
+  const order = ['USD','EUR','GBP','JPY','CHF','CAD','AUD','NZD','CNY','All'];
+  const seen = [...new Set(S.events.map(e => e.country))]
+    .sort((a,b) => (order.indexOf(a)+99)%100 - (order.indexOf(b)+99)%100);
+  document.getElementById('curFilters').innerHTML = seen.map(c =>
+    '<button class="chip cur" data-cur="'+c+'" aria-pressed="'+S.curs.has(c)+'">'+c+'</button>').join('');
+}
+function syncChips(){
+  document.querySelectorAll('#scopeFilters .chip[data-scope]')
+    .forEach(x => x.setAttribute('aria-pressed', x.dataset.scope === S.scope));
+  document.querySelectorAll('#scopeFilters .chip[data-imp]')
+    .forEach(x => x.setAttribute('aria-pressed', x.dataset.imp === S.imp));
+  document.getElementById('tzBtn').textContent = S.tz === 'tehran' ? 'وقت تهران' : 'وقت دستگاه';
+}
+
+async function boot(manual){
+  const btn = document.getElementById('refBtn');
+  if(manual && Date.now() - S.last < 5*60*1000){
+    btn.textContent = 'چند دقیقه صبر';
+    setTimeout(() => btn.textContent = 'تازه‌سازی', 2000);
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'گرفتن…';
+  try{
+    const data = await loadEvents();
+    S.events = data.sort((a,b) => new Date(a.date) - new Date(b.date));
+    S.last = Date.now();
+    buildCurFilters(); render();
+  }catch(err){
+    document.getElementById('list').innerHTML =
+      '<div class="state"><b>تقویم نیامد</b>فید فارکس‌فکتوری جواب نداد ('+esc(err.message)+'). '+
+      'چند دقیقه بعد تازه‌سازی بزن.</div>';
+  }
+  btn.disabled = false; btn.textContent = 'تازه‌سازی';
+}
+
+loadPrefs(); syncChips(); boot(false);
+setInterval(() => { if(!document.hidden) boot(false); }, 15*60*1000);
+</script>
+</body>
+</html>
