@@ -341,11 +341,11 @@ const key = e => e.title + '|' + e.country + '|' + e.date;
 
 /* ===================== data ===================== */
 const FEED = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-/* اول مستقیم و آنلاین از فارکس‌فکتوری؛ فقط اگر نشد، نسخه‌ی ریپو */
+/* فایل ریپو که Actions هر ساعت تازه‌اش می‌کند؛ مستقیم‌ها فقط اگر آن نبود */
 const SOURCES = [
+  {s:'repo', u:() => './calendar.json?t=' + Math.floor(Date.now()/6e5)},
   {s:'live', u:() => FEED},
   {s:'live', u:() => 'https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json'},
-  {s:'repo', u:() => './calendar.json?t=' + Math.floor(Date.now()/6e5)},
   {s:'live', u:() => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED)},
   {s:'live', u:() => 'https://corsproxy.io/?url=' + encodeURIComponent(FEED)}
 ];
@@ -658,7 +658,7 @@ function showSource(){
   const el = document.getElementById('upd');
   if(!el) return;
   if(S.src === 'live'){
-    el.textContent = ' · مستقیم و آنلاین از فارکس‌فکتوری، همین الان';
+    el.textContent = ' · مستقیم از فارکس‌فکتوری، همین الان';
     return;
   }
   if(S.src === 'cache'){
@@ -666,14 +666,14 @@ function showSource(){
     return;
   }
   if(S.src === 'repo'){
-    el.textContent = ' · فارکس‌فکتوری جواب نداد؛ نسخه‌ی پشتیبان';
+    el.textContent = ' · به‌روزرسانی خودکار هر ساعت';
     fetch('./updated.json?t=' + Math.floor(Date.now()/6e5), {cache:'no-store'})
       .then(r => r.ok ? r.json() : null)
       .then(o => {
         if(!o || !o.updated) return;
-        const h = Math.round((Date.now() - new Date(o.updated))/36e5);
-        el.textContent = ' · فارکس‌فکتوری جواب نداد؛ نسخه‌ی پشتیبانِ ' +
-          (h < 1 ? 'کمتر از یک ساعت پیش' : h + ' ساعت پیش');
+        const m = Math.round((Date.now() - new Date(o.updated))/6e4);
+        el.textContent = ' · آخرین به‌روزرسانی: ' +
+          (m < 60 ? m + ' دقیقه پیش' : Math.round(m/60) + ' ساعت پیش');
       }).catch(() => {});
   }
 }
