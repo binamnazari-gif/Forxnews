@@ -67,6 +67,12 @@ header{position:sticky;top:0;z-index:30;background:rgba(13,20,32,.97);backdrop-f
 .ev{width:100%;text-align:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;
   padding:10px 12px;margin-bottom:8px;color:inherit;font-family:inherit;display:grid;
   grid-template-columns:50px 1fr;gap:0 12px;cursor:pointer;transition:border-color .15s,opacity .2s}
+.ev{position:relative}
+.chev{position:absolute;inset-inline-end:9px;top:9px;color:var(--dim);font-size:10px;
+  line-height:1;transition:transform .18s;pointer-events:none}
+.ev[aria-expanded="true"] .chev{transform:rotate(180deg);color:var(--text)}
+td.evt .chev-t{color:var(--dim);font-size:9px;margin-inline-start:5px}
+tr[data-open="1"] td.evt .chev-t{color:var(--text)}
 .ev:hover{border-color:#31415f}
 .ev.past{opacity:.4}
 .ev.hi{background:var(--t-high);border-color:var(--b-high);border-inline-start:3px solid var(--r-high)}
@@ -486,6 +492,7 @@ function renderCards(){
     const k = key(e), info = lookup(e.title), open = S.open.has(k), diff = d.getTime()-now;
     const soon = rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '';
     html += '<button class="ev '+impClass(e.impact)+soon+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" aria-expanded="'+open+'">'+
+      '<span class="chev">\u25BE</span>'+
       '<div class="tcol"><span class="t">'+fmtTime(d)+'</span><span class="rel" data-cd="'+d.getTime()+'">'+relTime(diff)+'</span></div>'+
       '<div><div class="ev-head"><span class="cur">'+esc(e.country)+'</span><span class="en">'+esc(e.title)+'</span></div>'+
       '<div class="fa">'+esc(info ? info.fa : e.title)+'</div>'+
@@ -534,11 +541,11 @@ function renderTable(){
     }
     rows += '<tr class="row '+impClass(e.impact)+
       (rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '')+
-      (diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'">'+
+      (diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" data-open="'+(S.open.has(k)?'1':'0')+'">'+
       '<td class="ttd">'+fmtTime(d)+'</td>'+
       '<td class="curtd"><i>'+(FLAG[e.country] || '')+'</i>'+esc(e.country)+'</td>'+
       '<td>'+impDots(e.impact)+'</td>'+
-      '<td class="evt">'+esc(info ? info.fa : e.title)+'<small>'+esc(e.title)+'</small></td>'+
+      '<td class="evt">'+esc(info ? info.fa : e.title)+'<span class="chev-t">\u25BE</span><small>'+esc(e.title)+'</small></td>'+
       '<td class="numtd">'+esc(e.previous || '–')+'</td>'+
       '<td class="numtd">'+esc(e.forecast || '–')+'</td>'+
       actTd + '</tr>';
