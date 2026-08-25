@@ -2,8 +2,11 @@ name: Update calendar
 
 on:
   schedule:
-    - cron: "0 */6 * * *"     # هر ۶ ساعت
-  workflow_dispatch:           # اجرای دستی از تب Actions
+    - cron: "17 */2 * * *"     # هر ۲ ساعت
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/update-calendar.yml"
 
 permissions:
   contents: write
@@ -15,49 +18,76 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch Forex Factory weekly feed
+      - name: Fetch calendar
+        id: fetch
         run: |
-          set -e
+          FEED="https://nfs.faireconomy.media/ff_calendar_thisweek.json"
+          # چند مسیر مستقل؛ اگر یکی ۴۲۹ داد، بعدی از IP دیگری می‌خواند
+          URLS="
+          $FEED
+          https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json
+          https://api.allorigins.win/raw?url=https%3A%2F%2Fnfs.faireconomy.media%2Fff_calendar_thisweek.json
+          https://r.jina.ai/$FEED
+          "
           ok=0
-          for url in \
-            "https://nfs.faireconomy.media/ff_calendar_thisweek.json" \
-            "https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json"
-          do
-            for try in 1 2 3; do
-              echo "تلاش $try برای $url"
-              if curl -fsSL --max-time 30 \
-                   -H "User-Agent: Mozilla/5.0 (radar-khabar github action)" \
-                   -H "Accept: application/json" \
-                   "$url" -o tmp.json; then
-                if python3 -c "import json,sys; d=json.load(open('tmp.json')); sys.exit(0 if isinstance(d,list) and len(d)>0 else 1)"; then
-                  ok=1; break
-                fi
-                echo "پاسخ معتبر نبود"
+          for round in 1 2 3; do
+            for url in $URLS; do
+              echo "::group::دور $round — $url"
+              curl -sSL --max-time 45 --compressed \
+                -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36" \
+                -H "Accept: application/json,text/plain,*/*" \
+                -H "Accept-Language: en-US,en;q=0.9" \
+                "$url" -o raw.txt || echo "curl ناموفق"
+              if python3 - <<'PY'
+          import json, sys, pathlib
+          t = pathlib.Path('raw.txt').read_text(errors='ignore') if pathlib.Path('raw.txt').exists() else ''
+          a, b = t.find('['), t.rfind(']')
+          if a < 0 or b < a:
+              sys.exit(1)
+          try:
+              d = json.loads(t[a:b+1])
+          except Exception:
+              sys.exit(1)
+          if not isinstance(d, list) or len(d) < 5:
+              sys.exit(1)
+          if not all(isinstance(x, dict) and 'title' in x and 'date' in x for x in d[:5]):
+              sys.exit(1)
+          json.dump(d, open('fresh.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+          print('رویداد معتبر:', len(d))
+          PY
+              then
+                echo "موفق"; ok=1; echo "::endgroup::"; break
               fi
-              sleep 45
+              echo "پاسخ معتبر نبود"
+              echo "::endgroup::"
+              sleep 40
             done
             [ "$ok" = "1" ] && break
+            echo "همه‌ی مسیرها رد شدند؛ ۳ دقیقه صبر و دور بعد"
+            sleep 180
           done
-          if [ "$ok" != "1" ]; then
-            echo "فید در دسترس نبود؛ فایل قبلی دست‌نخورده می‌ماند."
+          rm -f raw.txt
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+
+      - name: Save and commit
+        run: |
+          if [ "${{ steps.fetch.outputs.ok }}" != "1" ]; then
+            if [ -f calendar.json ]; then
+              echo "فید در دسترس نبود؛ فایل قبلی حفظ شد. اجرای بعدی خودش دوباره تلاش می‌کند."
+              exit 0
+            fi
+            echo "فید در دسترس نبود و فایل قبلی هم وجود ندارد."
             exit 1
           fi
-          python3 - <<'PY'
-          import json
-          d = json.load(open('tmp.json'))
-          json.dump(d, open('calendar.json','w'), ensure_ascii=False, separators=(',',':'))
-          print('رویداد ذخیره‌شده:', len(d))
-          PY
-          rm -f tmp.json
-
-      - name: Commit if changed
-        run: |
+          mv fresh.json calendar.json
+          date -u '+{"updated":"%Y-%m-%dT%H:%M:%SZ"}' > updated.json
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add calendar.json
+          git add calendar.json updated.json
           if git diff --staged --quiet; then
             echo "تغییری نبود."
           else
