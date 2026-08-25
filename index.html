@@ -335,38 +335,38 @@ function lookup(title){
 }
 
 /* ===================== state ===================== */
-const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards', open:new Set(), last:0};
+const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards', open:new Set(), last:0, src:''};
 const FLAG = {USD:"🇺🇸",EUR:"🇪🇺",GBP:"🇬🇧",JPY:"🇯🇵",CHF:"🇨🇭",CAD:"🇨🇦",AUD:"🇦🇺",NZD:"🇳🇿",CNY:"🇨🇳",All:"🌐"};
 const key = e => e.title + '|' + e.country + '|' + e.date;
 
 /* ===================== data ===================== */
 const FEED = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-/* اول فایل خودِ ریپو (که Actions هر ۶ ساعت تازه‌اش می‌کند)، بعد مسیرهای مستقیم */
+/* اول مستقیم و آنلاین از فارکس‌فکتوری؛ فقط اگر نشد، نسخه‌ی ریپو */
 const SOURCES = [
-  () => './calendar.json?t=' + Math.floor(Date.now()/6e5),
-  () => FEED,
-  () => 'https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json',
-  () => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED),
-  () => 'https://corsproxy.io/?url=' + encodeURIComponent(FEED)
+  {s:'live', u:() => FEED},
+  {s:'live', u:() => 'https://cdn-nfs.faireconomy.media/ff_calendar_thisweek.json'},
+  {s:'repo', u:() => './calendar.json?t=' + Math.floor(Date.now()/6e5)},
+  {s:'live', u:() => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED)},
+  {s:'live', u:() => 'https://corsproxy.io/?url=' + encodeURIComponent(FEED)}
 ];
 async function loadEvents(){
   let err;
   for(const src of SOURCES){
-    const url = src();
     try{
-      const r = await fetch(url, {cache:'no-store'});
+      const r = await fetch(src.u(), {cache:'no-store'});
       if(!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const a = txt.indexOf('[');
       if(a < 0) throw new Error('پاسخ نامعتبر');
       const data = JSON.parse(txt.slice(a, txt.lastIndexOf(']')+1));
       if(!Array.isArray(data) || !data.length) throw new Error('خالی');
+      S.src = src.s;
       save(data);
       return data.filter(e => e && e.date && e.title);
     }catch(e){ err = e; }
   }
   const cached = restore();
-  if(cached) return cached;
+  if(cached){ S.src = 'cache'; return cached; }
   throw err || new Error('در دسترس نیست');
 }
 /* کش محلی: اگر شبکه نبود، همان داده هفته را نشان بده */
@@ -644,7 +644,7 @@ async function boot(manual){
     const data = await loadEvents();
     S.events = data.sort((a,b) => new Date(a.date) - new Date(b.date));
     S.last = Date.now();
-    buildCurFilters(); render();
+    buildCurFilters(); render(); showSource();
   }catch(err){
     document.getElementById('list').innerHTML =
       '<div class="state"><b>تقویم نیامد</b>هیچ‌کدام از منبع‌ها جواب ندادند ('+esc(err.message)+'). '+
@@ -653,19 +653,33 @@ async function boot(manual){
   btn.disabled = false; btn.textContent = 'تازه‌سازی';
 }
 
+/* نمایش اینکه داده از کجا آمد */
+function showSource(){
+  const el = document.getElementById('upd');
+  if(!el) return;
+  if(S.src === 'live'){
+    el.textContent = ' · مستقیم و آنلاین از فارکس‌فکتوری، همین الان';
+    return;
+  }
+  if(S.src === 'cache'){
+    el.textContent = ' · آفلاین: آخرین نسخه‌ی ذخیره‌شده در همین مرورگر';
+    return;
+  }
+  if(S.src === 'repo'){
+    el.textContent = ' · فارکس‌فکتوری جواب نداد؛ نسخه‌ی پشتیبان';
+    fetch('./updated.json?t=' + Math.floor(Date.now()/6e5), {cache:'no-store'})
+      .then(r => r.ok ? r.json() : null)
+      .then(o => {
+        if(!o || !o.updated) return;
+        const h = Math.round((Date.now() - new Date(o.updated))/36e5);
+        el.textContent = ' · فارکس‌فکتوری جواب نداد؛ نسخه‌ی پشتیبانِ ' +
+          (h < 1 ? 'کمتر از یک ساعت پیش' : h + ' ساعت پیش');
+      }).catch(() => {});
+  }
+}
+
 loadPrefs(); syncChips(); boot(false);
 setInterval(() => { if(!document.hidden) boot(false); }, 15*60*1000);
-
-/* زمان آخرین به‌روزرسانی خودکار (فایلی که Actions می‌سازد) */
-fetch('./updated.json?t=' + Math.floor(Date.now()/6e5), {cache:'no-store'})
-  .then(r => r.ok ? r.json() : null)
-  .then(o => {
-    if(!o || !o.updated) return;
-    const d = new Date(o.updated), h = Math.round((Date.now()-d)/36e5);
-    document.getElementById('upd').textContent =
-      ' · به‌روزرسانی خودکار: ' + (h < 1 ? 'کمتر از یک ساعت پیش' : h + ' ساعت پیش');
-  })
-  .catch(() => {});
 </script>
 </body>
 </html>
