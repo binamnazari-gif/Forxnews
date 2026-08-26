@@ -21,7 +21,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Martian+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Poetsen+One&display=swap">
 <style>
 :root{
   /* جوهر گرم — نه آبی، نه مشکی مطلق */
@@ -43,7 +43,7 @@
   --shadow:rgba(0,0,0,.6);
 
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  --clock:"Martian Mono","IBM Plex Mono",ui-monospace,monospace;
+  --clock:"Poetsen One","IBM Plex Mono",ui-monospace,monospace;
 }
 :root[data-theme="light"]{
   --ink:#f6f4f0; --ink-deep:#ece9e2; --bg-glow:#fffdf9;
@@ -105,23 +105,21 @@ header{position:sticky;top:0;z-index:30;background:var(--header-bg);
 .topt small{margin-inline-start:auto;font-size:10px;color:var(--faint)}
 
 /* ---------- خبر بعدی ---------- */
-.next{display:flex;align-items:center;gap:11px;
-  background:linear-gradient(105deg,var(--gold-soft),transparent 62%),var(--card);
-  border:1px solid var(--gold-line);border-radius:16px;padding:13px 15px;margin:14px 0 12px;
-  position:relative;overflow:hidden}
-.next::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo))}
+.next{display:flex;align-items:center;gap:11px;background:var(--card);
+  border:1px solid var(--gold);box-shadow:0 0 0 1px var(--gold-soft);
+  border-radius:16px;padding:13px 15px;margin:14px 0 12px}
 .next .lbl{font-size:10.5px;color:var(--faint);letter-spacing:.2px}
 .next .ttl{font-weight:700;font-size:15px;margin-top:2px;line-height:1.4}
-.next .cd{margin-inline-start:auto;font-family:var(--clock);
-  font-size:clamp(17px,5.2vw,23px);font-weight:500;direction:ltr;white-space:nowrap;
-  font-variant-numeric:tabular-nums;letter-spacing:-1px;
-  background:linear-gradient(175deg,var(--gold-hi) 4%,var(--gold) 52%,var(--gold-lo) 100%);
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;-webkit-text-fill-color:transparent}
-.next.soon{box-shadow:0 0 0 1px var(--gold-line),0 6px 26px -12px var(--gold);
+.next .cd{margin-inline-start:auto;font-family:var(--clock);color:var(--gold);
+  font-size:clamp(17px,5vw,23px);font-weight:400;direction:ltr;white-space:nowrap;
+  font-variant-numeric:tabular-nums;letter-spacing:.5px;line-height:1.1}
+.next .bulls{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+.bull{width:16px;height:14px;flex:0 0 auto;fill:none;stroke:var(--faint);
+  stroke-width:1.6;stroke-linejoin:round}
+.bull.on{fill:var(--ember);stroke:var(--ember)}
+.next.soon{box-shadow:0 0 0 1px var(--gold),0 6px 26px -12px var(--gold);
   animation:breathe 2.8s ease-in-out infinite}
-@keyframes breathe{50%{box-shadow:0 0 0 1px var(--gold),0 9px 34px -10px var(--gold)}}
+@keyframes breathe{50%{box-shadow:0 0 0 2px var(--gold),0 9px 34px -10px var(--gold)}}
 
 /* ---------- فیلترها ---------- */
 .filters{display:flex;gap:6px;overflow-x:auto;padding:3px 0 10px;scrollbar-width:none}
@@ -241,6 +239,14 @@ tr.det .body{margin:0;padding:0;border:0}
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bull" viewBox="0 0 24 20">
+    <path d="M12 6.4c1.2 0 2.3.3 3.2.8 1.1-2 3.4-3.6 6.3-3.4.4 3.9-2 6.3-4.7 7 .3.8.5 1.6.5 2.5
+             0 3-2.4 5.4-5.3 5.4S6.7 16.3 6.7 13.3c0-.9.2-1.7.5-2.5-2.7-.7-5.1-3.1-4.7-7
+             2.9-.2 5.2 1.4 6.3 3.4.9-.5 2-.8 3.2-.8z"/>
+  </symbol>
+</svg>
+
 <header>
   <div class="wrap head-row">
     <div class="brand"><b>رادار خبر</b><span>تقویم اقتصادی فارکس‌فکتوری</span></div>
@@ -270,7 +276,7 @@ tr.det .body{margin:0;padding:0;border:0}
   <div class="filters" id="curFilters"></div>
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
   <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال<span id="upd"></span></p>
-  <p class="credit">طراحی و توسعه: <b>علی نظری</b><span class="ver">v1.5</span></p>
+  <p class="credit">طراحی و توسعه: <b>علی نظری</b><span class="ver">v1.6</span></p>
 </div>
 
 <script>
@@ -675,6 +681,14 @@ function renderTable(){
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
+function bulls(imp){
+  const n = rank(imp);
+  let out = '<span class="bulls">';
+  for(let i=1;i<=3;i++)
+    out += '<svg class="bull'+(i <= n ? ' on' : '')+'" viewBox="0 0 24 20"><use href="#bull"/></svg>';
+  return out + '</span>';
+}
+
 function renderNext(){
   const box = document.getElementById('nextBox'), now = Date.now();
   const n = S.events.filter(e => rank(e.impact) >= 2 && new Date(e.date).getTime() > now)
@@ -685,7 +699,8 @@ function renderNext(){
   box.innerHTML = '<div class="next '+impClass(n.impact)+soonCls+'"><div>'+
     '<div class="lbl">خبر مهم بعدی · '+esc(n.country)+' · '+fmtTime(new Date(t))+'</div>'+
     '<div class="ttl">'+esc(info ? info.fa : n.title)+'</div></div>'+
-    '<div class="cd" data-cd-big="'+t+'">'+countdown(t-now)+'</div></div>';
+    '<div class="cd" data-cd-big="'+t+'">'+countdown(t-now)+'</div>'+
+    bulls(n.impact)+'</div>';
 }
 
 setInterval(() => {
