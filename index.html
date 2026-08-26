@@ -8,6 +8,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>رادار خبر</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23121317'/%3E%3Cpath d='M12 44h6V32h-6zm13 0h6V20h-6zm13 0h6V26h-6z' fill='%23e2564c'/%3E%3Ccircle cx='51' cy='17' r='5' fill='%23e0a140'/%3E%3C/svg%3E">
+<script>
+(function(){
+  var t='auto';
+  try{ var p=JSON.parse(localStorage.getItem('ffprefs')||'null'); if(p&&p.theme) t=p.theme; }catch(e){}
+  var m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches;
+  document.documentElement.dataset.theme = (t==='auto' ? (m?'light':'dark') : t);
+})();
+</script>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-180.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -26,14 +34,33 @@
   --t-high:rgba(226,86,76,.11); --t-med:rgba(224,161,64,.085);
   --b-high:rgba(226,86,76,.34); --b-med:rgba(224,161,64,.26);
   --up:#4fbf9b; --down:#e2647a;
+  --t-high-h:rgba(226,86,76,.17); --t-med-h:rgba(224,161,64,.14);
+  --t-high-s:rgba(226,86,76,.22);
+  --line-strong:#39404d; --header-bg:rgba(18,19,23,.9);
+  --det-bg:rgba(11,12,14,.55); --body-text:#cfd2d8; --bg-glow:#191b21;
+  --shadow:rgba(0,0,0,.6);
 
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+:root[data-theme="light"]{
+  --ink:#f6f4f0; --ink-deep:#ece9e2; --bg-glow:#fffdf9;
+  --card:#ffffff; --card-2:#f2efe9;
+  --line:#e1ddd4; --line-soft:#eae6de; --rail:#ded9cf; --line-strong:#c9c3b7;
+  --paper:#1b1c20; --mist:#63666e; --faint:#8e9099;
+  --ember:#c8402f; --marigold:#a8720f; --steel:#4c6f92;
+  --t-high:rgba(200,64,47,.07); --t-med:rgba(168,114,15,.08);
+  --b-high:rgba(200,64,47,.3); --b-med:rgba(168,114,15,.28);
+  --t-high-h:rgba(200,64,47,.13); --t-med-h:rgba(168,114,15,.14);
+  --t-high-s:rgba(200,64,47,.16);
+  --up:#0f8f6c; --down:#c2415a;
+  --header-bg:rgba(246,244,240,.92); --det-bg:rgba(0,0,0,.035);
+  --body-text:#33353b; --shadow:rgba(60,50,35,.22);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
   background:var(--ink);
-  background-image:radial-gradient(120% 60% at 50% 0%,#191b21 0%,var(--ink) 45%,var(--ink-deep) 100%);
+  background-image:radial-gradient(120% 60% at 50% 0%,var(--bg-glow) 0%,var(--ink) 45%,var(--ink-deep) 100%);
   background-attachment:fixed;
   color:var(--paper);
   font-family:"Vazirmatn",Tahoma,system-ui,sans-serif;
@@ -44,7 +71,7 @@ body{
 :where(.iconbtn,.chip,.ev,tr.row):focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
 
 /* ---------- سربرگ ---------- */
-header{position:sticky;top:0;z-index:30;background:rgba(18,19,23,.9);
+header{position:sticky;top:0;z-index:30;background:var(--header-bg);
   backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid var(--line-soft)}
 .head-row{display:flex;align-items:center;gap:7px;padding:12px 0 10px}
 .brand{margin-inline-end:auto;line-height:1.15}
@@ -54,8 +81,23 @@ header{position:sticky;top:0;z-index:30;background:rgba(18,19,23,.9);
 .brand span{font-size:10.5px;color:var(--faint);letter-spacing:.2px}
 .iconbtn{background:transparent;border:1px solid var(--line);color:var(--mist);border-radius:10px;
   padding:6px 11px;font-family:inherit;font-size:11.5px;cursor:pointer;transition:.15s}
-.iconbtn:hover{color:var(--paper);border-color:#39404d;background:var(--card)}
+.iconbtn:hover{color:var(--paper);border-color:var(--line-strong);background:var(--card)}
 .iconbtn:disabled{opacity:.4}
+.tw{position:relative;display:inline-flex}
+.themepop{position:absolute;top:calc(100% + 7px);inset-inline-end:0;z-index:40;
+  background:var(--card);border:1px solid var(--line);border-radius:13px;padding:5px;
+  min-width:140px;display:flex;flex-direction:column;gap:2px;
+  box-shadow:0 14px 34px -14px var(--shadow)}
+.themepop[hidden]{display:none}
+.topt{background:transparent;border:0;color:var(--mist);font-family:inherit;font-size:12.5px;
+  text-align:start;padding:8px 10px;border-radius:9px;cursor:pointer;
+  display:flex;align-items:center;gap:9px;transition:.12s}
+.topt:hover{background:var(--card-2);color:var(--paper)}
+.topt::before{content:"";width:7px;height:7px;border-radius:50%;flex:0 0 auto;
+  border:1px solid var(--faint);background:transparent}
+.topt[aria-selected="true"]{color:var(--paper)}
+.topt[aria-selected="true"]::before{background:var(--marigold);border-color:var(--marigold)}
+.topt small{margin-inline-start:auto;font-size:10px;color:var(--faint)}
 
 /* ---------- خبر بعدی ---------- */
 .next{display:flex;align-items:center;gap:12px;background:var(--card);
@@ -81,7 +123,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(18,19,23,.9);
   border-radius:999px;padding:5px 13px;font-family:inherit;font-size:12px;cursor:pointer;
   white-space:nowrap;transition:.15s}
 .chip:hover{color:var(--paper)}
-.chip[aria-pressed="true"]{background:var(--card-2);color:var(--paper);border-color:#3d4552}
+.chip[aria-pressed="true"]{background:var(--card-2);color:var(--paper);border-color:var(--line-strong)}
 .chip.cur[aria-pressed="true"]{color:var(--marigold);border-color:var(--b-med);background:var(--t-med)}
 
 /* ---------- روز و ریل زمان ---------- */
@@ -103,14 +145,14 @@ header{position:sticky;top:0;z-index:30;background:rgba(18,19,23,.9);
   border:1px solid var(--line-soft);border-radius:14px;padding:11px 13px;margin-bottom:9px;
   color:inherit;font-family:inherit;display:grid;grid-template-columns:50px 1fr;gap:0 12px;
   cursor:pointer;transition:border-color .15s,background .15s,opacity .2s}
-.ev:hover{border-color:#39404d}
+.ev:hover{border-color:var(--line-strong)}
 .ev.past{opacity:.38}
 .ev.hi{background:var(--t-high);border-color:var(--b-high);border-inline-start:3px solid var(--ember)}
 .ev.md{background:var(--t-med);border-color:var(--b-med);border-inline-start:3px solid var(--marigold)}
 .ev.lo{border-inline-start:3px solid var(--rail)}
-.ev.hi:hover{background:rgba(226,86,76,.17)}
-.ev.md:hover{background:rgba(224,161,64,.14)}
-.ev.hi.soon{background:rgba(226,86,76,.22);border-color:var(--ember)}
+.ev.hi:hover{background:var(--t-high-h)}
+.ev.md:hover{background:var(--t-med-h)}
+.ev.hi.soon{background:var(--t-high-s);border-color:var(--ember)}
 .ev.hi.soon .rel{color:var(--ember)}
 .chev{position:absolute;inset-inline-end:10px;top:11px;color:var(--faint);font-size:10px;
   line-height:1;transition:transform .18s;pointer-events:none}
@@ -130,7 +172,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(18,19,23,.9);
   direction:ltr;display:inline-block;font-variant-numeric:tabular-nums}
 .vals .up b{color:var(--up)} .vals .down b{color:var(--down)}
 .body{grid-column:1/-1;margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);
-  font-size:13.5px;color:#cfd2d8;line-height:1.8}
+  font-size:13.5px;color:var(--body-text);line-height:1.8}
 .body h4{margin:0 0 3px;font-size:10px;color:var(--marigold);font-weight:700;letter-spacing:.6px}
 .body p{margin:0 0 11px} .body p:last-child{margin-bottom:0}
 
@@ -152,9 +194,9 @@ table.cal tr.row{cursor:pointer}
 table.cal tr.row:hover td{background:var(--card-2)}
 table.cal tr.hi td{background:var(--t-high)}
 table.cal tr.md td{background:var(--t-med)}
-table.cal tr.hi.soon td{background:rgba(226,86,76,.2)}
-table.cal tr.hi:hover td{background:rgba(226,86,76,.17)}
-table.cal tr.md:hover td{background:rgba(224,161,64,.14)}
+table.cal tr.hi.soon td{background:var(--t-high-s)}
+table.cal tr.hi:hover td{background:var(--t-high-h)}
+table.cal tr.md:hover td{background:var(--t-med-h)}
 table.cal tr.past td{opacity:.4}
 table.cal tr.hi td:first-child{box-shadow:inset 3px 0 0 var(--ember)}
 table.cal tr.md td:first-child{box-shadow:inset 3px 0 0 var(--marigold)}
@@ -179,7 +221,7 @@ td.numtd.up{color:var(--up)} td.numtd.down{color:var(--down)}
 .imp.hi span.on{background:var(--ember)}
 .imp.md span.on{background:var(--marigold)}
 .imp.lo span.on{background:var(--faint)}
-tr.det td{text-align:start;background:rgba(11,12,14,.55);padding:13px 15px}
+tr.det td{text-align:start;background:var(--det-bg);padding:13px 15px}
 tr.det .body{margin:0;padding:0;border:0}
 
 /* ---------- حالت‌های خالی ---------- */
@@ -197,6 +239,14 @@ tr.det .body{margin:0;padding:0;border:0}
   <div class="wrap head-row">
     <div class="brand"><b>رادار خبر</b><span>تقویم اقتصادی فارکس‌فکتوری</span></div>
     <button class="iconbtn" id="viewBtn">جدول</button>
+    <span class="tw">
+      <button class="iconbtn" id="themeBtn" aria-expanded="false">خودکار</button>
+      <div class="themepop" id="themePop" hidden>
+        <button class="topt" data-theme="light">روشن</button>
+        <button class="topt" data-theme="dark">تیره</button>
+        <button class="topt" data-theme="auto">خودکار<small>مثل گوشی</small></button>
+      </div>
+    </span>
     <button class="iconbtn" id="tzBtn">وقت دستگاه</button>
     <button class="iconbtn" id="refBtn">تازه‌سازی</button>
   </div>
@@ -390,7 +440,8 @@ function lookup(title){
 }
 
 /* ===================== state ===================== */
-const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards', open:new Set(), last:0, src:''};
+const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards',
+           theme:'auto', open:new Set(), last:0, src:''};
 const FLAG = {USD:"🇺🇸",EUR:"🇪🇺",GBP:"🇬🇧",JPY:"🇯🇵",CHF:"🇨🇭",CAD:"🇨🇦",AUD:"🇦🇺",NZD:"🇳🇿",CNY:"🇨🇳",All:"🌐"};
 const key = e => e.title + '|' + e.country + '|' + e.date;
 
@@ -437,12 +488,13 @@ function loadPrefs(){
   try{
     const p = JSON.parse(localStorage.getItem('ffprefs') || 'null');
     if(p){ S.imp = p.imp || S.imp; S.scope = p.scope || S.scope; S.tz = p.tz || S.tz;
-           S.view = p.view || S.view; S.curs = new Set(p.curs || []); }
+           S.view = p.view || S.view; S.theme = p.theme || S.theme;
+           S.curs = new Set(p.curs || []); }
   }catch(e){}
 }
 function savePrefs(){
   try{ localStorage.setItem('ffprefs', JSON.stringify(
-    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, curs:[...S.curs]})); }catch(e){}
+    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, theme:S.theme, curs:[...S.curs]})); }catch(e){}
 }
 
 /* ===================== time ===================== */
@@ -742,12 +794,45 @@ function showSource(){
   }
 }
 
+/* ---------- تم ---------- */
+const LIGHT = window.matchMedia ? matchMedia('(prefers-color-scheme: light)') : null;
+const THEME_FA = {light:'روشن', dark:'تیره', auto:'خودکار'};
+
+function applyTheme(){
+  const resolved = S.theme === 'auto' ? (LIGHT && LIGHT.matches ? 'light' : 'dark') : S.theme;
+  document.documentElement.dataset.theme = resolved;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', resolved === 'light' ? '#f6f4f0' : '#121317');
+  document.getElementById('themeBtn').textContent = THEME_FA[S.theme];
+  document.querySelectorAll('.topt').forEach(b =>
+    b.setAttribute('aria-selected', b.dataset.theme === S.theme));
+}
+if(LIGHT && LIGHT.addEventListener)
+  LIGHT.addEventListener('change', () => { if(S.theme === 'auto') applyTheme(); });
+
+const themeBtn = document.getElementById('themeBtn');
+const themePop = document.getElementById('themePop');
+function closeTheme(){ themePop.hidden = true; themeBtn.setAttribute('aria-expanded','false'); }
+themeBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const open = themePop.hidden;
+  themePop.hidden = !open;
+  themeBtn.setAttribute('aria-expanded', String(open));
+});
+themePop.addEventListener('click', e => {
+  const b = e.target.closest('.topt'); if(!b) return;
+  S.theme = b.dataset.theme;
+  savePrefs(); applyTheme(); closeTheme();
+});
+document.addEventListener('click', e => { if(!e.target.closest('.tw')) closeTheme(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeTheme(); });
+
 /* نصب روی صفحه‌ی اصلی */
 if('serviceWorker' in navigator){
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
 
-loadPrefs(); syncChips(); boot(false);
+loadPrefs(); applyTheme(); syncChips(); boot(false);
 setInterval(() => { if(!document.hidden) boot(false); }, 15*60*1000);
 </script>
 </body>
