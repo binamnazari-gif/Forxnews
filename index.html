@@ -21,7 +21,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Martian+Mono:wght@500;600&display=swap">
 <style>
 :root{
   /* جوهر گرم — نه آبی، نه مشکی مطلق */
@@ -35,12 +35,15 @@
   --b-high:rgba(226,86,76,.34); --b-med:rgba(224,161,64,.26);
   --up:#4fbf9b; --down:#e2647a;
   --t-high-h:rgba(226,86,76,.17); --t-med-h:rgba(224,161,64,.14);
-  --t-high-s:rgba(226,86,76,.22);
+  --t-high-s:rgba(226,86,76,.22); --ring-high:rgba(226,86,76,.2);
+  --gold:#e0b452; --gold-hi:#f7e2a8; --gold-lo:#b8862a;
+  --gold-soft:rgba(224,180,82,.13); --gold-line:rgba(224,180,82,.34);
   --line-strong:#39404d; --header-bg:rgba(18,19,23,.9);
   --det-bg:rgba(11,12,14,.55); --body-text:#cfd2d8; --bg-glow:#191b21;
   --shadow:rgba(0,0,0,.6);
 
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --clock:"Martian Mono","IBM Plex Mono",ui-monospace,monospace;
 }
 :root[data-theme="light"]{
   --ink:#f6f4f0; --ink-deep:#ece9e2; --bg-glow:#fffdf9;
@@ -51,7 +54,9 @@
   --t-high:rgba(200,64,47,.07); --t-med:rgba(168,114,15,.08);
   --b-high:rgba(200,64,47,.3); --b-med:rgba(168,114,15,.28);
   --t-high-h:rgba(200,64,47,.13); --t-med-h:rgba(168,114,15,.14);
-  --t-high-s:rgba(200,64,47,.16);
+  --t-high-s:rgba(200,64,47,.16); --ring-high:rgba(200,64,47,.18);
+  --gold:#96690c; --gold-hi:#c09429; --gold-lo:#704e08;
+  --gold-soft:rgba(150,105,12,.11); --gold-line:rgba(150,105,12,.3);
   --up:#0f8f6c; --down:#c2415a;
   --header-bg:rgba(246,244,240,.92); --det-bg:rgba(0,0,0,.035);
   --body-text:#33353b; --shadow:rgba(60,50,35,.22);
@@ -100,21 +105,23 @@ header{position:sticky;top:0;z-index:30;background:var(--header-bg);
 .topt small{margin-inline-start:auto;font-size:10px;color:var(--faint)}
 
 /* ---------- خبر بعدی ---------- */
-.next{display:flex;align-items:center;gap:12px;background:var(--card);
-  border:1px solid var(--line);border-radius:16px;padding:13px 15px;margin:14px 0 12px;
+.next{display:flex;align-items:center;gap:11px;
+  background:linear-gradient(105deg,var(--gold-soft),transparent 62%),var(--card);
+  border:1px solid var(--gold-line);border-radius:16px;padding:13px 15px;margin:14px 0 12px;
   position:relative;overflow:hidden}
-.next::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--mist)}
+.next::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo))}
 .next .lbl{font-size:10.5px;color:var(--faint);letter-spacing:.2px}
 .next .ttl{font-weight:700;font-size:15px;margin-top:2px;line-height:1.4}
-.next .cd{margin-inline-start:auto;font-family:var(--mono);font-size:25px;font-weight:600;
-  direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:-.5px;color:var(--paper)}
-.next.hi{background:linear-gradient(90deg,var(--t-high),transparent 70%),var(--card);border-color:var(--b-high)}
-.next.hi::before{background:var(--ember)} .next.hi .cd{color:var(--ember)}
-.next.md{background:linear-gradient(90deg,var(--t-med),transparent 70%),var(--card);border-color:var(--b-med)}
-.next.md::before{background:var(--marigold)} .next.md .cd{color:var(--marigold)}
-.next.soon{box-shadow:0 0 0 1px var(--b-high),0 6px 26px -10px rgba(226,86,76,.7);
-  animation:breathe 2.6s ease-in-out infinite}
-@keyframes breathe{50%{box-shadow:0 0 0 1px var(--ember),0 8px 32px -8px rgba(226,86,76,.55)}}
+.next .cd{margin-inline-start:auto;font-family:var(--clock);
+  font-size:clamp(17px,5.2vw,23px);font-weight:500;direction:ltr;white-space:nowrap;
+  font-variant-numeric:tabular-nums;letter-spacing:-1px;
+  background:linear-gradient(175deg,var(--gold-hi) 4%,var(--gold) 52%,var(--gold-lo) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent}
+.next.soon{box-shadow:0 0 0 1px var(--gold-line),0 6px 26px -12px var(--gold);
+  animation:breathe 2.8s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 1px var(--gold),0 9px 34px -10px var(--gold)}}
 
 /* ---------- فیلترها ---------- */
 .filters{display:flex;gap:6px;overflow-x:auto;padding:3px 0 10px;scrollbar-width:none}
@@ -128,8 +135,6 @@ header{position:sticky;top:0;z-index:30;background:var(--header-bg);
 
 /* ---------- روز و ریل زمان ---------- */
 #list{position:relative}
-#list::before{content:"";position:absolute;inset-inline-end:37px;top:34px;bottom:8px;
-  width:1px;background:var(--rail);z-index:0}
 .day{position:sticky;top:55px;z-index:20;display:flex;align-items:baseline;gap:9px;
   padding:16px 0 9px;background:var(--ink);background-image:linear-gradient(var(--ink),var(--ink))}
 .day b{font-size:12.5px;font-weight:700;letter-spacing:.2px}
@@ -147,12 +152,12 @@ header{position:sticky;top:0;z-index:30;background:var(--header-bg);
   cursor:pointer;transition:border-color .15s,background .15s,opacity .2s}
 .ev:hover{border-color:var(--line-strong)}
 .ev.past{opacity:.38}
-.ev.hi{background:var(--t-high);border-color:var(--b-high);border-inline-start:3px solid var(--ember)}
+.ev.hi{background:var(--t-high);border:1px solid var(--ember);box-shadow:0 0 0 1px var(--ring-high)}
 .ev.md{background:var(--t-med);border-color:var(--b-med);border-inline-start:3px solid var(--marigold)}
 .ev.lo{border-inline-start:3px solid var(--rail)}
 .ev.hi:hover{background:var(--t-high-h)}
 .ev.md:hover{background:var(--t-med-h)}
-.ev.hi.soon{background:var(--t-high-s);border-color:var(--ember)}
+.ev.hi.soon{background:var(--t-high-s);border-color:var(--ember);box-shadow:0 0 0 2px var(--ring-high)}
 .ev.hi.soon .rel{color:var(--ember)}
 .chev{position:absolute;inset-inline-end:10px;top:11px;color:var(--faint);font-size:10px;
   line-height:1;transition:transform .18s;pointer-events:none}
@@ -230,6 +235,7 @@ tr.det .body{margin:0;padding:0;border:0}
 .note{font-size:11px;color:var(--faint);text-align:center;padding:20px 8px 5px;line-height:2}
 .credit{font-size:11px;color:var(--faint);text-align:center;padding:0 8px 20px;margin:0}
 .credit b{color:var(--mist);font-weight:600}
+.ver{font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-inline-start:7px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -264,7 +270,7 @@ tr.det .body{margin:0;padding:0;border:0}
   <div class="filters" id="curFilters"></div>
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
   <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال<span id="upd"></span></p>
-  <p class="credit">طراحی و توسعه: <b>علی نظری</b></p>
+  <p class="credit">طراحی و توسعه: <b>علی نظری</b><span class="ver">v1.5</span></p>
 </div>
 
 <script>
