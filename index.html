@@ -106,10 +106,12 @@ header{position:sticky;top:0;z-index:30;background:var(--header-bg);
 
 /* ---------- خبر بعدی ---------- */
 .next{display:flex;align-items:center;gap:11px;background:var(--card);
-  border:1px solid var(--gold);box-shadow:0 0 0 1px var(--gold-soft);
-  border-radius:16px;padding:13px 15px;margin:14px 0 12px}
+  border:1px solid var(--line-soft);border-radius:14px;padding:12px 13px;margin:14px 0 12px}
+.next.hi{background:var(--t-high);border:1px solid var(--ember);box-shadow:0 0 0 1px var(--ring-high)}
+.next.md{background:var(--t-med);border-color:var(--b-med);border-inline-start:3px solid var(--marigold)}
+.next.lo{border-inline-start:3px solid var(--rail)}
 .next .lbl{font-size:10.5px;color:var(--faint);letter-spacing:.2px}
-.next .ttl{font-weight:700;font-size:15px;margin-top:2px;line-height:1.4}
+.next .ttl{font-weight:700;font-size:15.5px;margin-top:3px;line-height:1.45}
 .next .cd{font-family:var(--clock);color:var(--gold);
   font-size:clamp(17px,5vw,23px);font-weight:400;direction:ltr;white-space:nowrap;
   font-variant-numeric:tabular-nums;letter-spacing:.5px;line-height:1.1;
@@ -118,7 +120,7 @@ header{position:sticky;top:0;z-index:30;background:var(--header-bg);
 .bull{width:23px;height:20px;flex:0 0 auto;fill:none;stroke:var(--faint);
   stroke-width:3.2;stroke-linejoin:round}
 .bull.on{fill:var(--ember);stroke:none}
-.next.soon{box-shadow:0 0 0 2px var(--gold)}
+.next.hi.soon{background:var(--t-high-s);border-color:var(--ember);box-shadow:0 0 0 2px var(--ring-high)}
 
 /* ---------- فیلترها ---------- */
 .filters{display:flex;gap:6px;overflow-x:auto;padding:3px 0 10px;scrollbar-width:none}
@@ -275,7 +277,7 @@ tr.det .body{margin:0;padding:0;border:0}
   <div class="filters" id="curFilters"></div>
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
   <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال<span id="upd"></span></p>
-  <p class="credit">طراحی و توسعه: <b>علی نظری</b><span class="ver">v1.9</span></p>
+  <p class="credit">طراحی و توسعه: <b>علی نظری</b><span class="ver">v2.0</span></p>
 </div>
 
 <script>
