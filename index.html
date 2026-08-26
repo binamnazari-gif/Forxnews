@@ -141,10 +141,13 @@ header{position:sticky;top:0;z-index:30;background:rgba(18,19,23,.9);
 .calhead span{margin-inline-start:auto;font-size:11px;color:var(--mist);font-family:var(--mono);direction:ltr}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:0 0 14px 14px;
   background:var(--card);-webkit-overflow-scrolling:touch}
-table.cal{width:100%;min-width:440px;border-collapse:collapse;font-size:12.5px}
+table.cal{width:100%;min-width:340px;border-collapse:collapse;font-size:12.5px;table-layout:fixed}
+table.cal.has-actual{min-width:430px}
+table.cal .w-t{width:50px} table.cal .w-c{width:56px}
+table.cal .w-i{width:32px} table.cal .w-n{width:58px}
 table.cal th{background:var(--card-2);color:var(--faint);font-size:10px;font-weight:700;
-  letter-spacing:.4px;padding:9px 6px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
-table.cal td{padding:10px 6px;text-align:center;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+  letter-spacing:.4px;padding:9px 4px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+table.cal td{padding:10px 4px;text-align:center;border-bottom:1px solid var(--line-soft);vertical-align:middle}
 table.cal tr.row{cursor:pointer}
 table.cal tr.row:hover td{background:var(--card-2)}
 table.cal tr.hi td{background:var(--t-high)}
@@ -160,14 +163,16 @@ tr.dayrow td{background:var(--ink);font-weight:700;font-size:12px;text-align:sta
 tr.dayrow span{color:var(--faint);font-family:var(--mono);font-size:11px;margin-inline-start:8px}
 td.ttd{font-family:var(--mono);font-weight:600;direction:ltr;white-space:nowrap;font-size:13px;
   font-variant-numeric:tabular-nums}
-td.curtd{white-space:nowrap;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--mist)}
+td.curtd{white-space:nowrap;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--mist);
+  overflow:hidden}
 td.curtd i{font-style:normal;font-size:14px;margin-inline-end:3px;vertical-align:-1px}
-td.evt{text-align:start;font-weight:600;line-height:1.55;min-width:150px}
-td.evt small{display:block;font-weight:400;color:var(--faint);font-size:9.5px;direction:ltr}
+td.evt{text-align:start;font-weight:600;line-height:1.55;padding-inline:8px;overflow-wrap:anywhere}
+td.evt small{display:block;font-weight:400;color:var(--faint);font-size:9.5px;direction:ltr;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 td.evt .chev-t{color:var(--faint);font-size:9px;margin-inline-start:5px}
 tr[data-open="1"] td.evt .chev-t{color:var(--paper)}
-td.numtd{font-family:var(--mono);direction:ltr;white-space:nowrap;color:var(--mist);font-size:12px;
-  font-variant-numeric:tabular-nums}
+td.numtd{font-family:var(--mono);direction:ltr;white-space:nowrap;color:var(--mist);font-size:11.5px;
+  font-variant-numeric:tabular-nums;letter-spacing:-.2px}
 td.numtd.up{color:var(--up)} td.numtd.down{color:var(--down)}
 .imp{display:inline-flex;gap:3px;direction:ltr}
 .imp span{width:5px;height:5px;border-radius:50%;background:var(--rail)}
@@ -605,9 +610,10 @@ function renderTable(){
   list.innerHTML =
     '<div class="calhead"><b>تقویم اقتصادی</b>'+
       '<span>'+weekday(anchor)+' · '+dateFa(anchor)+'</span></div>'+
-    '<div class="tablewrap"><table class="cal"><thead><tr>'+
-      '<th>زمان</th><th>ارز</th><th>اهمیت</th><th>رویداد</th><th>قبلی</th><th>پیش‌بینی</th>'+
-      (hasActual ? '<th>واقعی</th>' : '')+
+    '<div class="tablewrap"><table class="cal'+(hasActual ? ' has-actual' : '')+'"><thead><tr>'+
+      '<th class="w-t">زمان</th><th class="w-c">ارز</th><th class="w-i">اهمیت</th>'+
+      '<th>رویداد</th><th class="w-n">قبلی</th><th class="w-n">پیش‌بینی</th>'+
+      (hasActual ? '<th class="w-n">واقعی</th>' : '')+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
