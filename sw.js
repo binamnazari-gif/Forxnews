@@ -1,5 +1,5 @@
 /* رادار خبر — سرویس‌ورکر */
-const V = 'radar-v13';
+const V = 'radar-v14';
 const SHELL = ['./', './index.html', './manifest.webmanifest',
                './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
