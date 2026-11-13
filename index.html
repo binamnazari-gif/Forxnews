@@ -324,6 +324,117 @@ header{
 }
 .topt small{margin-inline-start:auto;font-size:10.5px;color:var(--text-muted);font-weight:500}
 
+
+/* ---------- هشدار صوتی و نوتیفیکیشن قبل از خبر ---------- */
+.iconbtn.alert-on{
+  background:var(--hi-bg);
+  border-color:var(--hi-border);
+  color:var(--hi);
+}
+.alertpop{
+  min-width:215px;
+  padding:8px;
+  gap:6px;
+}
+.alertpop-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:12px;
+  font-weight:800;
+  color:var(--text);
+  padding:2px 4px 4px;
+  border-bottom:1px solid var(--border-soft);
+}
+.alert-mins{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:4px;
+}
+.amin-btn{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text-sec);
+  font-family:inherit;
+  font-size:11.5px;
+  font-weight:700;
+  padding:6px 4px;
+  border-radius:8px;
+  cursor:pointer;
+  text-align:center;
+  transition:.12s;
+}
+.amin-btn[aria-pressed="true"]{
+  background:var(--hi-bg);
+  border-color:var(--hi-border);
+  color:var(--hi);
+}
+.alert-actions{
+  display:flex;
+  gap:5px;
+  margin-top:2px;
+}
+.alert-act-btn{
+  flex:1;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-family:inherit;
+  font-size:11.5px;
+  font-weight:700;
+  padding:6px 8px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.alert-act-btn.primary{
+  background:var(--hi);
+  border-color:var(--hi);
+  color:#fff;
+}
+.alert-toast{
+  position:fixed;
+  bottom:18px;
+  inset-inline:14px;
+  max-width:480px;
+  margin:0 auto;
+  z-index:60;
+  background:var(--surface);
+  border:1.5px solid var(--hi);
+  border-radius:14px;
+  padding:12px 14px;
+  box-shadow:0 16px 36px -10px rgba(0,0,0,.55);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.alert-toast[hidden]{display:none}
+.alert-toast-txt{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.55;
+}
+.alert-toast-txt small{
+  display:block;
+  font-size:11.5px;
+  font-weight:500;
+  color:var(--text-sec);
+  margin-top:2px;
+}
+.alert-toast-close{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text-sec);
+  border-radius:8px;
+  padding:4px 10px;
+  font-family:inherit;
+  font-size:11.5px;
+  font-weight:700;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+
 /* ---------- کارت خبر مهم بعدی ---------- */
 .next{
   position:relative;
@@ -1549,6 +1660,27 @@ tr.det .body{margin:0;padding:0;border:0}
         </div>
       </span>
 
+      <span class="tw">
+        <button class="iconbtn icon-only" id="alertBtn" aria-expanded="false" title="هشدار صوتی قبل از خبر">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <div class="themepop alertpop" id="alertPop" hidden>
+          <div class="alertpop-head">
+            <span id="alertPopTitle">هشدار خبر مهم (High)</span>
+            <span id="alertStatusBadge" style="font-size:10.5px;color:var(--text-muted)">خاموش</span>
+          </div>
+          <div class="alert-mins" id="alertMins">
+            <button class="amin-btn" data-min="5" aria-pressed="true">۵ دقیقه</button>
+            <button class="amin-btn" data-min="10" aria-pressed="false">۱۰ دقیقه</button>
+            <button class="amin-btn" data-min="15" aria-pressed="false">۱۵ دقیقه</button>
+          </div>
+          <div class="alert-actions">
+            <button class="alert-act-btn primary" id="alertToggleBtn">فعال کردن</button>
+            <button class="alert-act-btn" id="alertTestBtn">تست صدا</button>
+          </div>
+        </div>
+      </span>
+
       <button class="iconbtn icon-only" id="refBtn" title="تازه‌سازی تقویم">
         <svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
       </button>
@@ -1588,6 +1720,11 @@ tr.det .body{margin:0;padding:0;border:0}
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
   <p class="note"><span id="noteBase">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال</span><span id="upd"></span></p>
   <p class="credit"><span class="credit-main"><span id="creditLbl">طراحی و توسعه:</span> <b id="creditName">علی نظری</b></span><span class="ver" id="verTag">نسخه ۳.۰</span></p>
+</div>
+
+<div class="alert-toast" id="alertToast" hidden>
+  <div class="alert-toast-txt" id="alertToastTxt"></div>
+  <button class="alert-toast-close" id="alertToastClose">باشه</button>
 </div>
 
 <script>
@@ -1809,7 +1946,7 @@ const FALLBACK_EVENTS = [
 /* ===================== state ===================== */
 const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards',
            theme:'auto', lang:'fa', open:new Set(), last:0, src:'',
-           mtab:'', strMode:'mm', corrPair:'EUR/USD',
+           mtab:'', strMode:'mm', corrPair:'EUR/USD', alertOn:false, alertMin:10, alerted:new Set(),
            fx:{
              strength:{GBP:74, USD:68, EUR:58, JPY:52, CHF:46, CAD:41, AUD:34, NZD:29},
              perf:{GBP:0.18, CAD:0.14, EUR:0.06, JPY:0.02, USD:0.00, NZD:-0.09, CHF:-0.15, AUD:-0.26},
@@ -1888,7 +2025,19 @@ const UI = {
     noteBase: 'داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال',
     creditLbl: 'طراحی و توسعه:',
     creditName: 'علی نظری',
-    verTag: 'نسخه ۳.۵',
+    verTag: 'نسخه ۳.۶',
+    alertTitle: 'هشدار خبر مهم (High)',
+    alertOn: 'فعال',
+    alertOff: 'خاموش',
+    alertEnable: 'فعال کردن',
+    alertDisable: 'غیرفعال',
+    alertTest: 'تست صدا',
+    alertOk: 'باشه',
+    alertMin5: '۵ دقیقه',
+    alertMin10: '۱۰ دقیقه',
+    alertMin15: '۱۵ دقیقه',
+    alertTestMsg: 'تست هشدار صوتی و اعلان با موفقیت انجام شد',
+    alertTestSub: 'هشدار خبرهای قرمز (High) فعال است.',
     mtabSess: 'ساعت سشن‌ها',
     mtabStr: 'قدرت ارزها (MarketMilk)',
     mtabCorr: 'همبستگی (Investing)',
@@ -1963,7 +2112,19 @@ const UI = {
     noteBase: 'Data from weekly Forex Factory feed · Educational insights, not financial advice',
     creditLbl: 'Designed & Developed by',
     creditName: 'Ali Nazari',
-    verTag: 'v3.5',
+    verTag: 'v3.6',
+    alertTitle: 'High-Impact News Alert',
+    alertOn: 'Active',
+    alertOff: 'Off',
+    alertEnable: 'Enable',
+    alertDisable: 'Disable',
+    alertTest: 'Test Sound',
+    alertOk: 'OK',
+    alertMin5: '5 min',
+    alertMin10: '10 min',
+    alertMin15: '15 min',
+    alertTestMsg: 'Sound & notification alert test succeeded',
+    alertTestSub: 'Alerts for High-impact events are active.',
     mtabSess: 'Forex Sessions',
     mtabStr: 'Currency Strength',
     mtabCorr: 'Correlation Matrix',
@@ -2036,13 +2197,15 @@ function loadPrefs(){
       S.view = p.view || S.view;
       S.theme = p.theme || S.theme;
       S.lang = p.lang || S.lang;
+      if(typeof p.alertOn === 'boolean') S.alertOn = p.alertOn;
+      if(p.alertMin) S.alertMin = p.alertMin;
       S.curs = new Set(p.curs || []);
     }
   }catch(e){}
 }
 function savePrefs(){
   try{ localStorage.setItem('ffprefs', JSON.stringify(
-    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, theme:S.theme, lang:S.lang, curs:[...S.curs]})); }catch(e){}
+    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, theme:S.theme, lang:S.lang, alertOn:S.alertOn, alertMin:S.alertMin, curs:[...S.curs]})); }catch(e){}
 }
 
 /* ===================== time ===================== */
@@ -2532,6 +2695,93 @@ function renderMradar(){
   }
 }
 
+
+/* ===================== هشدار صوتی و نوتیفیکیشن ===================== */
+let audioCtx = null;
+function playRadarChime(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!audioCtx) audioCtx = new AC();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    [[880, 0, 0.16], [1174.66, 0.18, 0.24]].forEach(([freq, offset, dur]) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + offset);
+      gain.gain.setValueAtTime(0.001, now + offset);
+      gain.gain.exponentialRampToValueAtTime(0.22, now + offset + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + offset + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + dur + 0.02);
+    });
+  }catch(e){}
+}
+
+let toastTimer = null;
+function showAlertToast(title, sub){
+  const el = document.getElementById('alertToast');
+  document.getElementById('alertToastTxt').innerHTML = esc(title) + (sub ? '<small>'+esc(sub)+'</small>' : '');
+  el.hidden = false;
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 12000);
+}
+
+function sendBrowserNotif(title, body){
+  try{
+    if('Notification' in window && Notification.permission === 'granted'){
+      new Notification(title, {body: body, icon: './icon-192.png'});
+    }
+  }catch(e){}
+}
+
+function checkNewsAlerts(){
+  if(!S.alertOn || !S.events.length) return;
+  const now = Date.now(), winMs = S.alertMin * 60 * 1000;
+  for(const e of S.events){
+    if(rank(e.impact) < 3) continue;
+    const t = new Date(e.date).getTime();
+    const diff = t - now;
+    if(diff > 0 && diff <= winMs){
+      const k = key(e) + '@' + S.alertMin;
+      if(S.alerted.has(k)) continue;
+      S.alerted.add(k);
+      const minsLeft = Math.max(1, Math.ceil(diff / 60000));
+      const info = lookup(e.title);
+      const evName = S.lang === 'fa' ? (info ? info.fa : e.title) : e.title;
+      const msgTitle = S.lang === 'fa'
+        ? ('🔔 هشدار خبر مهم (' + e.country + ') تا ' + toFaNum(minsLeft) + ' دقیقه دیگر')
+        : ('🔔 High-Impact Alert (' + e.country + ') in ' + minsLeft + ' min');
+      const msgBody = evName + ' · ' + fmtTime(new Date(t));
+      playRadarChime();
+      showAlertToast(msgTitle, msgBody);
+      sendBrowserNotif(msgTitle, msgBody);
+    }
+  }
+}
+
+function syncAlertUI(){
+  const L = UI[S.lang];
+  const btn = document.getElementById('alertBtn');
+  btn.classList.toggle('alert-on', S.alertOn);
+  document.getElementById('alertPopTitle').textContent = L.alertTitle;
+  const badge = document.getElementById('alertStatusBadge');
+  badge.textContent = S.alertOn ? L.alertOn : L.alertOff;
+  badge.style.color = S.alertOn ? 'var(--hi)' : 'var(--text-muted)';
+  document.getElementById('alertToggleBtn').textContent = S.alertOn ? L.alertDisable : L.alertEnable;
+  document.getElementById('alertTestBtn').textContent = L.alertTest;
+  document.getElementById('alertToastClose').textContent = L.alertOk;
+  const minBtns = document.querySelectorAll('#alertMins .amin-btn');
+  const mapMin = {'5':L.alertMin5, '10':L.alertMin10, '15':L.alertMin15};
+  minBtns.forEach(b => {
+    b.textContent = mapMin[b.dataset.min];
+    b.setAttribute('aria-pressed', String(+b.dataset.min === S.alertMin));
+  });
+}
+
 function render(){
   if(S.view === 'table') renderTable(); else renderCards();
   renderNext();
@@ -2712,6 +2962,7 @@ setInterval(() => {
   if(b) b.innerHTML = countdownHTML(+b.dataset.cdBig - now);
   const nw = document.querySelector('[data-now]');
   if(nw) nw.textContent = L.now + ' ' + fmtTime(new Date());
+  checkNewsAlerts();
 }, 1000);
 
 /* ===================== interactions ===================== */
@@ -2806,6 +3057,7 @@ function applyLang(){
   document.getElementById('mtabCorr').textContent = L.mtabCorr;
   syncChips();
   applyTheme();
+  syncAlertUI();
 }
 
 function buildCurFilters(){
@@ -2916,8 +3168,43 @@ themePop.addEventListener('click', e => {
   S.theme = b.dataset.theme;
   savePrefs(); applyTheme(); closeTheme();
 });
-document.addEventListener('click', e => { if(!e.target.closest('.tw')) closeTheme(); });
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeTheme(); });
+
+const alertBtn = document.getElementById('alertBtn');
+const alertPop = document.getElementById('alertPop');
+function closeAlert(){ alertPop.hidden = true; alertBtn.setAttribute('aria-expanded','false'); }
+alertBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  closeTheme();
+  const open = alertPop.hidden;
+  alertPop.hidden = !open;
+  alertBtn.setAttribute('aria-expanded', String(open));
+});
+document.getElementById('alertMins').addEventListener('click', e => {
+  const b = e.target.closest('.amin-btn'); if(!b) return;
+  S.alertMin = +b.dataset.min;
+  savePrefs(); syncAlertUI(); checkNewsAlerts();
+});
+document.getElementById('alertToggleBtn').addEventListener('click', () => {
+  S.alertOn = !S.alertOn;
+  if(S.alertOn){
+    playRadarChime();
+    try{ if('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); }catch(e){}
+  }
+  savePrefs(); syncAlertUI(); checkNewsAlerts();
+});
+document.getElementById('alertTestBtn').addEventListener('click', () => {
+  const L = UI[S.lang];
+  playRadarChime();
+  try{ if('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); }catch(e){}
+  showAlertToast(L.alertTestMsg, L.alertTestSub);
+  sendBrowserNotif(L.alertTestMsg, L.alertTestSub);
+});
+document.getElementById('alertToastClose').addEventListener('click', () => {
+  document.getElementById('alertToast').hidden = true;
+});
+
+document.addEventListener('click', e => { if(!e.target.closest('.tw')){ closeTheme(); closeAlert(); } });
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeTheme(); closeAlert(); } });
 
 if('serviceWorker' in navigator){
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
