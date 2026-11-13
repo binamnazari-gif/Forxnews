@@ -3,17 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#14161b">
+<meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>فارکس فکتوری — تقویم اقتصادی</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314161b'/%3E%3Cpath d='M14 44h7V30h-7zm14.5 0h7V18h-7zM43 44h7V25h-7z' fill='%23e05a4f'/%3E%3Ccircle cx='46.5' cy='15' r='4.5' fill='%23df9b38'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230F172A'/%3E%3Cpath d='M14 44h7V30h-7zm14.5 0h7V18h-7zM43 44h7V25h-7z' fill='%23F43F5E'/%3E%3Ccircle cx='46.5' cy='15' r='4.5' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script>
 (function(){
-  var t='auto';
-  try{ var p=JSON.parse(localStorage.getItem('ffprefs')||'null'); if(p&&p.theme) t=p.theme; }catch(e){}
+  var t='auto', l='fa';
+  try{
+    var p=JSON.parse(localStorage.getItem('ffprefs')||'null');
+    if(p&&p.theme) t=p.theme;
+    if(p&&p.lang) l=p.lang;
+  }catch(e){}
   var m=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches;
   document.documentElement.dataset.theme = (t==='auto' ? (m?'light':'dark') : t);
+  document.documentElement.lang = l;
+  document.documentElement.dir = (l==='en' ? 'ltr' : 'rtl');
 })();
 </script>
 <link rel="manifest" href="./manifest.webmanifest">
@@ -21,97 +27,105 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 :root{
-  /* تم تیره ملایم و چشم‌نواز (Warm Slate Dark) */
-  --bg:#13161c;
-  --bg-deep:#0e1015;
-  --bg-glow:#1b2029;
-  --surface:#1b1f27;
-  --surface-2:#232833;
-  --surface-3:#2b313e;
-  --border:#2a303c;
-  --border-soft:#222731;
-  --border-strong:#3a4252;
+  /* پالت استاندارد تیره (Slate Dark — کنتراست بالا و استاندارد WCAG AAA/AA بدون طوسیِ بی‌روح روی مشکی) */
+  --bg:#0F172A;
+  --bg-deep:#0B1120;
+  --bg-glow:#1E293B;
+  --surface:#1E293B;
+  --surface-2:#283548;
+  --surface-3:#334155;
+  --border:#334155;
+  --border-soft:#263346;
+  --border-strong:#475569;
 
-  --text:#e6e8ec;
-  --text-sec:#9da3b0;
-  --text-muted:#6c7280;
-  --body-text:#cfd4de;
+  /* متن‌های کاملاً خوانا و روشن روی پس‌زمینه سرمه‌ای تیره */
+  --text:#F8FAFC;
+  --text-sec:#E2E8F0;
+  --text-muted:#CBD5E1;
+  --body-text:#F1F5F9;
 
-  /* رنگ‌های اهمیت با کنتراست ملایم */
-  --hi:#e05a4f;
-  --hi-bg:rgba(224,90,79,.09);
-  --hi-bg-hover:rgba(224,90,79,.14);
-  --hi-border:rgba(224,90,79,.32);
-  --hi-ring:rgba(224,90,79,.18);
+  /* رنگ‌های معنایی هماهنگ در تم تیره */
+  --hi:#FB7185;
+  --hi-bg:rgba(244,63,94,.13);
+  --hi-bg-hover:rgba(244,63,94,.20);
+  --hi-border:rgba(251,113,133,.42);
+  --hi-ring:rgba(251,113,133,.25);
 
-  --md:#df9b38;
-  --md-bg:rgba(223,155,56,.08);
-  --md-bg-hover:rgba(223,155,56,.13);
-  --md-border:rgba(223,155,56,.28);
+  --md:#FBBF24;
+  --md-bg:rgba(245,158,11,.12);
+  --md-bg-hover:rgba(245,158,11,.18);
+  --md-border:rgba(251,191,36,.38);
 
-  --lo:#64748b;
-  --lo-bg:rgba(100,116,139,.08);
+  --lo:#94A3B8;
+  --lo-bg:rgba(148,163,184,.12);
 
-  --up:#38b28b;
-  --up-bg:rgba(56,178,139,.12);
-  --down:#e05d72;
-  --down-bg:rgba(224,93,114,.12);
+  --up:#34D399;
+  --up-bg:rgba(16,185,129,.15);
+  --down:#FB7185;
+  --down-bg:rgba(244,63,94,.15);
 
-  --accent:#df9b38;
-  --accent-soft:rgba(223,155,56,.14);
-  --header-bg:rgba(19,22,28,.86);
-  --det-bg:rgba(14,16,21,.55);
-  --shadow:0 10px 28px -10px rgba(0,0,0,.55);
-  --bull-off:#353c4b;
+  --accent:#38BDF8;
+  --accent-soft:rgba(56,189,248,.16);
+  --accent-border:rgba(56,189,248,.42);
 
+  --header-bg:rgba(15,23,42,.88);
+  --det-bg:rgba(11,17,32,.65);
+  --shadow:0 12px 28px -10px rgba(2,6,23,.65);
+  --bull-off:#475569;
+
+  --font-fa:"Vazirmatn",Tahoma,system-ui,sans-serif;
+  --font-en:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
 
 :root[data-theme="light"]{
-  /* تم روشن گرم و کاغذی بدون سفیدی خیره‌کننده (Warm Soft Ivory) */
-  --bg:#f4f1ea;
-  --bg-deep:#ebe6dc;
-  --bg-glow:#faf8f4;
-  --surface:#fcfaf6;
-  --surface-2:#eeeae1;
-  --surface-3:#e3ded3;
-  --border:#dcd6c9;
-  --border-soft:#e5e0d5;
-  --border-strong:#c6bfb0;
+  /* پالت استاندارد روشن (Clean Cool Alabaster & Slate — هماهنگ با تم تیره و کنتراست عالی) */
+  --bg:#F1F5F9;
+  --bg-deep:#E2E8F0;
+  --bg-glow:#F8FAFC;
+  --surface:#FFFFFF;
+  --surface-2:#F1F5F9;
+  --surface-3:#E2E8F0;
+  --border:#CBD5E1;
+  --border-soft:#E2E8F0;
+  --border-strong:#94A3B8;
 
-  --text:#1f2329;
-  --text-sec:#5a606b;
-  --text-muted:#868c98;
-  --body-text:#343942;
+  /* متن‌های سرمه‌ای تیره با خوانایی فوق‌العاده */
+  --text:#0F172A;
+  --text-sec:#1E293B;
+  --text-muted:#475569;
+  --body-text:#1E293B;
 
-  --hi:#c84337;
-  --hi-bg:rgba(200,67,55,.065);
-  --hi-bg-hover:rgba(200,67,55,.11);
-  --hi-border:rgba(200,67,55,.28);
-  --hi-ring:rgba(200,67,55,.14);
+  --hi:#E11D48;
+  --hi-bg:rgba(225,29,72,.07);
+  --hi-bg-hover:rgba(225,29,72,.12);
+  --hi-border:rgba(225,29,72,.32);
+  --hi-ring:rgba(225,29,72,.16);
 
-  --md:#b87614;
-  --md-bg:rgba(184,118,20,.07);
-  --md-bg-hover:rgba(184,118,20,.12);
-  --md-border:rgba(184,118,20,.26);
+  --md:#D97706;
+  --md-bg:rgba(217,119,6,.08);
+  --md-bg-hover:rgba(217,119,6,.13);
+  --md-border:rgba(217,119,6,.32);
 
-  --lo:#64748b;
-  --lo-bg:rgba(100,116,139,.08);
+  --lo:#64748B;
+  --lo-bg:rgba(100,116,139,.1);
 
-  --up:#14805e;
-  --up-bg:rgba(20,128,94,.1);
-  --down:#be364d;
-  --down-bg:rgba(190,54,77,.1);
+  --up:#059669;
+  --up-bg:rgba(5,150,105,.11);
+  --down:#E11D48;
+  --down-bg:rgba(225,29,72,.11);
 
-  --accent:#b87614;
-  --accent-soft:rgba(184,118,20,.12);
-  --header-bg:rgba(244,241,234,.88);
-  --det-bg:rgba(235,230,220,.55);
-  --shadow:0 10px 26px -10px rgba(45,40,30,.15);
-  --bull-off:#d2ccc0;
+  --accent:#0284C7;
+  --accent-soft:rgba(2,132,199,.12);
+  --accent-border:rgba(2,132,199,.36);
+
+  --header-bg:rgba(241,245,249,.9);
+  --det-bg:#F8FAFC;
+  --shadow:0 10px 24px -8px rgba(15,23,42,.09);
+  --bull-off:#CBD5E1;
 }
 
 *{box-sizing:border-box}
@@ -121,14 +135,25 @@ body{
   background-image:radial-gradient(120% 70% at 50% 0%,var(--bg-glow) 0%,var(--bg) 55%,var(--bg-deep) 100%);
   background-attachment:fixed;
   color:var(--text);
-  font-family:"Vazirmatn",Tahoma,system-ui,sans-serif;
+  font-family:var(--font-fa);
   font-size:14.5px;
   line-height:1.7;
   -webkit-font-smoothing:antialiased;
   padding-bottom:48px;
   transition:background-color .2s ease,color .2s ease;
 }
-.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+html[lang="en"] body{
+  font-family:var(--font-en);
+}
+/* در حالت فارسی فونت اعداد هم Vazirmatn باشد تا ارقام فارسی یکدست و هم‌عرض نمایش داده شوند */
+html[lang="fa"]{
+  --num-font:var(--font-fa);
+}
+html[lang="en"]{
+  --num-font:var(--mono);
+}
+
+.wrap{max-width:660px;margin:0 auto;padding:0 14px}
 :where(.iconbtn,.seg-btn,.chip,.ev,tr.row):focus-visible{
   outline:2px solid var(--accent);
   outline-offset:2px;
@@ -140,9 +165,9 @@ header{
   top:0;
   z-index:30;
   background:var(--header-bg);
-  backdrop-filter:blur(16px) saturate(1.2);
-  -webkit-backdrop-filter:blur(16px) saturate(1.2);
-  border-bottom:1px solid var(--border-soft);
+  backdrop-filter:blur(16px) saturate(1.25);
+  -webkit-backdrop-filter:blur(16px) saturate(1.25);
+  border-bottom:1px solid var(--border);
 }
 .head-row{
   display:flex;
@@ -158,18 +183,18 @@ header{
   min-width:0;
 }
 .brand-logo{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  background:var(--surface-2);
+  width:36px;
+  height:36px;
+  border-radius:11px;
+  background:var(--surface);
   border:1px solid var(--border);
   display:flex;
   align-items:center;
   justify-content:center;
   flex:0 0 auto;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  box-shadow:0 2px 6px rgba(0,0,0,.12);
 }
-.brand-logo svg{width:20px;height:20px}
+.brand-logo svg{width:21px;height:21px}
 .brand-txt{line-height:1.25}
 .brand-txt b{
   font-size:17.5px;
@@ -177,19 +202,20 @@ header{
   letter-spacing:-.3px;
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:7px;
   color:var(--text);
 }
 .live-dot{
-  width:7px;
-  height:7px;
+  width:7.5px;
+  height:7.5px;
   border-radius:50%;
   background:var(--hi);
   box-shadow:0 0 0 3px var(--hi-ring);
   display:inline-block;
 }
 .brand-txt span{
-  font-size:11px;
+  font-size:11.5px;
+  font-weight:500;
   color:var(--text-muted);
   display:block;
 }
@@ -204,7 +230,7 @@ header{
   border:1px solid var(--border);
   color:var(--text-sec);
   border-radius:10px;
-  height:34px;
+  height:35px;
   padding:0 10px;
   font-family:inherit;
   font-size:12px;
@@ -222,7 +248,7 @@ header{
   height:15px;
   stroke:currentColor;
   fill:none;
-  stroke-width:1.9;
+  stroke-width:2;
   stroke-linecap:round;
   stroke-linejoin:round;
   flex:0 0 auto;
@@ -233,8 +259,15 @@ header{
   background:var(--surface-2);
 }
 .iconbtn:active{transform:scale(.97)}
-.iconbtn:disabled{opacity:.45;cursor: default}
-.iconbtn.icon-only{width:34px;padding:0}
+.iconbtn:disabled{opacity:.45;cursor:default}
+.iconbtn.icon-only{width:35px;padding:0}
+.iconbtn.lang-btn{
+  background:var(--accent-soft);
+  border-color:var(--accent-border);
+  color:var(--text);
+  font-weight:700;
+  min-width:42px;
+}
 
 /* منوی انتخاب تم */
 .tw{position:relative;display:inline-flex}
@@ -247,7 +280,7 @@ header{
   border:1px solid var(--border);
   border-radius:13px;
   padding:5px;
-  min-width:148px;
+  min-width:152px;
   display:flex;
   flex-direction:column;
   gap:2px;
@@ -260,7 +293,7 @@ header{
   color:var(--text-sec);
   font-family:inherit;
   font-size:12.5px;
-  font-weight:500;
+  font-weight:600;
   text-align:start;
   padding:8px 10px;
   border-radius:9px;
@@ -289,20 +322,20 @@ header{
   background:var(--accent);
   border-color:var(--accent);
 }
-.topt small{margin-inline-start:auto;font-size:10px;color:var(--text-muted);font-weight:400}
+.topt small{margin-inline-start:auto;font-size:10.5px;color:var(--text-muted);font-weight:500}
 
-/* ---------- کارت خبر مهم بعدی (بازطراحی شده) ---------- */
+/* ---------- کارت خبر مهم بعدی ---------- */
 .next{
   position:relative;
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:16px;
-  padding:14px 16px;
+  padding:15px 17px;
   margin:14px 0 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:14px;
+  gap:16px;
   box-shadow:var(--shadow);
   overflow:hidden;
   transition:all .2s ease;
@@ -313,16 +346,16 @@ header{
   inset-inline-start:0;
   top:0;
   bottom:0;
-  width:4px;
+  width:4.5px;
   background:var(--border-strong);
 }
 .next.hi{
-  background:linear-gradient(135deg,var(--hi-bg) 0%,var(--surface) 90%);
+  background:linear-gradient(135deg,var(--hi-bg) 0%,var(--surface) 88%);
   border-color:var(--hi-border);
 }
 .next.hi::before{background:var(--hi)}
 .next.md{
-  background:linear-gradient(135deg,var(--md-bg) 0%,var(--surface) 90%);
+  background:linear-gradient(135deg,var(--md-bg) 0%,var(--surface) 88%);
   border-color:var(--md-border);
 }
 .next.md::before{background:var(--md)}
@@ -339,25 +372,28 @@ header{
   align-items:center;
   gap:8px;
   flex-wrap:wrap;
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 .next-badge{
-  font-size:11px;
-  font-weight:600;
+  font-size:11.5px;
+  font-weight:700;
   color:var(--text-sec);
+  background:var(--surface-2);
+  padding:2px 9px;
+  border-radius:6px;
   display:inline-flex;
   align-items:center;
   gap:5px;
 }
-.next.hi .next-badge{color:var(--hi)}
-.next.md .next-badge{color:var(--md)}
+.next.hi .next-badge{color:var(--hi);background:var(--hi-bg);border:1px solid var(--hi-border)}
+.next.md .next-badge{color:var(--md);background:var(--md-bg);border:1px solid var(--md-border)}
 .next-cur{
   font-family:var(--mono);
-  font-size:11px;
-  font-weight:600;
+  font-size:11.5px;
+  font-weight:700;
   background:var(--surface-2);
   border:1px solid var(--border);
-  padding:1px 7px;
+  padding:2px 8px;
   border-radius:6px;
   color:var(--text);
   display:inline-flex;
@@ -366,28 +402,29 @@ header{
   direction:ltr;
 }
 .next-time{
-  font-family:var(--mono);
+  font-family:var(--num-font);
   font-size:12.5px;
   font-weight:600;
   color:var(--text-sec);
-  direction:ltr;
+  font-variant-numeric:tabular-nums;
 }
 .next-title{
   font-weight:800;
-  font-size:16px;
+  font-size:16.5px;
   line-height:1.45;
   color:var(--text);
   margin:0;
 }
 .next-en{
-  font-size:11px;
+  font-size:11.5px;
+  font-weight:500;
   color:var(--text-muted);
   direction:ltr;
   text-align:start;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  margin-top:2px;
+  margin-top:3px;
 }
 
 .next-side{
@@ -395,7 +432,7 @@ header{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:9px;
+  gap:10px;
   flex:0 0 auto;
 }
 
@@ -420,16 +457,15 @@ header{
 }
 .bulls.hi .bull.on{
   fill:var(--hi);
-  filter:drop-shadow(0 1px 3px rgba(224,90,79,.28));
+  filter:drop-shadow(0 1px 3px rgba(244,63,94,.3));
 }
 .bulls.md .bull.on{
   fill:var(--md);
-  filter:drop-shadow(0 1px 3px rgba(223,155,56,.25));
+  filter:drop-shadow(0 1px 3px rgba(245,158,11,.26));
 }
 .bulls.lo .bull.on{
   fill:var(--lo);
 }
-/* سایز کوچک‌تر گاوها برای داخل جدول و کارت‌ها */
 .bulls.sm{gap:2.5px}
 .bulls.sm .bull{width:19px;height:14px}
 
@@ -439,20 +475,20 @@ header{
   align-items:center;
   gap:4px;
   direction:ltr;
-  font-family:var(--mono);
+  font-family:var(--num-font);
   font-variant-numeric:tabular-nums;
 }
 .cd-seg{
   background:var(--surface-2);
   border:1px solid var(--border);
   border-radius:10px;
-  min-width:46px;
+  min-width:48px;
   padding:6px 8px 4px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,.12);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.1);
 }
 .next.hi .cd-seg{
   border-color:var(--hi-border);
@@ -460,21 +496,22 @@ header{
 }
 .cd-val{
   font-size:20px;
-  font-weight:700;
+  font-weight:800;
   line-height:1.1;
   color:var(--text);
-  letter-spacing:.4px;
+  letter-spacing:.3px;
 }
 .next.hi.soon .cd-val{color:var(--hi)}
 .cd-lbl{
-  font-family:"Vazirmatn",sans-serif;
-  font-size:9.5px;
+  font-family:inherit;
+  font-size:10px;
+  font-weight:600;
   color:var(--text-muted);
   margin-top:3px;
   line-height:1;
 }
 .cd-sep{
-  font-weight:700;
+  font-weight:800;
   font-size:17px;
   color:var(--text-muted);
   margin-top:-8px;
@@ -483,23 +520,23 @@ header{
   background:var(--hi-bg);
   border:1px solid var(--hi-border);
   color:var(--hi);
-  font-family:"Vazirmatn",sans-serif;
-  font-size:12.5px;
+  font-size:13px;
   font-weight:700;
-  padding:5px 12px;
+  padding:6px 13px;
   border-radius:9px;
 }
 
 /* ---------- پنل فیلترها ---------- */
 .filter-panel{
   background:var(--surface);
-  border:1px solid var(--border-soft);
+  border:1px solid var(--border);
   border-radius:14px;
-  padding:9px 10px;
+  padding:10px 11px;
   margin-bottom:14px;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:9px;
+  box-shadow:var(--shadow);
 }
 .filter-top{
   display:flex;
@@ -511,10 +548,10 @@ header{
 .seg-group{
   display:inline-flex;
   background:var(--surface-2);
-  border:1px solid var(--border-soft);
+  border:1px solid var(--border);
   border-radius:10px;
   padding:3px;
-  gap:2px;
+  gap:3px;
 }
 .seg-btn{
   background:transparent;
@@ -523,7 +560,7 @@ header{
   font-family:inherit;
   font-size:12px;
   font-weight:600;
-  padding:4px 11px;
+  padding:5px 12px;
   border-radius:7px;
   cursor:pointer;
   white-space:nowrap;
@@ -533,7 +570,8 @@ header{
 .seg-btn[aria-pressed="true"]{
   background:var(--surface);
   color:var(--text);
-  box-shadow:0 1px 3px rgba(0,0,0,.18);
+  font-weight:700;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
 }
 
 .cur-row{
@@ -549,10 +587,10 @@ header{
 .chip{
   flex:0 0 auto;
   background:var(--surface-2);
-  border:1px solid var(--border-soft);
+  border:1px solid var(--border);
   color:var(--text-sec);
   border-radius:9px;
-  padding:4px 10px;
+  padding:5px 11px;
   font-family:var(--mono);
   font-size:11.5px;
   font-weight:600;
@@ -565,32 +603,34 @@ header{
   direction:ltr;
 }
 .chip.all-cur{
-  font-family:"Vazirmatn",sans-serif;
-  direction:rtl;
-  font-size:11.5px;
+  font-family:inherit;
+  direction:inherit;
+  font-size:12px;
+  font-weight:700;
 }
-.chip i{font-style:normal;font-size:13px;line-height:1}
+.chip i{font-style:normal;font-size:13.5px;line-height:1}
 .chip:hover{
   color:var(--text);
   border-color:var(--border-strong);
 }
 .chip[aria-pressed="true"]{
   background:var(--accent-soft);
-  color:var(--accent);
-  border-color:var(--md-border);
+  color:var(--text);
+  border-color:var(--accent-border);
+  font-weight:700;
 }
 
 /* ---------- جداکننده روز و خط زمان فعلی ---------- */
 #list{position:relative}
 .day{
   position:sticky;
-  top:57px;
+  top:58px;
   z-index:20;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  padding:10px 12px;
+  padding:10px 13px;
   margin:14px 0 9px;
   background:var(--surface-2);
   border:1px solid var(--border);
@@ -606,10 +646,10 @@ header{
 .day-rel{
   background:var(--accent-soft);
   color:var(--accent);
-  border:1px solid var(--md-border);
-  padding:1px 8px;
+  border:1px solid var(--accent-border);
+  padding:1px 9px;
   border-radius:7px;
-  font-size:11px;
+  font-size:11.5px;
   font-weight:700;
 }
 .day-rel.today{
@@ -618,16 +658,14 @@ header{
   border-color:var(--hi-border);
 }
 .day-main{
-  font-size:13px;
+  font-size:13.5px;
   font-weight:800;
   color:var(--text);
 }
-.day-en{
-  font-family:var(--mono);
-  font-size:11px;
+.day-sub{
+  font-size:11.5px;
   font-weight:600;
   color:var(--text-muted);
-  direction:ltr;
   white-space:nowrap;
 }
 .nowline{
@@ -636,24 +674,26 @@ header{
   display:flex;
   align-items:center;
   gap:8px;
-  margin:4px 0 10px;
+  margin:5px 0 10px;
 }
 .nowline b{
-  font-family:var(--mono);
-  font-size:11px;
-  font-weight:600;
+  font-family:var(--num-font);
+  font-size:11.5px;
+  font-weight:700;
   color:var(--hi);
   background:var(--hi-bg);
   border:1px solid var(--hi-border);
-  padding:1px 8px;
+  padding:2px 9px;
   border-radius:99px;
-  direction:ltr;
   font-variant-numeric:tabular-nums;
 }
 .nowline i{
   flex:1;
   height:1px;
   background:linear-gradient(to left,var(--hi),transparent);
+}
+html[lang="en"] .nowline i{
+  background:linear-gradient(to right,var(--hi),transparent);
 }
 
 /* ---------- نمای کارت‌ها ---------- */
@@ -663,14 +703,14 @@ header{
   width:100%;
   text-align:start;
   background:var(--surface);
-  border:1px solid var(--border-soft);
+  border:1px solid var(--border);
   border-radius:14px;
-  padding:12px 14px;
+  padding:13px 15px;
   margin-bottom:9px;
   color:inherit;
   font-family:inherit;
   display:grid;
-  grid-template-columns:58px 1fr;
+  grid-template-columns:62px 1fr;
   gap:0 12px;
   cursor:pointer;
   transition:border-color .15s,background .15s,opacity .2s,transform .1s;
@@ -682,11 +722,11 @@ header{
   inset-inline-start:0;
   top:0;
   bottom:0;
-  width:3.5px;
+  width:4px;
   background:var(--border-strong);
 }
 .ev:hover{border-color:var(--border-strong)}
-.ev.past{opacity:.48}
+.ev.past{opacity:.62}
 .ev.hi{
   background:var(--hi-bg);
   border-color:var(--hi-border);
@@ -703,7 +743,7 @@ header{
 .ev.hi.soon{
   box-shadow:0 0 0 1.5px var(--hi-ring);
 }
-.ev.hi.soon .rel{color:var(--hi);font-weight:600}
+.ev.hi.soon .rel{color:var(--hi);font-weight:700}
 
 .chev{
   position:absolute;
@@ -727,16 +767,16 @@ header{
   padding-top:1px;
 }
 .tcol .t{
-  font-family:var(--mono);
-  font-size:15px;
-  font-weight:700;
-  direction:ltr;
+  font-family:var(--num-font);
+  font-size:15.5px;
+  font-weight:800;
   font-variant-numeric:tabular-nums;
-  letter-spacing:-.3px;
+  letter-spacing:-.2px;
   color:var(--text);
 }
 .tcol .rel{
-  font-size:10px;
+  font-size:10.5px;
+  font-weight:600;
   color:var(--text-muted);
   white-space:nowrap;
 }
@@ -751,20 +791,21 @@ header{
 .cur-badge{
   font-family:var(--mono);
   font-size:11px;
-  font-weight:600;
+  font-weight:700;
   background:var(--surface-2);
   border:1px solid var(--border);
   border-radius:6px;
-  padding:1px 6px;
+  padding:1px 7px;
   color:var(--text);
   display:inline-flex;
   align-items:center;
   gap:4px;
   direction:ltr;
 }
-.cur-badge i{font-style:normal;font-size:12.5px}
+.cur-badge i{font-style:normal;font-size:13px}
 .en{
-  font-size:10.5px;
+  font-size:11px;
+  font-weight:500;
   color:var(--text-muted);
   direction:ltr;
   text-align:start;
@@ -772,13 +813,14 @@ header{
 }
 .fa{
   font-size:15px;
-  font-weight:700;
+  font-weight:800;
   margin-top:4px;
   line-height:1.45;
   color:var(--text);
 }
 .why{
   font-size:12.5px;
+  font-weight:500;
   color:var(--text-sec);
   margin-top:3px;
   line-height:1.65;
@@ -790,47 +832,67 @@ header{
   margin-top:9px;
 }
 .val-pill{
-  font-size:11px;
+  font-size:11.5px;
+  font-weight:600;
   color:var(--text-sec);
   background:var(--surface-2);
-  border:1px solid var(--border-soft);
-  padding:2px 8px;
+  border:1px solid var(--border);
+  padding:2px 9px;
   border-radius:7px;
   display:inline-flex;
   align-items:center;
   gap:5px;
 }
 .val-pill b{
-  font-family:var(--mono);
-  font-size:12px;
-  font-weight:600;
+  font-family:var(--num-font);
+  font-size:12.5px;
+  font-weight:700;
   color:var(--text);
-  direction:ltr;
   display:inline-block;
   font-variant-numeric:tabular-nums;
 }
-.val-pill.up{background:var(--up-bg);border-color:rgba(56,178,139,.25)}
+.val-pill.up{background:var(--up-bg);border-color:rgba(52,211,153,.35)}
 .val-pill.up b{color:var(--up)}
-.val-pill.down{background:var(--down-bg);border-color:rgba(224,93,114,.25)}
+.val-pill.down{background:var(--down-bg);border-color:rgba(251,113,133,.35)}
 .val-pill.down b{color:var(--down)}
 
 .body{
   grid-column:1/-1;
   margin-top:12px;
   padding-top:12px;
-  border-top:1px solid var(--border-soft);
+  border-top:1px solid var(--border);
   font-size:13px;
   color:var(--body-text);
   line-height:1.8;
 }
 .body h4{
-  margin:0 0 3px;
-  font-size:11px;
+  margin:10px 0 4px;
+  font-size:12px;
   color:var(--accent);
-  font-weight:700;
+  font-weight:800;
 }
+.body h4:first-child{margin-top:0}
 .body p{margin:0 0 10px}
 .body p:last-child{margin-bottom:0}
+.scen-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  margin:8px 0 10px;
+}
+.scen{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:9px 11px;
+  font-size:12.5px;
+  line-height:1.75;
+}
+.scen.bullish{border-inline-start:3.5px solid var(--up);background:var(--up-bg)}
+.scen.bearish{border-inline-start:3.5px solid var(--down);background:var(--down-bg)}
+.scen b{color:var(--text);font-weight:700}
+.scen.bullish b.tag{color:var(--up)}
+.scen.bearish b.tag{color:var(--down)}
 
 /* ---------- نمای جدولی ---------- */
 .calhead{
@@ -844,9 +906,10 @@ header{
   border-radius:14px 14px 0 0;
   padding:11px 15px;
 }
-.calhead b{font-size:14px;font-weight:700}
+.calhead b{font-size:14px;font-weight:800;color:var(--text)}
 .calhead span{
-  font-size:11.5px;
+  font-size:12px;
+  font-weight:600;
   color:var(--text-sec);
 }
 .tablewrap{
@@ -865,16 +928,16 @@ table.cal{
   table-layout:fixed;
 }
 table.cal.has-actual{min-width:430px}
-table.cal .w-t{width:52px}
-table.cal .w-c{width:62px}
-table.cal .w-i{width:54px}
-table.cal .w-n{width:58px}
+table.cal .w-t{width:54px}
+table.cal .w-c{width:64px}
+table.cal .w-i{width:56px}
+table.cal .w-n{width:60px}
 table.cal th{
   background:var(--surface-2);
-  color:var(--text-muted);
-  font-size:10.5px;
+  color:var(--text-sec);
+  font-size:11px;
   font-weight:700;
-  padding:9px 4px;
+  padding:10px 4px;
   text-align:center;
   border-bottom:1px solid var(--border);
   white-space:nowrap;
@@ -891,13 +954,15 @@ table.cal tr.hi td{background:var(--hi-bg)}
 table.cal tr.md td{background:var(--md-bg)}
 table.cal tr.hi:hover td{background:var(--hi-bg-hover)}
 table.cal tr.md:hover td{background:var(--md-bg-hover)}
-table.cal tr.past td{opacity:.46}
-table.cal tr.hi td:first-child{box-shadow:inset -3px 0 0 var(--hi)}
-table.cal tr.md td:first-child{box-shadow:inset -3px 0 0 var(--md)}
+table.cal tr.past td{opacity:.62}
+html[dir="rtl"] table.cal tr.hi td:first-child{box-shadow:inset -3.5px 0 0 var(--hi)}
+html[dir="rtl"] table.cal tr.md td:first-child{box-shadow:inset -3.5px 0 0 var(--md)}
+html[dir="ltr"] table.cal tr.hi td:first-child{box-shadow:inset 3.5px 0 0 var(--hi)}
+html[dir="ltr"] table.cal tr.md td:first-child{box-shadow:inset 3.5px 0 0 var(--md)}
 
 tr.dayrow td{
   background:var(--surface-2);
-  font-weight:700;
+  font-weight:800;
   font-size:12.5px;
   text-align:start;
   padding:10px 14px;
@@ -910,18 +975,16 @@ tr.dayrow .dayrow-wrap{
   justify-content:space-between;
   gap:8px;
 }
-tr.dayrow .day-en{
-  font-family:var(--mono);
-  font-size:11px;
+tr.dayrow .day-sub{
+  font-size:11.5px;
   color:var(--text-muted);
-  font-weight:500;
+  font-weight:600;
 }
 td.ttd{
-  font-family:var(--mono);
-  font-weight:600;
-  direction:ltr;
+  font-family:var(--num-font);
+  font-weight:700;
   white-space:nowrap;
-  font-size:12.5px;
+  font-size:13px;
   font-variant-numeric:tabular-nums;
   color:var(--text);
 }
@@ -929,7 +992,7 @@ td.curtd{
   white-space:nowrap;
   font-family:var(--mono);
   font-size:11px;
-  font-weight:600;
+  font-weight:700;
   color:var(--text-sec);
   direction:ltr;
 }
@@ -949,36 +1012,36 @@ td.evt{
 }
 td.evt small{
   display:block;
-  font-weight:400;
+  font-weight:500;
   color:var(--text-muted);
-  font-size:10px;
+  font-size:10.5px;
   direction:ltr;
   text-align:start;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  margin-top:1px;
+  margin-top:2px;
 }
 td.evt .chev-t{
   color:var(--text-muted);
-  font-size:9px;
+  font-size:9.5px;
   margin-inline-start:5px;
 }
 tr[data-open="1"] td.evt .chev-t{color:var(--text)}
 td.numtd{
-  font-family:var(--mono);
-  direction:ltr;
+  font-family:var(--num-font);
   white-space:nowrap;
   color:var(--text-sec);
-  font-size:11.5px;
+  font-size:12px;
+  font-weight:600;
   font-variant-numeric:tabular-nums;
 }
-td.numtd.up{color:var(--up);font-weight:600}
-td.numtd.down{color:var(--down);font-weight:600}
+td.numtd.up{color:var(--up);font-weight:700}
+td.numtd.down{color:var(--down);font-weight:700}
 tr.det td{
   text-align:start;
   background:var(--det-bg);
-  padding:13px 16px;
+  padding:14px 16px;
 }
 tr.det .body{margin:0;padding:0;border:0}
 
@@ -990,7 +1053,7 @@ tr.det .body{margin:0;padding:0;border:0}
   font-size:13.5px;
   line-height:1.9;
   background:var(--surface);
-  border:1px solid var(--border-soft);
+  border:1px solid var(--border);
   border-radius:14px;
 }
 .state b{
@@ -1000,14 +1063,15 @@ tr.det .body{margin:0;padding:0;border:0}
   font-size:15px;
 }
 .note{
-  font-size:11px;
+  font-size:11.5px;
+  font-weight:500;
   color:var(--text-muted);
   text-align:center;
   padding:22px 8px 4px;
   line-height:1.9;
 }
 .credit{
-  font-size:11.5px;
+  font-size:12px;
   color:var(--text-muted);
   text-align:center;
   padding:0 8px 20px;
@@ -1015,13 +1079,15 @@ tr.det .body{margin:0;padding:0;border:0}
 }
 .credit b{color:var(--text-sec);font-weight:700}
 .ver{
-  font-family:var(--mono);
-  font-size:10px;
-  color:var(--text-muted);
+  font-family:var(--num-font);
+  font-size:10.5px;
+  font-weight:600;
+  color:var(--text-sec);
   margin-inline-start:6px;
   background:var(--surface-2);
-  padding:1px 6px;
-  border-radius:5px;
+  border:1px solid var(--border);
+  padding:1px 7px;
+  border-radius:6px;
 }
 
 /* واکنش‌گرا برای موبایل‌های کوچک */
@@ -1035,7 +1101,7 @@ tr.det .body{margin:0;padding:0;border:0}
     flex-direction:row;
     align-items:center;
     justify-content:space-between;
-    padding-top:10px;
+    padding-top:11px;
     border-top:1px solid var(--border-soft);
   }
   .filter-top{
@@ -1050,7 +1116,7 @@ tr.det .body{margin:0;padding:0;border:0}
     flex:1;
     text-align:center;
   }
-  .iconbtn span.btn-txt{
+  .iconbtn span.hide-xs{
     display:none;
   }
   .iconbtn{
@@ -1065,7 +1131,6 @@ tr.det .body{margin:0;padding:0;border:0}
 </head>
 <body>
 
-<!-- آیکون استاندارد و اصلاح‌شده سر گاو با ابعاد 24x24 -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="bull" viewBox="0 0 100 73.3">
     <path fill-rule="evenodd" d="M56.5 64.5L56.3 64.5L55.5 65.2L55.5 65.4L55.0 65.9L55.0 66.0L54.4 66.6L54.4 66.7L54.1 67.0L54.0 67.0L53.4 67.5L53.3 67.5L53.3 67.7L53.6 68.0L53.6 68.2L53.9 68.5L53.9 68.6L54.0 68.7L54.1 68.7L54.4 69.1L54.6 69.1L54.8 69.2L55.0 69.2L55.1 69.3L55.4 69.3L55.5 69.2L55.6 69.2L56.0 68.9L56.0 68.6L56.2 68.4L56.2 68.3L56.3 68.2L56.3 68.1L56.5 67.8L56.5 67.5L56.6 67.4L56.6 67.3L56.7 67.2L56.7 67.0L56.8 66.9L56.8 66.4L56.9 66.3L56.9 65.2L56.8 65.1L56.8 64.9L56.7 64.8L56.7 64.7ZM43.2 64.5L43.0 64.7L43.0 65.0L42.8 65.1L42.8 66.6L43.0 66.7L43.0 67.0L43.1 67.1L43.1 67.3L43.3 67.7L43.3 67.9L43.4 68.0L43.4 68.1L43.5 68.2L43.5 68.3L43.6 68.4L43.6 68.5L43.8 68.7L43.8 68.9L44.0 69.1L44.0 69.2L44.2 69.3L44.3 69.3L44.4 69.2L45.0 69.2L45.1 69.1L45.2 69.1L45.4 69.0L45.5 69.0L46.0 68.4L46.0 68.3L46.2 68.1L46.2 68.0L46.4 67.7L46.0 67.2L45.9 67.2L45.0 66.3L45.0 66.2L44.5 65.7L44.5 65.6L43.8 64.9L43.8 64.8L43.7 64.7L43.6 64.7L43.4 64.5ZM62.3 23.6L58.1 24.8L54.2 26.6L52.6 28.9L51.4 31.6L50.8 33.8L50.8 35.4L50.9 34.1L51.4 32.5L52.0 31.0L53.2 29.4L54.6 28.0L57.0 26.2L59.8 24.8L61.1 24.4L62.4 23.7ZM37.6 23.6L37.7 23.8L40.9 25.1L42.8 26.2L45.0 27.8L46.9 29.6L47.9 31.0L48.4 32.1L49.0 34.0L49.1 35.3L49.1 33.6L48.4 31.1L47.5 29.2L45.8 26.7L44.5 25.9L41.7 24.8L38.4 23.7ZM66.7 18.9L66.3 19.2L66.3 19.3L66.1 19.6L66.1 19.7L65.9 19.9L65.9 20.0L65.8 20.1L65.8 20.2L65.7 20.3L65.7 20.5L65.6 20.7L65.6 20.9L65.5 21.0L65.5 21.2L65.4 21.3L65.4 21.6L65.2 21.7L65.2 23.2L65.4 23.3L65.4 23.7L65.5 23.8L65.5 23.9L65.6 23.9L65.6 23.4L65.7 23.3L65.7 22.6L65.8 22.5L65.8 22.2L65.9 22.1L65.9 21.6L66.0 21.5L66.0 21.1L66.1 21.0L66.1 20.7L66.2 20.5L66.2 20.3L66.3 20.2L66.3 19.9L66.4 19.8L66.4 19.6L66.6 19.5L66.6 19.2L66.7 19.1ZM33.2 18.9L33.3 19.0L33.3 19.3L33.4 19.5L33.4 19.7L33.6 19.8L33.6 20.0L33.7 20.1L33.7 20.4L33.8 20.5L33.8 20.8L33.9 20.9L33.9 21.2L34.0 21.3L34.0 21.7L34.1 21.9L34.1 22.3L34.2 22.4L34.2 23.0L34.3 23.1L34.3 23.8L34.4 23.9L34.4 24.0L34.4 23.9L34.5 23.8L34.5 23.5L34.6 23.4L34.6 22.7L34.8 22.6L34.8 22.4L34.6 22.3L34.6 21.4L34.5 21.3L34.5 21.1L34.4 21.0L34.4 20.7L34.3 20.5L34.3 20.4L34.2 20.3L34.2 20.2L34.1 20.1L34.1 20.0L34.0 19.9L34.0 19.8L33.8 19.6L33.8 19.5L33.6 19.2L33.6 19.1L33.3 18.9ZM31.0 18.1L34.2 16.6L37.8 16.4L39.7 16.9L42.4 18.5L46.0 19.7L47.9 20.0L52.1 20.0L56.5 18.9L60.5 16.8L62.1 16.4L65.2 16.5L68.7 18.0L66.8 16.8L64.6 16.1L60.7 15.8L58.6 16.6L56.8 17.8L51.9 19.5L49.2 19.6L47.4 19.3L44.2 18.3L40.1 16.1L36.7 15.8L33.1 16.8ZM0.0 11.8L4.9 22.1L30.2 28.6L27.8 34.9L31.9 40.1L30.8 45.8L36.3 52.5L43.7 73.3L58.7 71.4L61.3 57.5L69.0 46.1L68.0 40.2L72.1 35.0L69.9 28.5L94.0 22.6L100.0 13.8L97.6 5.9L90.8 0.1L93.2 9.2L90.2 14.1L68.0 18.7L67.7 22.0L80.0 20.5L93.3 11.4L83.2 20.9L67.0 23.3L67.5 35.2L55.0 41.9L51.7 39.7L55.4 55.8L55.6 44.2L68.3 37.3L67.0 46.0L61.2 52.3L60.4 45.0L59.3 62.8L56.9 54.0L57.6 61.9L49.9 66.7L42.4 61.9L43.0 54.0L40.5 63.0L39.6 45.5L38.7 52.2L33.4 47.0L31.4 36.8L44.0 43.8L44.5 55.6L48.2 39.6L44.9 41.9L32.3 35.2L32.9 23.3L16.5 20.8L6.6 11.3L20.7 20.8L33.0 21.9L31.9 18.7L9.5 13.9L6.7 8.7L9.1 0.0ZM41.2 69.3L41.5 69.2L42.8 70.1L44.2 70.5L45.7 70.5L49.5 69.5L50.9 69.5L54.1 70.3L56.6 70.2L58.3 69.3L58.6 69.3L58.7 69.6L58.0 71.0L56.5 72.7L55.8 72.7L55.5 72.5L53.8 72.0L52.5 71.9L46.2 72.0L43.5 72.7L42.0 71.1ZM41.6 63.5L42.3 62.6L43.6 62.5L49.8 67.3L50.1 67.3L56.3 62.5L57.4 62.5L57.9 62.8L58.4 63.8L58.3 68.2L57.6 69.0L56.3 69.6L55.1 69.9L53.6 69.8L50.9 69.2L49.4 69.2L46.0 70.1L44.5 70.1L42.2 68.9L41.6 68.1ZM63.8 38.4L63.9 38.6L63.9 39.2L63.8 39.3L63.8 39.6L63.6 40.0L63.0 40.8L62.8 40.8L62.0 41.4L61.5 41.6L61.3 41.6L60.8 42.0L60.4 42.0L60.3 42.1L59.7 42.2L59.2 42.4L58.8 42.4L58.7 42.5L58.3 42.5L58.1 42.6L57.7 42.6L57.6 42.7L56.9 42.7L56.8 42.8L55.7 42.8L55.6 42.7L55.6 42.5L55.8 42.4L56.0 42.2L56.4 42.0L56.5 41.7L56.8 41.6L57.5 41.1L57.8 41.0L58.7 40.3L59.0 40.2L59.3 39.9L60.0 39.6L61.1 38.6L61.2 38.6L61.2 38.5L61.5 38.1L62.0 38.1L62.1 38.0L62.3 38.1L63.5 38.1ZM36.0 38.6L36.1 38.4L36.4 38.1L37.9 38.1L38.0 38.0L38.3 38.0L39.7 39.3L39.8 39.3L40.1 39.7L40.2 39.7L41.1 40.3L41.4 40.4L42.6 41.3L43.0 41.4L44.4 42.6L44.2 42.8L43.1 42.8L43.0 42.7L42.2 42.7L42.1 42.6L41.7 42.6L41.6 42.5L41.2 42.5L41.1 42.4L40.8 42.4L40.7 42.3L40.2 42.3L40.1 42.2L39.9 42.2L39.8 42.1L38.9 41.9L37.6 41.2L36.3 40.0L36.1 39.6L36.1 39.3L36.0 39.2L36.1 39.0L36.0 38.9ZM69.7 28.7L69.8 28.9L69.8 29.2L69.9 29.3L69.9 29.9L70.1 30.1L70.1 30.8L70.2 30.9L70.2 33.3L70.1 33.4L70.1 34.0L69.9 34.1L69.9 34.3L69.8 34.4L70.2 34.8L70.1 34.9L69.8 34.9L69.7 35.0L68.6 35.0L68.5 35.1L67.9 35.1L67.8 35.0L67.8 32.6L67.9 32.5L67.9 31.9L68.0 31.8L68.0 31.5L68.2 31.1L68.2 30.9L68.3 30.8L68.3 30.7L68.4 30.6L68.4 30.5L68.5 30.4L68.5 30.3L68.6 30.2L68.6 30.1L68.7 29.9L68.9 29.6L69.1 29.4L69.1 29.3L69.3 29.1L69.3 29.0L69.4 28.9ZM30.2 28.6L30.3 28.6L30.6 29.0L30.6 29.1L30.8 29.3L30.8 29.4L31.3 29.9L31.3 30.1L31.5 30.4L31.5 30.6L31.7 30.9L31.7 31.1L31.9 31.5L31.9 31.9L32.0 32.0L32.0 32.5L32.1 32.6L32.1 33.7L32.2 33.8L32.2 34.4L32.1 34.5L32.1 35.0L32.0 35.1L31.4 35.1L31.3 35.0L30.3 35.0L30.2 34.9L29.8 34.9L29.7 34.8L29.7 34.6L30.1 34.4L30.1 34.3L29.8 34.1L29.8 33.4L29.7 33.3L29.7 33.1L29.8 33.0L29.7 32.9L29.7 31.7L29.8 31.6L29.8 30.2L29.9 30.1L29.9 29.6L30.1 29.5L30.1 28.7ZM93.7 9.1L93.8 9.2L93.8 9.6L93.7 9.7L93.6 9.6L93.6 9.2Z"/>
@@ -1084,12 +1149,14 @@ tr.det .body{margin:0;padding:0;border:0}
         </svg>
       </div>
       <div class="brand-txt">
-        <b>فارکس فکتوری <i class="live-dot"></i></b>
-        <span>تقویم اقتصادی</span>
+        <b><span id="brandTitle">فارکس فکتوری</span> <i class="live-dot"></i></b>
+        <span id="brandSub">تقویم اقتصادی</span>
       </div>
     </div>
 
     <div class="toolbar">
+      <button class="iconbtn lang-btn" id="langBtn" title="تغییر زبان / Switch Language">EN</button>
+
       <button class="iconbtn" id="viewBtn" title="تغییر نمای کارت و جدول">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg>
         <span id="viewTxt">جدول</span>
@@ -1097,18 +1164,18 @@ tr.det .body{margin:0;padding:0;border:0}
 
       <button class="iconbtn" id="tzBtn" title="تغییر منطقه زمانی">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-        <span id="tzTxt">وقت دستگاه</span>
+        <span id="tzTxt" class="hide-xs">وقت دستگاه</span>
       </button>
 
       <span class="tw">
         <button class="iconbtn" id="themeBtn" aria-expanded="false" title="تغییر پوسته روشن / تیره">
           <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <span id="themeTxt">خودکار</span>
+          <span id="themeTxt" class="hide-xs">خودکار</span>
         </button>
         <div class="themepop" id="themePop" hidden>
-          <button class="topt" data-theme="light">روشن <small>ملایم</small></button>
-          <button class="topt" data-theme="dark">تیره <small>مخصوص شب</small></button>
-          <button class="topt" data-theme="auto">خودکار <small>طبق سیستم</small></button>
+          <button class="topt" data-theme="light"><span data-i18n="t_light">روشن</span> <small data-i18n="t_light_s">ملایم</small></button>
+          <button class="topt" data-theme="dark"><span data-i18n="t_dark">تیره</span> <small data-i18n="t_dark_s">مخصوص شب</small></button>
+          <button class="topt" data-theme="auto"><span data-i18n="t_auto">خودکار</span> <small data-i18n="t_auto_s">طبق سیستم</small></button>
         </div>
       </span>
 
@@ -1124,56 +1191,56 @@ tr.det .body{margin:0;padding:0;border:0}
 
   <div class="filter-panel">
     <div class="filter-top" id="scopeFilters">
-      <div class="seg-group" role="group" aria-label="بازه زمانی">
-        <button class="seg-btn" data-scope="today">امروز</button>
-        <button class="seg-btn" data-scope="week" aria-pressed="true">کل هفته</button>
+      <div class="seg-group" role="group" aria-label="Scope">
+        <button class="seg-btn" data-scope="today" id="scToday">امروز</button>
+        <button class="seg-btn" data-scope="week" id="scWeek" aria-pressed="true">کل هفته</button>
       </div>
-      <div class="seg-group" role="group" aria-label="درجه اهمیت">
-        <button class="seg-btn" data-imp="high">فقط پرتأثیر</button>
-        <button class="seg-btn" data-imp="med" aria-pressed="true">متوسط و بالا</button>
-        <button class="seg-btn" data-imp="all">همه</button>
+      <div class="seg-group" role="group" aria-label="Impact">
+        <button class="seg-btn" data-imp="high" id="imHigh">فقط پرتأثیر</button>
+        <button class="seg-btn" data-imp="med" id="imMed" aria-pressed="true">متوسط و بالا</button>
+        <button class="seg-btn" data-imp="all" id="imAll">همه</button>
       </div>
     </div>
     <div class="cur-row" id="curFilters"></div>
   </div>
 
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
-  <p class="note">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال<span id="upd"></span></p>
-  <p class="credit">طراحی و توسعه: <b>علی نظری</b><span class="ver">v2.5</span></p>
+  <p class="note"><span id="noteBase">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال</span><span id="upd"></span></p>
+  <p class="credit"><span id="creditLbl">طراحی و توسعه:</span> <b id="creditName">علی نظری</b><span class="ver" id="verTag">نسخه ۳.۰</span></p>
 </div>
 
 <script>
-/* ============ دیکشنری فارسی رویدادها: [نام, این چیه و چرا مهمه, اثر بالاتر از انتظار] ============ */
+/* ============ دیکشنری فارسی رویدادها ============ */
 const D = {
-"cpi":["شاخص قیمت مصرف‌کننده","تورم مصرف‌کننده؛ اصلی‌ترین ورودی تصمیم نرخ بهره بانک مرکزی.","تورم داغ‌تر → انتظار نرخ بهره بالاتر → تقویت ارز و فشار فروش روی طلا."],
-"core cpi":["شاخص قیمت مصرف‌کننده هسته","تورم بدون خوراک و انرژی؛ بانک‌های مرکزی بیشتر به همین نگاه می‌کنند.","بالاتر از انتظار → سیاست انقباضی‌تر → ارز قوی‌تر، طلا زیر فشار."],
+"cpi":["شاخص قیمت مصرف‌کننده","تغییر قیمت سبد کالاها و خدمات مصرفی خانوارها (تورم رسمی). چون کنترل تورم وظیفه اصلی بانک مرکزی است، این داده مستقیم روی تصمیم نرخ بهره اثر می‌گذارد.","تورم داغ‌تر → انتظار نرخ بهره بالاتر → تقویت ارز و فشار فروش روی طلا."],
+"core cpi":["شاخص قیمت مصرف‌کننده هسته","تورم مصرف‌کننده پس از حذف اقلام پرنوسان مثل خوراک و انرژی. بانک‌های مرکزی برای تشخیص روند واقعی و ماندگار تورم، بیشتر به این شاخص تکیه می‌کنند.","بالاتر از انتظار → سیاست انقباضی‌تر → ارز قوی‌تر، طلا زیر فشار."],
 "cpi flash estimate":["برآورد اولیه تورم","اولین تخمین تورم منطقه یورو؛ زودتر از رقم نهایی بازار را حرکت می‌دهد.","بالاتر از انتظار → یورو قوی‌تر."],
 "trimmed mean cpi":["تورم میانگین تعدیل‌شده","معیار تورم پایدارِ موردنظر بانک مرکزی استرالیا.","بالاتر از انتظار → احتمال نرخ بهره بالاتر → تقویت ارز."],
-"ppi":["شاخص قیمت تولیدکننده","تورم در سطح تولید؛ پیش‌نشانه تورم مصرف‌کننده.","بالاتر از انتظار → انتظار تورم بیشتر → تقویت ارز."],
-"core ppi":["شاخص قیمت تولیدکننده هسته","تورم تولید بدون اقلام پرنوسان.","بالاتر از انتظار → ارز قوی‌تر."],
+"ppi":["شاخص قیمت تولیدکننده","میانگین تغییر قیمت کالاها و خدمات در درب کارخانه و سطح عمده‌فروشی. افزایش هزینه تولیدکنندگان معمولاً با کمی تأخیر به قیمت‌های مصرف‌کننده (CPI) منتقل می‌شود، پس پیش‌نگر تورم است.","بالاتر از انتظار → انتظار تورم بیشتر → تقویت ارز."],
+"core ppi":["شاخص قیمت تولیدکننده هسته","تورم در سطح تولیدکنندگان بدون در نظر گرفتن مواد غذایی و انرژی پرنوسان. نشان می‌دهد آیا فشار هزینه در زنجیره تولید واقعی و پایدار است یا موقتی؛ به همین دلیل پیش‌نشانه مهمی برای تورم مصرف‌کننده (CPI) محسوب می‌شود.","بالاتر از انتظار → ارز قوی‌تر."],
 "wpi":["شاخص قیمت عمده‌فروشی","تورم در سطح عمده‌فروشی قبل از رسیدن به مصرف‌کننده.","بالاتر از انتظار → تقویت ارز."],
 "pce price index":["شاخص قیمت مخارج مصرف شخصی","معیار تورم موردعلاقه فدرال‌رزرو.","بالاتر از انتظار → دلار قوی‌تر، طلا زیر فشار."],
-"core pce price index":["شاخص قیمت PCE هسته","دقیق‌ترین معیار تورمی که فدرال‌رزرو تصمیمش را با آن می‌گیرد؛ از مهم‌ترین خبرهای ماه.","بالاتر از انتظار → کاهش امید به کاهش نرخ بهره → دلار قوی، طلا نزولی."],
+"core pce price index":["شاخص قیمت PCE هسته","شاخص هزینه مصرف شخصی بدون خوراک و انرژی؛ دقیق‌ترین و محبوب‌ترین معیار تورمی که فدرال‌رزرو تصمیم نرخ بهره را بر اساس آن می‌گیرد. از مهم‌ترین و جهت‌سازترین خبرهای ماه برای دلار و طلا است.","بالاتر از انتظار → کاهش امید به کاهش نرخ بهره → دلار قوی، طلا نزولی."],
 "import prices":["قیمت کالاهای وارداتی","تورم وارداتی؛ اثر نرخ ارز روی قیمت‌ها.","بالاتر از انتظار → فشار تورمی بیشتر."],
 "inflation expectations":["انتظارات تورمی","تصور مردم و بازار از تورم آینده؛ بانک مرکزی روی لنگر بودنش حساس است.","بالاتر از انتظار → نگرانی بانک مرکزی → ارز قوی‌تر."],
 "mi inflation expectations":["انتظارات تورمی ملبورن","انتظار خانوارهای استرالیایی از تورم ۱۲ ماه آینده.","بالاتر از انتظار → تقویت AUD."],
-"non-farm employment change":["اشتغال غیرکشاورزی (NFP)","تعداد شغل‌های ایجادشده در آمریکا؛ پرنوسان‌ترین خبر ماه برای دلار و طلا.","خیلی بهتر از انتظار → دلار جهش، طلا افت شدید."],
+"non-farm employment change":["اشتغال غیرکشاورزی (NFP)","تعداد مشاغل جدید ایجادشده در بخش‌های غیرکشاورزی آمریکا در ماه گذشته. مهم‌ترین نبض سلامت اقتصاد آمریکا و پرنوسان‌ترین خبر ماه برای دلار، طلا و شاخص‌های سهام است.","خیلی بهتر از انتظار → دلار جهش، طلا افت شدید."],
 "adp non-farm employment change":["اشتغال بخش خصوصی ADP","پیش‌درآمد NFP از داده حقوق‌ودستمزد شرکت‌ها.","بالاتر از انتظار → انتظار NFP قوی → دلار قوی‌تر."],
 "adp weekly employment change":["اشتغال هفتگی ADP","نبض هفتگی بازار کار آمریکا؛ داده کم‌وزن ولی پرتکرار.","بالاتر از انتظار → دلار کمی قوی‌تر."],
 "employment change":["تغییر اشتغال","خالص شغل‌های ایجادشده؛ سلامت بازار کار.","بالاتر از انتظار → تقویت ارز."],
-"unemployment rate":["نرخ بیکاری","درصد جویندگان کار؛ نیمه دوم مأموریت بانک مرکزی.","پایین‌تر از انتظار (بازار کار داغ) → ارز قوی‌تر."],
-"unemployment claims":["مدعیان بیکاری هفتگی","تعداد درخواست‌های جدید بیمه بیکاری؛ سریع‌ترین نشانه ضعف بازار کار.","پایین‌تر از انتظار → بازار کار قوی → دلار قوی‌تر."],
+"unemployment rate":["نرخ بیکاری","درصد افراد بیکار و جویای کار از کل نیروی کار فعال کشور. هرچه این نرخ پایین‌تر باشد یعنی بازار کار داغ‌تر است و بانک مرکزی دست بازتری برای حفظ نرخ بهره بالا دارد.","پایین‌تر از انتظار (بازار کار داغ) → ارز قوی‌تر."],
+"unemployment claims":["مدعیان بیکاری هفتگی","تعداد افرادی که در هفته گذشته برای اولین بار درخواست بیمه بیکاری داده‌اند. سریع‌ترین و به‌روزترین نشانه از سرد شدن یا داغ ماندن بازار کار آمریکا است.","پایین‌تر از انتظار → بازار کار قوی → دلار قوی‌تر."],
 "average hourly earnings":["میانگین دستمزد ساعتی","رشد دستمزد؛ سوخت تورم خدماتی.","بالاتر از انتظار → نگرانی تورمی → ارز قوی‌تر."],
 "wage price index":["شاخص دستمزد","رشد دستمزدها؛ ورودی مهم تورم.","بالاتر از انتظار → تقویت ارز."],
 "jolts job openings":["فرصت‌های شغلی JOLTS","تعداد جایگاه‌های خالی؛ معیار تقاضای نیروی کار.","بالاتر از انتظار → بازار کار سفت → دلار قوی‌تر."],
 "challenger job cuts":["اخراج‌های اعلام‌شده Challenger","تعداد تعدیل نیروی اعلامی شرکت‌های آمریکایی.","بالاتر از انتظار → ضعف بازار کار → دلار ضعیف‌تر."],
 "prelim benchmark payrolls revision":["تجدیدنظر معیار اشتغال","بازنگری سالانه آمار اشتغال؛ می‌تواند تصویر بازار کار را کاملاً عوض کند.","تجدیدنظر منفی بزرگ → دلار ضعیف، طلا صعودی."],
 "claimant count change":["تغییر مدعیان بیکاری","تعداد متقاضیان مزایای بیکاری در بریتانیا.","کمتر از انتظار → پوند قوی‌تر."],
-"retail sales":["خرده‌فروشی","مخارج مصرف‌کننده؛ موتور اصلی رشد اقتصادی.","بالاتر از انتظار → اقتصاد قوی → تقویت ارز."],
+"retail sales":["خرده‌فروشی","ارزش کل فروش فروشگاه‌ها و خرده‌فروشی‌ها؛ از آنجا که مصرف خانوار بخش بزرگی از اقتصاد را می‌سازد، این شاخص موتور اصلی رشد اقتصادی و تقاضا را نشان می‌دهد.","بالاتر از انتظار → اقتصاد قوی → تقویت ارز."],
 "core retail sales":["خرده‌فروشی هسته","خرده‌فروشی بدون خودرو؛ تصویر تمیزتر از مصرف.","بالاتر از انتظار → تقویت ارز."],
 "manufacturing sales":["فروش بخش تولیدی","حجم فروش کارخانه‌ها؛ پیش‌نگر سلامت صنعت.","بالاتر از انتظار → تقویت ارز."],
 "wholesale sales":["فروش عمده‌فروشی","حجم معاملات در سطح عمده‌فروشی.","بالاتر از انتظار → تقویت ارز."],
-"gdp":["تولید ناخالص داخلی","نرخ رشد کل اقتصاد؛ گسترده‌ترین معیار سلامت اقتصادی.","بالاتر از انتظار → تقویت ارز."],
+"gdp":["تولید ناخالص داخلی","ارزش کل کالاها و خدمات تولیدشده در کشور و جامع‌ترین مقیاس رشد یا رکود اقتصاد. رشد قوی‌تر از انتظار نشان‌دهنده اقتصاد سرحال و احتمال نرخ بهره بالاتر است.","بالاتر از انتظار → تقویت ارز."],
 "gdp price index":["شاخص قیمت تولید ناخالص داخلی","تورم در کل اقتصاد، نه فقط سبد مصرف.","بالاتر از انتظار → فشار تورمی → تقویت ارز."],
 "manufacturing pmi":["شاخص مدیران خرید تولیدی","نظرسنجی مدیران خرید صنعت؛ بالای ۵۰ یعنی رشد، زیر ۵۰ یعنی انقباض.","بالاتر از انتظار → تقویت ارز."],
 "services pmi":["شاخص مدیران خرید خدمات","بخش خدمات سهم بزرگ‌تری از اقتصاد دارد، پس معمولاً مهم‌تر از تولیدی است.","بالاتر از انتظار → تقویت ارز."],
@@ -1227,7 +1294,7 @@ const D = {
 "business inventories":["موجودی انبار کسب‌وکارها","سطح ذخیره کالا در اقتصاد.","اثر معمولاً محدود."],
 "mi leading index":["شاخص پیش‌نگر ملبورن","پیش‌بینی روند اقتصاد استرالیا.","اثر جزئی."],
 "cb leading index":["شاخص پیش‌نگر کنفرانس‌بورد","ترکیبی از داده‌های پیش‌نگر اقتصاد.","اثر جزئی."],
-"federal funds rate":["نرخ بهره فدرال‌رزرو","تصمیم نرخ بهره آمریکا؛ مهم‌ترین رویداد ممکن برای دلار و طلا.","نرخ بالاتر یا لحن سخت‌گیرانه → دلار جهشی، طلا نزولی."],
+"federal funds rate":["نرخ بهره فدرال‌رزرو","نرخ پایه استقراض بین‌بانکی که فدرال‌رزرو آمریکا تعیین می‌کند. مهم‌ترین محرک بلندمدت و کوتاه‌مدت برای ارزش دلار، طلا و تمام بازارهای مالی جهان است.","نرخ بالاتر یا لحن سخت‌گیرانه → دلار جهشی، طلا نزولی."],
 "fomc statement":["بیانیه FOMC","متن تصمیم فدرال‌رزرو؛ تغییر واژه‌ها به‌اندازه خود نرخ مهم است.","لحن انقباضی → دلار قوی، طلا زیر فشار."],
 "fomc press conference":["نشست خبری فدرال‌رزرو","پرسش‌وپاسخ با رئیس فدرال‌رزرو؛ معمولاً پرنوسان‌ترین نیم‌ساعت ماه.","لحن سخت‌گیرانه → دلار قوی، طلا نزولی."],
 "fomc meeting minutes":["صورت‌جلسه FOMC","جزئیات بحث اعضا در نشست قبلی؛ نشان می‌دهد اختلاف‌نظرها کجاست.","لحن انقباضی → دلار قوی‌تر."],
@@ -1319,7 +1386,6 @@ function lookup(title){
   return {fa:label, why:hit[1], eff:hit[2]};
 }
 
-/* داده پشتیبان از calendar.json شما برای نمایش فوری در صورت عدم دسترسی به شبکه */
 const FALLBACK_EVENTS = [
   {"title":"BOE Gov Bailey Speaks","country":"GBP","date":"2026-11-09T12:25:00-05:00","impact":"Medium","forecast":"","previous":""},
   {"title":"FOMC Member Waller Speaks","country":"USD","date":"2026-11-10T04:00:00-05:00","impact":"Medium","forecast":"","previous":""},
@@ -1361,9 +1427,122 @@ const FALLBACK_EVENTS = [
 
 /* ===================== state ===================== */
 const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards',
-           theme:'auto', open:new Set(), last:0, src:''};
+           theme:'auto', lang:'fa', open:new Set(), last:0, src:''};
 const FLAG = {USD:"🇺🇸",EUR:"🇪🇺",GBP:"🇬🇧",JPY:"🇯🇵",CHF:"🇨🇭",CAD:"🇨🇦",AUD:"🇦🇺",NZD:"🇳🇿",CNY:"🇨🇳",All:"🌐"};
 const key = e => e.title + '|' + e.country + '|' + e.date;
+
+/* ===================== دو زبانه و اعداد فارسی ===================== */
+const FA_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFaNum(str){
+  return String(str).replace(/\d/g, d => FA_DIGITS[+d]);
+}
+function locNum(str){
+  if(str === null || str === undefined) return '';
+  return S.lang === 'fa' ? toFaNum(str) : String(str);
+}
+
+const UI = {
+  fa: {
+    docTitle: 'فارکس فکتوری — تقویم اقتصادی',
+    brandTitle: 'فارکس فکتوری',
+    brandSub: 'تقویم اقتصادی',
+    langBtn: 'EN',
+    viewTable: 'جدول',
+    viewCards: 'کارت',
+    tzDevice: 'وقت دستگاه',
+    tzTehran: 'وقت تهران',
+    themeLight: 'روشن',
+    themeDark: 'تیره',
+    themeAuto: 'خودکار',
+    themeLightSub: 'ملایم',
+    themeDarkSub: 'مخصوص شب',
+    themeAutoSub: 'طبق سیستم',
+    scToday: 'امروز',
+    scWeek: 'کل هفته',
+    imHigh: 'فقط پرتأثیر',
+    imMed: 'متوسط و بالا',
+    imAll: 'همه',
+    allCurs: 'همه ارزها',
+    nextNews: 'خبر مهم بعدی',
+    nextHoliday: 'تعطیلی بانکی پیش‌رو',
+    releasing: 'در حال انتشار',
+    day: 'روز',
+    hour: 'ساعت',
+    min: 'دقیقه',
+    sec: 'ثانیه',
+    today: 'امروز',
+    tomorrow: 'فردا',
+    yesterday: 'دیروز',
+    now: 'اکنون',
+    actual: 'واقعی',
+    forecast: 'پیش‌بینی',
+    previous: 'قبلی',
+    calTitle: 'تقویم اقتصادی',
+    thTime: 'زمان',
+    thCur: 'ارز',
+    thImp: 'اهمیت',
+    thEvent: 'رویداد',
+    thPrev: 'قبلی',
+    thFore: 'پیش‌بینی',
+    thAct: 'واقعی',
+    emptyTitle: 'خبری با این فیلترها نیست',
+    emptyDesc: 'فیلتر اهمیت، ارز یا بازه زمانی را بازتر کن.',
+    noteBase: 'داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال',
+    creditLbl: 'طراحی و توسعه:',
+    creditName: 'علی نظری',
+    verTag: 'نسخه ۳.۰'
+  },
+  en: {
+    docTitle: 'Forex Factory — Economic Calendar',
+    brandTitle: 'Forex Factory',
+    brandSub: 'Economic Calendar',
+    langBtn: 'فا',
+    viewTable: 'Table',
+    viewCards: 'Cards',
+    tzDevice: 'Device Time',
+    tzTehran: 'Tehran Time',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeAuto: 'Auto',
+    themeLightSub: 'Soft',
+    themeDarkSub: 'High Contrast',
+    themeAutoSub: 'System',
+    scToday: 'Today',
+    scWeek: 'Full Week',
+    imHigh: 'High Only',
+    imMed: 'Med & High',
+    imAll: 'All',
+    allCurs: 'All Currencies',
+    nextNews: 'Next Major Event',
+    nextHoliday: 'Upcoming Bank Holiday',
+    releasing: 'Releasing Now',
+    day: 'Days',
+    hour: 'Hrs',
+    min: 'Min',
+    sec: 'Sec',
+    today: 'Today',
+    tomorrow: 'Tomorrow',
+    yesterday: 'Yesterday',
+    now: 'Now',
+    actual: 'Actual',
+    forecast: 'Forecast',
+    previous: 'Previous',
+    calTitle: 'Economic Calendar',
+    thTime: 'Time',
+    thCur: 'Cur',
+    thImp: 'Impact',
+    thEvent: 'Event',
+    thPrev: 'Prev',
+    thFore: 'Forecast',
+    thAct: 'Actual',
+    emptyTitle: 'No events match these filters',
+    emptyDesc: 'Try broadening your impact, currency, or time scope filters.',
+    noteBase: 'Data from weekly Forex Factory feed · Educational insights, not financial advice',
+    creditLbl: 'Designed & Developed by',
+    creditName: 'Ali Nazari',
+    verTag: 'v3.0'
+  }
+};
 
 /* ===================== data ===================== */
 const FEED = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
@@ -1382,9 +1561,9 @@ async function loadEvents(){
       if(!r.ok) throw new Error('HTTP ' + r.status);
       const txt = await r.text();
       const a = txt.indexOf('[');
-      if(a < 0) throw new Error('پاسخ نامعتبر');
+      if(a < 0) throw new Error('Invalid response');
       const data = JSON.parse(txt.slice(a, txt.lastIndexOf(']')+1));
-      if(!Array.isArray(data) || !data.length) throw new Error('خالی');
+      if(!Array.isArray(data) || !data.length) throw new Error('Empty');
       S.src = src.s;
       save(data);
       return data.filter(e => e && e.date && e.title);
@@ -1407,59 +1586,74 @@ function restore(){
 function loadPrefs(){
   try{
     const p = JSON.parse(localStorage.getItem('ffprefs') || 'null');
-    if(p){ S.imp = p.imp || S.imp; S.scope = p.scope || S.scope; S.tz = p.tz || S.tz;
-           S.view = p.view || S.view; S.theme = p.theme || S.theme;
-           S.curs = new Set(p.curs || []); }
+    if(p){
+      S.imp = p.imp || S.imp;
+      S.scope = p.scope || S.scope;
+      S.tz = p.tz || S.tz;
+      S.view = p.view || S.view;
+      S.theme = p.theme || S.theme;
+      S.lang = p.lang || S.lang;
+      S.curs = new Set(p.curs || []);
+    }
   }catch(e){}
 }
 function savePrefs(){
   try{ localStorage.setItem('ffprefs', JSON.stringify(
-    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, theme:S.theme, curs:[...S.curs]})); }catch(e){}
+    {imp:S.imp, scope:S.scope, tz:S.tz, view:S.view, theme:S.theme, lang:S.lang, curs:[...S.curs]})); }catch(e){}
 }
 
 /* ===================== time ===================== */
 const tzOpt = () => S.tz === 'tehran' ? {timeZone:'Asia/Tehran'} : {};
-const fmtTime = d => new Intl.DateTimeFormat('en-GB', Object.assign({hour:'2-digit',minute:'2-digit',hour12:false}, tzOpt())).format(d);
+const fmtTimeRaw = d => new Intl.DateTimeFormat('en-GB', Object.assign({hour:'2-digit',minute:'2-digit',hour12:false}, tzOpt())).format(d);
+const fmtTime = d => locNum(fmtTimeRaw(d));
 const dayKey = d => new Intl.DateTimeFormat('en-CA', Object.assign({year:'numeric',month:'2-digit',day:'2-digit'}, tzOpt())).format(d);
-const weekday = d => new Intl.DateTimeFormat('fa-IR', Object.assign({weekday:'long'}, tzOpt())).format(d);
-const dateFa = d => new Intl.DateTimeFormat('fa-IR-u-nu-latn', Object.assign({day:'numeric',month:'long'}, tzOpt())).format(d);
-const dateEn = d => new Intl.DateTimeFormat('en-GB', Object.assign({weekday:'short',day:'numeric',month:'short'}, tzOpt())).format(d);
+const weekdayFa = d => new Intl.DateTimeFormat('fa-IR', Object.assign({weekday:'long'}, tzOpt())).format(d);
+const dateFa = d => toFaNum(new Intl.DateTimeFormat('fa-IR-u-nu-latn', Object.assign({day:'numeric',month:'long'}, tzOpt())).format(d));
+const dateEnFull = d => new Intl.DateTimeFormat('en-US', Object.assign({weekday:'long',month:'short',day:'numeric'}, tzOpt())).format(d);
+const dateEnShort = d => new Intl.DateTimeFormat('en-GB', Object.assign({weekday:'short',day:'numeric',month:'short'}, tzOpt())).format(d);
+
 function dayRelLabel(dk){
-  const now = Date.now();
-  if(dk === dayKey(new Date(now))) return {txt:'امروز', cls:'today'};
-  if(dk === dayKey(new Date(now + 864e5))) return {txt:'فردا', cls:''};
-  if(dk === dayKey(new Date(now - 864e5))) return {txt:'دیروز', cls:''};
+  const now = Date.now(), L = UI[S.lang];
+  if(dk === dayKey(new Date(now))) return {txt:L.today, cls:'today'};
+  if(dk === dayKey(new Date(now + 864e5))) return {txt:L.tomorrow, cls:''};
+  if(dk === dayKey(new Date(now - 864e5))) return {txt:L.yesterday, cls:''};
   return null;
 }
 
 function relTime(ms){
   const m = Math.round(Math.abs(ms)/60000);
+  if(S.lang === 'en'){
+    if(m < 1) return 'Just now';
+    const h = Math.floor(m/60), d = Math.floor(h/24);
+    const s = d >= 1 ? d + 'd' : h >= 1 ? h + 'h' : m + 'm';
+    return ms > 0 ? 'in ' + s : s + ' ago';
+  }
   if(m < 1) return 'همین حالا';
   const h = Math.floor(m/60), d = Math.floor(h/24);
-  let s = d >= 1 ? d + ' روز' : h >= 1 ? h + ' ساعت' : m + ' دقیقه';
+  let s = d >= 1 ? toFaNum(d) + ' روز' : h >= 1 ? toFaNum(h) + ' ساعت' : toFaNum(m) + ' دقیقه';
   return ms > 0 ? s + ' دیگر' : s + ' پیش';
 }
 
-/* ساخت شمارشگر دیجیتال باکس‌دار */
 function countdownHTML(ms){
-  if(ms <= 0) return '<span class="cd-now">در حال انتشار</span>';
-  const t = Math.floor(ms/1000), p = n => String(n).padStart(2,'0');
+  const L = UI[S.lang];
+  if(ms <= 0) return '<span class="cd-now">'+L.releasing+'</span>';
+  const t = Math.floor(ms/1000), p = n => locNum(String(n).padStart(2,'0'));
   const d = Math.floor(t/86400), h = Math.floor(t%86400/3600), m = Math.floor(t%3600/60), s = t%60;
   if(d > 0){
     return '<div class="cd-box">' +
-      '<div class="cd-seg"><span class="cd-val">'+p(d)+'</span><span class="cd-lbl">روز</span></div>' +
+      '<div class="cd-seg"><span class="cd-val">'+p(d)+'</span><span class="cd-lbl">'+L.day+'</span></div>' +
       '<span class="cd-sep">:</span>' +
-      '<div class="cd-seg"><span class="cd-val">'+p(h)+'</span><span class="cd-lbl">ساعت</span></div>' +
+      '<div class="cd-seg"><span class="cd-val">'+p(h)+'</span><span class="cd-lbl">'+L.hour+'</span></div>' +
       '<span class="cd-sep">:</span>' +
-      '<div class="cd-seg"><span class="cd-val">'+p(m)+'</span><span class="cd-lbl">دقیقه</span></div>' +
+      '<div class="cd-seg"><span class="cd-val">'+p(m)+'</span><span class="cd-lbl">'+L.min+'</span></div>' +
     '</div>';
   }
   return '<div class="cd-box">' +
-    '<div class="cd-seg"><span class="cd-val">'+p(h)+'</span><span class="cd-lbl">ساعت</span></div>' +
+    '<div class="cd-seg"><span class="cd-val">'+p(h)+'</span><span class="cd-lbl">'+L.hour+'</span></div>' +
     '<span class="cd-sep">:</span>' +
-    '<div class="cd-seg"><span class="cd-val">'+p(m)+'</span><span class="cd-lbl">دقیقه</span></div>' +
+    '<div class="cd-seg"><span class="cd-val">'+p(m)+'</span><span class="cd-lbl">'+L.min+'</span></div>' +
     '<span class="cd-sep">:</span>' +
-    '<div class="cd-seg"><span class="cd-val">'+p(s)+'</span><span class="cd-lbl">ثانیه</span></div>' +
+    '<div class="cd-seg"><span class="cd-val">'+p(s)+'</span><span class="cd-lbl">'+L.sec+'</span></div>' +
   '</div>';
 }
 
@@ -1482,7 +1676,7 @@ const num = v => parseFloat(String(v).replace(/[^0-9.\-]/g,''));
 
 function bullsHTML(imp, small){
   const n = rank(imp), cls = impClass(imp) + (small ? ' sm' : '');
-  let out = '<span class="bulls '+cls+'" aria-label="اهمیت '+esc(imp)+'">';
+  let out = '<span class="bulls '+cls+'" aria-label="Impact '+esc(imp)+'">';
   for(let i=1;i<=3;i++){
     out += '<svg class="bull'+(i <= n ? ' on' : '')+'" viewBox="0 0 100 73.3"><use href="#bull"/></svg>';
   }
@@ -1490,38 +1684,217 @@ function bullsHTML(imp, small){
 }
 
 function valsHTML(e){
-  const out = [];
+  const out = [], L = UI[S.lang];
   if(e.actual){
     const f = num(e.forecast), a = num(e.actual);
     const cls = (!isNaN(f) && !isNaN(a)) ? (a > f ? ' up' : a < f ? ' down' : '') : '';
-    out.push('<span class="val-pill'+cls+'">واقعی <b>'+esc(e.actual)+'</b></span>');
+    out.push('<span class="val-pill'+cls+'">'+L.actual+' <b>'+esc(locNum(e.actual))+'</b></span>');
   }
-  if(e.forecast) out.push('<span class="val-pill">پیش‌بینی <b>'+esc(e.forecast)+'</b></span>');
-  if(e.previous) out.push('<span class="val-pill">قبلی <b>'+esc(e.previous)+'</b></span>');
+  if(e.forecast) out.push('<span class="val-pill">'+L.forecast+' <b>'+esc(locNum(e.forecast))+'</b></span>');
+  if(e.previous) out.push('<span class="val-pill">'+L.previous+' <b>'+esc(locNum(e.previous))+'</b></span>');
   return out.length ? '<div class="vals">'+out.join('')+'</div>' : '';
 }
 
-function bodyHTML(e, info){
-  let html = '';
-  if(info){
-    html += '<h4>این خبر چیست</h4><p>'+esc(info.why)+'</p>';
-    html += '<h4>اثر روی بازار</h4><p>'+esc(info.eff)+'</p>';
-  }else{
-    html += '<p>این رویداد در دیکشنری نیست. عنوان انگلیسی‌اش را در فارکس‌فکتوری ببین.</p>';
+function pairEffectFa(cur, strong){
+  const dir = strong ? 'صعودی' : 'نزولی';
+  const opp = strong ? 'نزولی' : 'صعودی';
+  switch(cur){
+    case 'USD':
+      return strong
+        ? 'جفت‌ارزهایی مثل <b>USDJPY</b> و <b>USDCAD</b> تمایل به <b>صعود</b> دارند و <b>EURUSD</b>، <b>GBPUSD</b> و <b>طلا (XAUUSD)</b> معمولاً با فشار <b>نزولی</b> روبه‌رو می‌شوند.'
+        : 'جفت‌ارزهایی مثل <b>EURUSD</b>، <b>GBPUSD</b> و <b>طلا (XAUUSD)</b> معمولاً تمایل به <b>صعود</b> دارند و <b>USDJPY</b> و <b>USDCAD</b> تحت فشار <b>نزولی</b> قرار می‌گیرند.';
+    case 'EUR':
+      return 'در نتیجه <b>EURUSD</b>، <b>EURGBP</b> و <b>EURJPY</b> معمولاً تمایل به حرکت <b>'+dir+'</b> دارند.';
+    case 'GBP':
+      return 'در نتیجه <b>GBPUSD</b> و <b>GBPJPY</b> تمایل به حرکت <b>'+dir+'</b> و <b>EURGBP</b> تمایل به حرکت <b>'+opp+'</b> دارد.';
+    case 'JPY':
+      return 'در نتیجه <b>USDJPY</b> و <b>EURJPY</b> معمولاً تمایل به حرکت <b>'+opp+'</b> دارند (چون ین ارز دوم جفت‌ارز است).';
+    case 'CAD':
+      return 'در نتیجه <b>USDCAD</b> معمولاً تمایل به حرکت <b>'+opp+'</b> و <b>CADJPY</b> تمایل به حرکت <b>'+dir+'</b> دارد.';
+    case 'CHF':
+      return 'در نتیجه <b>USDCHF</b> و <b>EURCHF</b> معمولاً تمایل به حرکت <b>'+opp+'</b> دارند.';
+    case 'AUD':
+      return 'در نتیجه <b>AUDUSD</b> و <b>AUDJPY</b> معمولاً تمایل به حرکت <b>'+dir+'</b> دارند.';
+    case 'NZD':
+      return 'در نتیجه <b>NZDUSD</b> و <b>NZDJPY</b> معمولاً تمایل به حرکت <b>'+dir+'</b> دارند.';
+    default:
+      return 'ارز <b>'+esc(cur)+'</b> در برابر سایر ارزها تمایل به حرکت <b>'+dir+'</b> پیدا می‌کند.';
   }
-  if(e.forecast && e.previous){
-    const f = num(e.forecast), p = num(e.previous);
-    if(!isNaN(f) && !isNaN(p)){
-      const dir = f > p ? 'بهتر از دوره قبل' : f < p ? 'ضعیف‌تر از دوره قبل' : 'هم‌سطح دوره قبل';
-      html += '<h4>انتظار بازار</h4><p>بازار رقمی '+dir+' انتظار دارد ('+esc(e.previous)+' → '+esc(e.forecast)+'). '+
-              'انحراف از پیش‌بینی است که حرکت می‌سازد، نه خودِ عدد.</p>';
+}
+
+function pairEffectEn(cur, strong){
+  const dir = strong ? 'bullish (upward)' : 'bearish (downward)';
+  const opp = strong ? 'bearish (downward)' : 'bullish (upward)';
+  switch(cur){
+    case 'USD':
+      return strong
+        ? 'Pairs like <b>USDJPY</b> and <b>USDCAD</b> tend to move <b>higher</b>, while <b>EURUSD</b>, <b>GBPUSD</b>, and <b>Gold (XAUUSD)</b> face <b>downward</b> pressure.'
+        : '<b>EURUSD</b>, <b>GBPUSD</b>, and <b>Gold (XAUUSD)</b> tend to move <b>higher</b>, while <b>USDJPY</b> and <b>USDCAD</b> face <b>downward</b> pressure.';
+    case 'EUR':
+      return 'Consequently, <b>EURUSD</b>, <b>EURGBP</b>, and <b>EURJPY</b> typically see <b>'+dir+'</b> momentum.';
+    case 'GBP':
+      return 'Consequently, <b>GBPUSD</b> and <b>GBPJPY</b> see <b>'+dir+'</b> pressure while <b>EURGBP</b> moves <b>'+opp+'</b>.';
+    case 'JPY':
+      return 'Consequently, <b>USDJPY</b> and <b>EURJPY</b> typically move <b>'+opp+'</b> (since JPY is the quote currency).';
+    case 'CAD':
+      return 'Consequently, <b>USDCAD</b> typically moves <b>'+opp+'</b> while <b>CADJPY</b> moves <b>'+dir+'</b>.';
+    case 'CHF':
+      return 'Consequently, <b>USDCHF</b> and <b>EURCHF</b> typically move <b>'+opp+'</b>.';
+    case 'AUD':
+      return 'Consequently, <b>AUDUSD</b> and <b>AUDJPY</b> typically see <b>'+dir+'</b> momentum.';
+    case 'NZD':
+      return 'Consequently, <b>NZDUSD</b> and <b>NZDJPY</b> typically see <b>'+dir+'</b> momentum.';
+    default:
+      return '<b>'+esc(cur)+'</b> tends to experience <b>'+dir+'</b> pressure against major counterparts.';
+  }
+}
+
+function isInverseMetric(title){
+  const t = String(title || '').toLowerCase();
+  return /unemployment rate|unemployment claims|claimant count|unemployment change|challenger job cuts|mortgage delinquencies|jobless/.test(t);
+}
+
+function bodyHTML(e, info){
+  if(S.lang === 'en') return bodyHTMLEn(e);
+  let html = '';
+  const cur = esc(e.country || '');
+  const tLow = (e.title || '').toLowerCase();
+
+  html += '<h4>این خبر دقیقاً چیست؟</h4>';
+  if(info){
+    html += '<p>'+esc(toFaNum(info.why))+'</p>';
+  }else{
+    html += '<p>رویداد اقتصادی مربوط به ارز <b>'+cur+'</b> با عنوان انگلیسی <span dir="ltr">'+esc(e.title)+'</span>. این شاخص وضعیت بخشی از اقتصاد یا سیاست پولی این کشور را گزارش می‌دهد.</p>';
+  }
+
+  html += '<h4>انتظار بازار و اثر روی قیمت</h4>';
+
+  if(isHoliday(e.impact)){
+    html += '<p>در روزهای تعطیلی بانکی عدد پیش‌بینی یا واقعی منتشر نمی‌شود؛ مهم‌ترین اثر آن کاهش نقدشوندگی و حجم معاملات در سشن مربوط به <b>'+cur+'</b> است.</p>';
+    html += '<div class="scen-list"><div class="scen"><b>رفتار معمول قیمت:</b> بازار معمولاً کم‌رمق یا رِنج می‌شود، اما به دلیل خالی بودن دفتر سفارش‌ها، ممکن است اسپایک‌های ناگهانی و اسپرد بالا دیده شود.</div></div>';
+  }else if(/\bspeaks$|symposium|minutes|statement|press conference|bulletin|opinions|deliberations|meetings/.test(tLow)){
+    html += '<p>این رویداد عددی نیست و بازار به <b>لحن کلام و جهت‌گیری سیاست پولی</b> واکنش نشان می‌دهد (نه به پیش‌بینی عددی).</p>';
+    html += '<div class="scen-list">'+
+      '<div class="scen bullish"><b class="tag">▲ لحن انقباضی (Hawkish / سخت‌گیرانه):</b> اشاره به نگرانی از تورم یا نیاز به بالا نگه داشتن نرخ بهره ← <b>تقویت '+cur+'</b>؛ '+pairEffectFa(e.country, true)+'</div>'+
+      '<div class="scen bearish"><b class="tag">▼ لحن انبساطی (Dovish / نرم):</b> اشاره به ضعف اقتصاد یا احتمال کاهش نرخ بهره ← <b>تضعیف '+cur+'</b>؛ '+pairEffectFa(e.country, false)+'</div>'+
+    '</div>';
+  }else if(/crude oil inventories|natural gas storage|api weekly/.test(tLow)){
+    const asset = tLow.includes('natural gas') ? 'گاز طبیعی' : 'نفت (WTI/Brent)';
+    const fcTxt = e.forecast ? 'پیش‌بینی فعلی بازار روی <b>'+esc(toFaNum(e.forecast))+'</b> است. ' : '';
+    html += '<p>'+fcTxt+'افزایش غیرمنتظره ذخایر یعنی تقاضا کمتر یا عرضه بیشتر بوده است.</p>';
+    html += '<div class="scen-list">'+
+      '<div class="scen bearish"><b class="tag">▲ بالاتر از پیش‌بینی:</b> ذخیره بیشتر از انتظار ← فشار <b>نزولی</b> روی قیمت '+asset+(e.country==='USD'?' و معمولاً فشار منفی روی <b>CAD</b> (به‌عنوان ارز نفتی)':'')+'.</div>'+
+      '<div class="scen bullish"><b class="tag">▼ پایین‌تر از پیش‌بینی:</b> کاهش ذخیره بیشتر از انتظار ← حمایت <b>صعودی</b> از قیمت '+asset+'.</div>'+
+    '</div>';
+  }else{
+    const inv = isInverseMetric(e.title);
+    let intro = '';
+    if(e.forecast && e.previous){
+      const f = num(e.forecast), p = num(e.previous);
+      let cmp = '';
+      if(!isNaN(f) && !isNaN(p)){
+        cmp = f > p ? ' (بالاتر از عدد قبلی)' : f < p ? ' (پایین‌تر از عدد قبلی)' : ' (بدون تغییر نسبت به دوره قبل)';
+      }
+      intro = 'عدد دوره قبل <b>'+esc(toFaNum(e.previous))+'</b> بوده و انتظار فعلی بازار (پیش‌بینی) روی <b>'+esc(toFaNum(e.forecast))+'</b>'+cmp+' قرار دارد. ';
+    }else if(e.forecast){
+      intro = 'پیش‌بینی و انتظار فعلی بازار روی <b>'+esc(toFaNum(e.forecast))+'</b> است. ';
+    }else{
+      intro = 'واکنش بازار بر اساس مقایسه عدد <b>واقعی (Actual)</b> با <b>پیش‌بینی (Forecast)</b> شکل می‌گیرد. ';
+    }
+    intro += 'آنچه باعث حرکت تند قیمت می‌شود، <b>اختلاف عدد واقعی با پیش‌بینی</b> است؛ نه خودِ عدد به تنهایی:';
+    html += '<p>'+intro+'</p>';
+
+    const fcRef = e.forecast ? ' (بیشتر از '+esc(toFaNum(e.forecast))+')' : '';
+    const fcRefLow = e.forecast ? ' (کمتر از '+esc(toFaNum(e.forecast))+')' : '';
+
+    if(!inv){
+      html += '<div class="scen-list">'+
+        '<div class="scen bullish"><b class="tag">▲ اگر بالاتر از انتظار'+fcRef+' بیاید:</b> یعنی شاخص قوی‌تر از پیش‌بینی است و احتمال سیاست سخت‌گیرانه‌تر بانک مرکزی بالا می‌رود ← <b>تقویت '+cur+'</b>؛ '+pairEffectFa(e.country, true)+'</div>'+
+        '<div class="scen bearish"><b class="tag">▼ اگر پایین‌تر از انتظار'+fcRefLow+' بیاید:</b> یعنی داده‌ها ضعیف‌تر از پیش‌بینی بازار است ← <b>تضعیف '+cur+'</b>؛ '+pairEffectFa(e.country, false)+'</div>'+
+      '</div>';
+    }else{
+      html += '<div class="scen-list">'+
+        '<div class="scen bearish"><b class="tag">▲ اگر بالاتر از انتظار'+fcRef+' بیاید:</b> در این شاخص عدد بالاتر به معنی <b>وضعیت ضعیف‌تر</b> (بیکاری یا ریسک بیشتر) است ← <b>تضعیف '+cur+'</b>؛ '+pairEffectFa(e.country, false)+'</div>'+
+        '<div class="scen bullish"><b class="tag">▼ اگر پایین‌تر از انتظار'+fcRefLow+' بیاید:</b> یعنی شرایط بهتر از پیش‌بینی بازار و بازار کار قوی‌تر است ← <b>تقویت '+cur+'</b>؛ '+pairEffectFa(e.country, true)+'</div>'+
+      '</div>';
+    }
+    if(e.actual){
+      html += '<p><b>نتیجه منتشرشده:</b> عدد واقعی <b>'+esc(toFaNum(e.actual))+'</b> ثبت شده است.</p>';
     }
   }
+
   if(isHoliday(e.impact)){
-    html += '<h4>نکته معاملاتی تعطیلی بانکی</h4><p>در روزهای تعطیلی بانکی نقدشوندگی بازار کاهش می‌یابد، اسپردها ممکن است باز شوند و حرکت‌های قیمت گاهی کم‌رمق یا فریبنده هستند.</p>';
+    html += '<h4>نکته معاملاتی</h4><p>در زمان تعطیلی بانکی از ورود به معاملات اسکالپ روی جفت‌ارزهای <b>'+cur+'</b> خودداری کنید یا حد ضرر را با احتیاط تنظیم کنید.</p>';
   }else if(rank(e.impact) === 3){
-    html += '<h4>نکته اجرایی</h4><p>در دقایق اطراف این خبر اسپرد باز می‌شود و استاپ‌ها راحت شکار می‌شوند. '+
-            'اگر پوزیشن باز داری، حجم و استاپ را قبلش تنظیم کن.</p>';
+    html += '<h4>نکته اجرایی</h4><p>در دقایق قبل و بعد از انتشار این خبر، اسپرد بروکرها باز می‌شود و نوسان رفت‌وبرگشتی (شکار استاپ) زیاد است؛ پیش از خبر حجم و حد ضرر خود را مدیریت کنید.</p>';
+  }
+  return html;
+}
+
+function bodyHTMLEn(e){
+  let html = '';
+  const cur = esc(e.country || '');
+  const tLow = (e.title || '').toLowerCase();
+
+  html += '<h4>What Is This Event?</h4>';
+  if(isHoliday(e.impact)){
+    html += '<p>Banks and local financial markets in <b>'+cur+'</b> are closed for a public holiday, reducing liquidity during this session.</p>';
+  }else if(/cpi|pce|ppi|wpi|inflation/.test(tLow)){
+    html += '<p><b>'+esc(e.title)+'</b> measures price changes and inflationary pressure for <b>'+cur+'</b>. Central banks closely watch inflation data when deciding interest rate policy.</p>';
+  }else if(/employment|unemployment|payrolls|job|claimant|earnings|wage/.test(tLow)){
+    html += '<p><b>'+esc(e.title)+'</b> is a key labor market indicator for <b>'+cur+'</b>. Strong job growth supports consumer spending and hawkish monetary policy.</p>';
+  }else if(/gdp|retail sales|pmi|production|orders|sales|trade balance|account/.test(tLow)){
+    html += '<p><b>'+esc(e.title)+'</b> tracks economic activity and demand for <b>'+cur+'</b>, acting as a leading gauge of overall economic momentum.</p>';
+  }else if(/rate|fomc|ecb|boe|boj|rba|boc|snb|mpc|speaks|minutes|statement/.test(tLow)){
+    html += '<p><b>'+esc(e.title)+'</b> communicates central bank policy direction and interest rate outlook for <b>'+cur+'</b>.</p>';
+  }else{
+    html += '<p>Economic indicator for <b>'+cur+'</b> (<b>'+esc(e.title)+'</b>) reflecting macroeconomic or monetary conditions.</p>';
+  }
+
+  html += '<h4>Market Expectation & Price Impact</h4>';
+  if(isHoliday(e.impact)){
+    html += '<div class="scen-list"><div class="scen"><b>Typical Price Action:</b> Lower liquidity and wider spreads; price often ranges but can experience sudden thin-market spikes.</div></div>';
+  }else if(/\bspeaks$|symposium|minutes|statement|press conference|bulletin|opinions|deliberations|meetings/.test(tLow)){
+    html += '<p>Traders react to the <b>policy tone (Hawkish vs. Dovish)</b> rather than a single number:</p>';
+    html += '<div class="scen-list">'+
+      '<div class="scen bullish"><b class="tag">▲ Hawkish Tone (Higher Rates / Inflation Focus):</b> Bullish for <b>'+cur+'</b>. '+pairEffectEn(e.country, true)+'</div>'+
+      '<div class="scen bearish"><b class="tag">▼ Dovish Tone (Rate Cuts / Growth Concerns):</b> Bearish for <b>'+cur+'</b>. '+pairEffectEn(e.country, false)+'</div>'+
+    '</div>';
+  }else if(/crude oil inventories|natural gas storage|api weekly/.test(tLow)){
+    const asset = tLow.includes('natural gas') ? 'Natural Gas' : 'Crude Oil (WTI/Brent)';
+    html += '<div class="scen-list">'+
+      '<div class="scen bearish"><b class="tag">▲ Higher Than Forecast:</b> Larger inventory build signals weaker demand ← <b>Bearish</b> for '+asset+'.</div>'+
+      '<div class="scen bullish"><b class="tag">▼ Lower Than Forecast:</b> Larger drawdown signals stronger demand ← <b>Bullish</b> for '+asset+'.</div>'+
+    '</div>';
+  }else{
+    const inv = isInverseMetric(e.title);
+    let intro = '';
+    if(e.forecast && e.previous){
+      intro = 'Previous reading was <b>'+esc(e.previous)+'</b> and market consensus forecast stands at <b>'+esc(e.forecast)+'</b>. ';
+    }else if(e.forecast){
+      intro = 'Market consensus forecast stands at <b>'+esc(e.forecast)+'</b>. ';
+    }
+    intro += 'Price volatility is driven by the <b>deviation between Actual and Forecast</b>:';
+    html += '<p>'+intro+'</p>';
+
+    const fcHi = e.forecast ? ' (&gt; '+esc(e.forecast)+')' : '';
+    const fcLo = e.forecast ? ' (&lt; '+esc(e.forecast)+')' : '';
+
+    if(!inv){
+      html += '<div class="scen-list">'+
+        '<div class="scen bullish"><b class="tag">▲ Higher Than Forecast'+fcHi+':</b> Stronger economic reading supports hawkish policy ← <b>Bullish for '+cur+'</b>. '+pairEffectEn(e.country, true)+'</div>'+
+        '<div class="scen bearish"><b class="tag">▼ Lower Than Forecast'+fcLo+':</b> Weaker reading weighs on rate expectations ← <b>Bearish for '+cur+'</b>. '+pairEffectEn(e.country, false)+'</div>'+
+      '</div>';
+    }else{
+      html += '<div class="scen-list">'+
+        '<div class="scen bearish"><b class="tag">▲ Higher Than Forecast'+fcHi+':</b> For this indicator, a higher figure reflects economic slack ← <b>Bearish for '+cur+'</b>. '+pairEffectEn(e.country, false)+'</div>'+
+        '<div class="scen bullish"><b class="tag">▼ Lower Than Forecast'+fcLo+':</b> Lower reading signals a tighter labor/credit market ← <b>Bullish for '+cur+'</b>. '+pairEffectEn(e.country, true)+'</div>'+
+      '</div>';
+    }
+  }
+
+  if(rank(e.impact) === 3 && !isHoliday(e.impact)){
+    html += '<h4>Execution Note</h4><p>Spreads often widen and stop-hunts (whipsaws) are common in the minutes around high-impact releases. Manage position size and stops beforehand.</p>';
   }
   return html;
 }
@@ -1532,13 +1905,13 @@ function render(){
 }
 
 function renderCards(){
-  const list = document.getElementById('list');
+  const list = document.getElementById('list'), L = UI[S.lang];
   const evs = S.events.filter(passes);
   if(!evs.length){
-    list.innerHTML = '<div class="state"><b>خبری با این فیلترها نیست</b>فیلتر اهمیت، ارز یا بازه زمانی را بازتر کن.</div>';
+    list.innerHTML = '<div class="state"><b>'+L.emptyTitle+'</b>'+L.emptyDesc+'</div>';
     return;
   }
-  const now = Date.now(), today = dayKey(new Date()), tmr = dayKey(new Date(Date.now()+864e5));
+  const now = Date.now(), today = dayKey(new Date());
   let html = '', cur = '', nowIns = false;
   for(const e of evs){
     const d = new Date(e.date), dk = dayKey(d);
@@ -1546,26 +1919,32 @@ function renderCards(){
       cur = dk;
       const rel = dayRelLabel(dk);
       const relHtml = rel ? '<span class="day-rel '+rel.cls+'">'+rel.txt+'</span>' : '';
+      const mainDate = S.lang === 'fa' ? (weekdayFa(d)+'، '+dateFa(d)) : dateEnFull(d);
+      const subDate = S.lang === 'fa' ? toFaNum(new Intl.DateTimeFormat('fa-IR-u-nu-latn', Object.assign({year:'numeric',month:'2-digit',day:'2-digit'}, tzOpt())).format(d)) : '';
       html += '<div class="day"><div class="day-right">'+relHtml+
-        '<span class="day-main">'+weekday(d)+'، '+dateFa(d)+'</span></div>'+
-        '<span class="day-en">'+dateEn(d)+'</span></div>';
+        '<span class="day-main">'+mainDate+'</span></div>'+
+        '<span class="day-sub">'+subDate+'</span></div>';
     }
     if(!nowIns && dk === today && d.getTime() > now){
-      html += '<div class="nowline"><b data-now>اکنون '+fmtTime(new Date())+'</b><i></i></div>';
+      html += '<div class="nowline"><b data-now>'+L.now+' '+fmtTime(new Date())+'</b><i></i></div>';
       nowIns = true;
     }
     const k = key(e), info = lookup(e.title), open = S.open.has(k), diff = d.getTime()-now;
     const soon = rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '';
+    const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : e.title) : e.title;
+    const showEnSub = S.lang === 'fa' && info;
+    const whyTxt = S.lang === 'fa' && info ? '<div class="why">'+esc(toFaNum(info.why))+'</div>' : '';
+
     html += '<button class="ev '+impClass(e.impact)+soon+(diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" aria-expanded="'+open+'">'+
-      '<span class="chev">\u25BE</span>'+
+      '<span class="chev">▾</span>'+
       '<div class="tcol"><span class="t">'+fmtTime(d)+'</span><span class="rel" data-cd="'+d.getTime()+'">'+relTime(diff)+'</span></div>'+
       '<div><div class="ev-head">'+
         '<span class="cur-badge"><i>'+(FLAG[e.country] || '')+'</i>'+esc(e.country)+'</span>'+
         bullsHTML(e.impact, true)+
-        '<span class="en">'+esc(e.title)+'</span>'+
+        (showEnSub ? '<span class="en">'+esc(e.title)+'</span>' : '')+
       '</div>'+
-      '<div class="fa">'+esc(info ? info.fa : e.title)+'</div>'+
-      (info ? '<div class="why">'+esc(info.why)+'</div>' : '')+
+      '<div class="fa">'+esc(titleMain)+'</div>'+
+      whyTxt+
       valsHTML(e)+'</div>'+
       (open ? '<div class="body">'+bodyHTML(e, info)+'</div>' : '')+'</button>';
   }
@@ -1573,13 +1952,13 @@ function renderCards(){
 }
 
 function renderTable(){
-  const list = document.getElementById('list');
+  const list = document.getElementById('list'), L = UI[S.lang];
   const evs = S.events.filter(passes);
   if(!evs.length){
-    list.innerHTML = '<div class="state"><b>خبری با این فیلترها نیست</b>فیلتر اهمیت، ارز یا بازه زمانی را بازتر کن.</div>';
+    list.innerHTML = '<div class="state"><b>'+L.emptyTitle+'</b>'+L.emptyDesc+'</div>';
     return;
   }
-  const now = Date.now(), today = dayKey(new Date()), tmr = dayKey(new Date(Date.now()+864e5));
+  const now = Date.now();
   const hasActual = evs.some(e => e.actual);
   const cols = hasActual ? 7 : 6;
 
@@ -1590,9 +1969,11 @@ function renderTable(){
       cur = dk;
       const rel = dayRelLabel(dk);
       const relHtml = rel ? '<span class="day-rel '+rel.cls+'">'+rel.txt+'</span> ' : '';
+      const mainDate = S.lang === 'fa' ? (weekdayFa(d)+'، '+dateFa(d)) : dateEnFull(d);
+      const subDate = S.lang === 'fa' ? toFaNum(new Intl.DateTimeFormat('fa-IR-u-nu-latn', Object.assign({year:'numeric',month:'2-digit',day:'2-digit'}, tzOpt())).format(d)) : '';
       rows += '<tr class="dayrow"><td colspan="'+cols+'"><div class="dayrow-wrap">'+
-        '<div>'+relHtml+'<span>'+weekday(d)+'، '+dateFa(d)+'</span></div>'+
-        '<span class="day-en">'+dateEn(d)+'</span></div></td></tr>';
+        '<div>'+relHtml+'<span>'+mainDate+'</span></div>'+
+        '<span class="day-sub">'+subDate+'</span></div></td></tr>';
     }
     const k = key(e), info = lookup(e.title), diff = d.getTime()-now;
     let actTd = '';
@@ -1602,49 +1983,60 @@ function renderTable(){
         const f = num(e.forecast), a = num(e.actual);
         if(!isNaN(f) && !isNaN(a)) cls = a > f ? ' up' : a < f ? ' down' : '';
       }
-      actTd = '<td class="numtd'+cls+'">'+esc(e.actual || '–')+'</td>';
+      actTd = '<td class="numtd'+cls+'">'+esc(e.actual ? locNum(e.actual) : '–')+'</td>';
     }
+    const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : e.title) : e.title;
+    const subEn = (S.lang === 'fa' && info) ? '<small>'+esc(e.title)+'</small>' : '';
+
     rows += '<tr class="row '+impClass(e.impact)+
       (rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '')+
       (diff < -36e5 ? ' past':'')+'" data-k="'+esc(k)+'" data-open="'+(S.open.has(k)?'1':'0')+'">'+
       '<td class="ttd">'+fmtTime(d)+'</td>'+
       '<td class="curtd"><i>'+(FLAG[e.country] || '')+'</i>'+esc(e.country)+'</td>'+
       '<td>'+bullsHTML(e.impact, true)+'</td>'+
-      '<td class="evt">'+esc(info ? info.fa : e.title)+'<span class="chev-t">\u25BE</span><small>'+esc(e.title)+'</small></td>'+
-      '<td class="numtd">'+esc(e.previous || '–')+'</td>'+
-      '<td class="numtd">'+esc(e.forecast || '–')+'</td>'+
+      '<td class="evt">'+esc(titleMain)+'<span class="chev-t">▾</span>'+subEn+'</td>'+
+      '<td class="numtd">'+esc(e.previous ? locNum(e.previous) : '–')+'</td>'+
+      '<td class="numtd">'+esc(e.forecast ? locNum(e.forecast) : '–')+'</td>'+
       actTd + '</tr>';
     if(S.open.has(k))
       rows += '<tr class="det"><td colspan="'+cols+'"><div class="body">'+bodyHTML(e, info)+'</div></td></tr>';
   }
 
   const anchor = new Date(S.scope === 'today' ? Date.now() : evs[0].date);
+  const headDate = S.lang === 'fa' ? (weekdayFa(anchor)+' · '+dateFa(anchor)) : dateEnFull(anchor);
   list.innerHTML =
-    '<div class="calhead"><b>تقویم اقتصادی</b>'+
-      '<span>'+weekday(anchor)+' · '+dateFa(anchor)+'</span></div>'+
+    '<div class="calhead"><b>'+L.calTitle+'</b>'+
+      '<span>'+headDate+'</span></div>'+
     '<div class="tablewrap"><table class="cal'+(hasActual ? ' has-actual' : '')+'"><thead><tr>'+
-      '<th class="w-t">زمان</th><th class="w-c">ارز</th><th class="w-i">اهمیت</th>'+
-      '<th>رویداد</th><th class="w-n">قبلی</th><th class="w-n">پیش‌بینی</th>'+
-      (hasActual ? '<th class="w-n">واقعی</th>' : '')+
+      '<th class="w-t">'+L.thTime+'</th><th class="w-c">'+L.thCur+'</th><th class="w-i">'+L.thImp+'</th>'+
+      '<th>'+L.thEvent+'</th><th class="w-n">'+L.thPrev+'</th><th class="w-n">'+L.thFore+'</th>'+
+      (hasActual ? '<th class="w-n">'+L.thAct+'</th>' : '')+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
 function renderNext(){
-  const box = document.getElementById('nextBox'), now = Date.now();
+  const box = document.getElementById('nextBox'), now = Date.now(), L = UI[S.lang];
   const n = S.events.filter(e => rank(e.impact) >= 2 && new Date(e.date).getTime() > now)
                     .sort((a,b) => new Date(a.date)-new Date(b.date))[0];
   if(!n){ box.innerHTML = ''; return; }
   const t = new Date(n.date).getTime(), info = lookup(n.title);
   const soonCls = (rank(n.impact) === 3 && t-now < 36e5) ? ' soon' : '';
+  const dt = new Date(t);
+  const r = dayRelLabel(dayKey(dt));
+  const dateStr = S.lang === 'fa'
+    ? ((r ? r.txt + ' · ' : '') + weekdayFa(dt) + ' ' + dateFa(dt) + ' · ' + fmtTime(dt))
+    : ((r ? r.txt + ' · ' : '') + dateEnShort(dt) + ' · ' + fmtTime(dt));
+  const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : n.title) : n.title;
+
   box.innerHTML = '<div class="next '+impClass(n.impact)+soonCls+'">'+
     '<div class="next-info">'+
       '<div class="next-meta">'+
-        '<span class="next-badge">'+(isHoliday(n.impact) ? 'تعطیلی بانکی پیش‌رو' : 'خبر مهم بعدی')+'</span>'+
+        '<span class="next-badge">'+(isHoliday(n.impact) ? L.nextHoliday : L.nextNews)+'</span>'+
         '<span class="next-cur"><i>'+(FLAG[n.country] || '')+'</i>'+esc(n.country)+'</span>'+
-        '<span class="next-time">'+(function(dt){ const r=dayRelLabel(dayKey(dt)); return (r?r.txt+' · ':'')+weekday(dt)+' '+dateFa(dt)+' · '+fmtTime(dt); })(new Date(t))+'</span>'+
+        '<span class="next-time">'+dateStr+'</span>'+
       '</div>'+
-      '<div class="next-title">'+esc(info ? info.fa : n.title)+'</div>'+
-      (info ? '<div class="next-en">'+esc(n.title)+'</div>' : '')+
+      '<div class="next-title">'+esc(titleMain)+'</div>'+
+      (S.lang === 'fa' && info ? '<div class="next-en">'+esc(n.title)+'</div>' : '')+
     '</div>'+
     '<div class="next-side">'+
       bullsHTML(n.impact, false)+
@@ -1654,12 +2046,12 @@ function renderNext(){
 }
 
 setInterval(() => {
-  const now = Date.now();
+  const now = Date.now(), L = UI[S.lang];
   document.querySelectorAll('[data-cd]').forEach(el => el.textContent = relTime(+el.dataset.cd - now));
   const b = document.querySelector('[data-cd-big]');
   if(b) b.innerHTML = countdownHTML(+b.dataset.cdBig - now);
   const nw = document.querySelector('[data-now]');
-  if(nw) nw.textContent = 'اکنون ' + fmtTime(new Date());
+  if(nw) nw.textContent = L.now + ' ' + fmtTime(new Date());
 }, 1000);
 
 /* ===================== interactions ===================== */
@@ -1669,9 +2061,17 @@ document.getElementById('list').addEventListener('click', ev => {
   S.open.has(k) ? S.open.delete(k) : S.open.add(k);
   render();
 });
+document.getElementById('langBtn').addEventListener('click', () => {
+  S.lang = S.lang === 'fa' ? 'en' : 'fa';
+  savePrefs();
+  applyLang();
+  buildCurFilters();
+  render();
+  showSource();
+});
 document.getElementById('viewBtn').addEventListener('click', () => {
   S.view = S.view === 'cards' ? 'table' : 'cards';
-  document.getElementById('viewTxt').textContent = S.view === 'table' ? 'کارت' : 'جدول';
+  syncChips();
   savePrefs(); render();
 });
 document.getElementById('scopeFilters').addEventListener('click', ev => {
@@ -1698,7 +2098,7 @@ document.getElementById('curFilters').addEventListener('click', ev => {
 });
 document.getElementById('tzBtn').addEventListener('click', () => {
   S.tz = S.tz === 'device' ? 'tehran' : 'device';
-  document.getElementById('tzTxt').textContent = S.tz === 'tehran' ? 'وقت تهران' : 'وقت دستگاه';
+  syncChips();
   savePrefs(); render();
 });
 document.getElementById('refBtn').addEventListener('click', () => boot(true));
@@ -1706,12 +2106,40 @@ document.addEventListener('visibilitychange', () => {
   if(!document.hidden && Date.now() - S.last > 15*60*1000) boot(false);
 });
 
-/* ===================== boot ===================== */
+/* ===================== boot & i18n ===================== */
+function applyLang(){
+  const L = UI[S.lang];
+  document.documentElement.lang = S.lang;
+  document.documentElement.dir = S.lang === 'en' ? 'ltr' : 'rtl';
+  document.title = L.docTitle;
+  document.getElementById('brandTitle').textContent = L.brandTitle;
+  document.getElementById('brandSub').textContent = L.brandSub;
+  document.getElementById('langBtn').textContent = L.langBtn;
+  document.getElementById('scToday').textContent = L.scToday;
+  document.getElementById('scWeek').textContent = L.scWeek;
+  document.getElementById('imHigh').textContent = L.imHigh;
+  document.getElementById('imMed').textContent = L.imMed;
+  document.getElementById('imAll').textContent = L.imAll;
+  document.getElementById('noteBase').textContent = L.noteBase;
+  document.getElementById('creditLbl').textContent = L.creditLbl;
+  document.getElementById('creditName').textContent = L.creditName;
+  document.getElementById('verTag').textContent = L.verTag;
+  document.querySelector('[data-i18n="t_light"]').textContent = L.themeLight;
+  document.querySelector('[data-i18n="t_dark"]').textContent = L.themeDark;
+  document.querySelector('[data-i18n="t_auto"]').textContent = L.themeAuto;
+  document.querySelector('[data-i18n="t_light_s"]').textContent = L.themeLightSub;
+  document.querySelector('[data-i18n="t_dark_s"]').textContent = L.themeDarkSub;
+  document.querySelector('[data-i18n="t_auto_s"]').textContent = L.themeAutoSub;
+  syncChips();
+  applyTheme();
+}
+
 function buildCurFilters(){
+  const L = UI[S.lang];
   const order = ['USD','EUR','GBP','JPY','CHF','CAD','AUD','NZD','CNY','All'];
   const seen = [...new Set(S.events.map(e => e.country))]
     .sort((a,b) => (order.indexOf(a)+99)%100 - (order.indexOf(b)+99)%100);
-  const allBtn = '<button class="chip all-cur" data-cur="__all__" aria-pressed="'+(S.curs.size===0)+'">همه ارزها</button>';
+  const allBtn = '<button class="chip all-cur" data-cur="__all__" aria-pressed="'+(S.curs.size===0)+'">'+L.allCurs+'</button>';
   const curBtns = seen.map(c =>
     '<button class="chip cur" data-cur="'+c+'" aria-pressed="'+S.curs.has(c)+'"><i>'+(FLAG[c]||'')+'</i>'+c+'</button>'
   ).join('');
@@ -1719,12 +2147,13 @@ function buildCurFilters(){
 }
 
 function syncChips(){
+  const L = UI[S.lang];
   document.querySelectorAll('#scopeFilters .seg-btn[data-scope]')
     .forEach(x => x.setAttribute('aria-pressed', x.dataset.scope === S.scope));
   document.querySelectorAll('#scopeFilters .seg-btn[data-imp]')
     .forEach(x => x.setAttribute('aria-pressed', x.dataset.imp === S.imp));
-  document.getElementById('tzTxt').textContent = S.tz === 'tehran' ? 'وقت تهران' : 'وقت دستگاه';
-  document.getElementById('viewTxt').textContent = S.view === 'table' ? 'کارت' : 'جدول';
+  document.getElementById('tzTxt').textContent = S.tz === 'tehran' ? L.tzTehran : L.tzDevice;
+  document.getElementById('viewTxt').textContent = S.view === 'table' ? L.viewCards : L.viewTable;
 }
 
 async function boot(manual){
@@ -1738,7 +2167,7 @@ async function boot(manual){
     buildCurFilters(); render(); showSource();
   }catch(err){
     document.getElementById('list').innerHTML =
-      '<div class="state"><b>تقویم نیامد</b>هیچ‌کدام از منبع‌ها جواب ندادند ('+esc(err.message)+').</div>';
+      '<div class="state"><b>Error</b>'+esc(err.message)+'</div>';
   }
   btn.disabled = false;
 }
@@ -1747,40 +2176,46 @@ function showSource(){
   const el = document.getElementById('upd');
   if(!el) return;
   if(S.src === 'live'){
-    el.textContent = ' · مستقیم از فارکس‌فکتوری، همین الان';
+    el.textContent = S.lang === 'fa' ? ' · مستقیم از فارکس‌فکتوری' : ' · Live from Forex Factory';
     return;
   }
   if(S.src === 'cache'){
-    el.textContent = ' · آفلاین: آخرین نسخه‌ی ذخیره‌شده در مرورگر';
+    el.textContent = S.lang === 'fa' ? ' · آفلاین: آخرین نسخه‌ی ذخیره‌شده' : ' · Offline cached copy';
     return;
   }
   if(S.src === 'fallback'){
-    el.textContent = ' · داده تقویم هفته جاری';
+    el.textContent = S.lang === 'fa' ? ' · داده تقویم هفته جاری' : ' · Current week snapshot';
     return;
   }
   if(S.src === 'repo'){
-    el.textContent = ' · به‌روزرسانی خودکار هر ساعت';
+    el.textContent = S.lang === 'fa' ? ' · به‌روزرسانی خودکار هر ساعت' : ' · Auto-updated hourly';
     fetch('./updated.json?t=' + Math.floor(Date.now()/6e5), {cache:'no-store'})
       .then(r => r.ok ? r.json() : null)
       .then(o => {
         if(!o || !o.updated) return;
         const m = Math.round((Date.now() - new Date(o.updated))/6e4);
-        el.textContent = ' · آخرین به‌روزرسانی: ' +
-          (m < 60 ? m + ' دقیقه پیش' : Math.round(m/60) + ' ساعت پیش');
+        if(S.lang === 'fa'){
+          el.textContent = ' · آخرین به‌روزرسانی: ' +
+            (m < 60 ? toFaNum(m) + ' دقیقه پیش' : toFaNum(Math.round(m/60)) + ' ساعت پیش');
+        }else{
+          el.textContent = ' · Last updated: ' +
+            (m < 60 ? m + 'm ago' : Math.round(m/60) + 'h ago');
+        }
       }).catch(() => {});
   }
 }
 
-/* ---------- مدیریت تم (روشن / تیره / خودکار) ---------- */
+/* ---------- مدیریت تم ---------- */
 const LIGHT = window.matchMedia ? matchMedia('(prefers-color-scheme: light)') : null;
-const THEME_FA = {light:'روشن', dark:'تیره', auto:'خودکار'};
 
 function applyTheme(){
+  const L = UI[S.lang];
   const resolved = S.theme === 'auto' ? (LIGHT && LIGHT.matches ? 'light' : 'dark') : S.theme;
   document.documentElement.dataset.theme = resolved;
   const meta = document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute('content', resolved === 'light' ? '#f4f1ea' : '#13161c');
-  document.getElementById('themeTxt').textContent = THEME_FA[S.theme];
+  if(meta) meta.setAttribute('content', resolved === 'light' ? '#F1F5F9' : '#0F172A');
+  const mapTxt = {light:L.themeLight, dark:L.themeDark, auto:L.themeAuto};
+  document.getElementById('themeTxt').textContent = mapTxt[S.theme];
   const icon = document.getElementById('themeIcon');
   if(icon){
     icon.innerHTML = resolved === 'light'
@@ -1814,7 +2249,7 @@ if('serviceWorker' in navigator){
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
 
-loadPrefs(); applyTheme(); syncChips(); boot(false);
+loadPrefs(); applyLang(); boot(false);
 setInterval(() => { if(!document.hidden) boot(false); }, 15*60*1000);
 </script>
 </body>
