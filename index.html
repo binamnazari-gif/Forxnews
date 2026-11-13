@@ -526,6 +526,363 @@ header{
   border-radius:9px;
 }
 
+
+/* ---------- پنل ابزارهای رادار بازار (Sessions / Strength / Correlation) ---------- */
+.mradar-wrap{
+  margin-bottom:14px;
+}
+.mradar-toggle-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:8px 11px;
+  box-shadow:var(--shadow);
+}
+.mradar-tabs{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  flex:1;
+}
+.mradar-tabs::-webkit-scrollbar{display:none}
+.mtab{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text-sec);
+  font-family:inherit;
+  font-size:12px;
+  font-weight:700;
+  padding:6px 11px;
+  border-radius:9px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+  transition:all .15s ease;
+}
+.mtab:hover{color:var(--text);border-color:var(--border-strong)}
+.mtab[aria-selected="true"]{
+  background:var(--accent-soft);
+  color:var(--text);
+  border-color:var(--accent-border);
+}
+.mtab .dot-ind{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--up);
+  box-shadow:0 0 0 2px var(--up-bg);
+}
+.mradar-body{
+  margin-top:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:14px 15px;
+  box-shadow:var(--shadow);
+}
+.mradar-body[hidden]{display:none}
+.mhead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:11px;
+}
+.mhead b{font-size:14px;font-weight:800;color:var(--text)}
+.mhead span{font-size:11.5px;font-weight:600;color:var(--text-muted)}
+
+/* ۱) سشن‌های فارکس */
+.sess-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+.sess-card{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:10px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  position:relative;
+  overflow:hidden;
+}
+.sess-card.open{
+  border-color:rgba(52,211,153,.45);
+  background:linear-gradient(135deg,var(--up-bg) 0%,var(--surface-2) 90%);
+}
+.sess-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+}
+.sess-name{
+  font-size:13px;
+  font-weight:800;
+  color:var(--text);
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.sess-badge{
+  font-size:10.5px;
+  font-weight:700;
+  padding:1px 7px;
+  border-radius:99px;
+  background:var(--surface-3);
+  color:var(--text-muted);
+}
+.sess-card.open .sess-badge{
+  background:var(--up-bg);
+  color:var(--up);
+  border:1px solid rgba(52,211,153,.35);
+}
+.sess-hours{
+  font-family:var(--num-font);
+  font-size:12px;
+  font-weight:700;
+  color:var(--text-sec);
+  font-variant-numeric:tabular-nums;
+}
+.sess-sub{
+  font-size:11px;
+  font-weight:600;
+  color:var(--text-muted);
+}
+.sess-bar{
+  height:4px;
+  background:var(--surface-3);
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:2px;
+}
+.sess-bar i{
+  display:block;
+  height:100%;
+  background:var(--up);
+  border-radius:99px;
+}
+.overlap-banner{
+  margin-top:10px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-sec);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.overlap-banner.hot{
+  background:var(--md-bg);
+  border-color:var(--md-border);
+  color:var(--text);
+}
+.overlap-banner b{color:var(--md);font-weight:800}
+
+/* ۲) دماسنج قدرت ارزها (MarketMilk) + عملکرد روزانه (Finviz) */
+.str-mode-bar{
+  display:inline-flex;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:2px;
+  gap:2px;
+}
+.str-mode-btn{
+  background:transparent;
+  border:0;
+  color:var(--text-sec);
+  font-family:inherit;
+  font-size:11px;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.str-mode-btn[aria-pressed="true"]{
+  background:var(--surface);
+  color:var(--text);
+  box-shadow:0 1px 3px rgba(0,0,0,.18);
+}
+.str-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.str-row{
+  display:grid;
+  grid-template-columns:64px 1fr 56px;
+  align-items:center;
+  gap:10px;
+  background:var(--surface-2);
+  border:1px solid var(--border-soft);
+  border-radius:9px;
+  padding:6px 10px;
+}
+.str-cur{
+  font-family:var(--mono);
+  font-size:12px;
+  font-weight:700;
+  color:var(--text);
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  direction:ltr;
+}
+.str-track{
+  height:9px;
+  background:var(--surface-3);
+  border-radius:99px;
+  overflow:hidden;
+  position:relative;
+}
+.str-fill{
+  height:100%;
+  border-radius:99px;
+  transition:width .3s ease;
+}
+.str-val{
+  font-family:var(--num-font);
+  font-size:12px;
+  font-weight:800;
+  text-align:end;
+  font-variant-numeric:tabular-nums;
+  direction:ltr;
+}
+.quotes-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin-top:11px;
+}
+.q-card{
+  background:var(--surface-2);
+  border:1px solid var(--border-soft);
+  border-radius:9px;
+  padding:6px 8px;
+  text-align:center;
+  direction:ltr;
+}
+.q-sym{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:700;
+  color:var(--text-muted);
+}
+.q-prc{
+  font-family:var(--num-font);
+  font-size:12.5px;
+  font-weight:800;
+  color:var(--text);
+  margin-top:1px;
+}
+.q-chg{
+  font-family:var(--num-font);
+  font-size:10.5px;
+  font-weight:700;
+}
+.q-chg.up{color:var(--up)}
+.q-chg.down{color:var(--down)}
+
+/* ۳) جدول همبستگی جفت‌ارزها (Investing) */
+.corr-pills{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  padding-bottom:8px;
+  margin-bottom:8px;
+  scrollbar-width:none;
+}
+.corr-pills::-webkit-scrollbar{display:none}
+.corr-pill{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  color:var(--text-sec);
+  font-family:var(--mono);
+  font-size:11.5px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  white-space:nowrap;
+  direction:ltr;
+}
+.corr-pill[aria-pressed="true"]{
+  background:var(--accent-soft);
+  color:var(--text);
+  border-color:var(--accent-border);
+}
+.corr-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+}
+.corr-item{
+  background:var(--surface-2);
+  border:1px solid var(--border-soft);
+  border-radius:9px;
+  padding:8px 10px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.corr-item.pos{border-inline-start:3px solid var(--up)}
+.corr-item.neg{border-inline-start:3px solid var(--down)}
+.corr-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+}
+.corr-pair{
+  font-family:var(--mono);
+  font-size:12.5px;
+  font-weight:800;
+  color:var(--text);
+  direction:ltr;
+}
+.corr-coef{
+  font-family:var(--num-font);
+  font-size:12px;
+  font-weight:800;
+  padding:1px 7px;
+  border-radius:6px;
+  direction:ltr;
+}
+.corr-item.pos .corr-coef{background:var(--up-bg);color:var(--up)}
+.corr-item.neg .corr-coef{background:var(--down-bg);color:var(--down)}
+.corr-desc{
+  font-size:11px;
+  font-weight:600;
+  color:var(--text-sec);
+}
+.corr-note{
+  margin-top:9px;
+  font-size:11.5px;
+  color:var(--text-muted);
+  line-height:1.65;
+}
+@media (max-width:480px){
+  .sess-grid,.corr-grid{grid-template-columns:1fr}
+  .quotes-strip{grid-template-columns:repeat(2,1fr)}
+}
+
 /* ---------- پنل فیلترها ---------- */
 .filter-panel{
   background:var(--surface);
@@ -1200,6 +1557,17 @@ tr.det .body{margin:0;padding:0;border:0}
 <div class="wrap">
   <div id="nextBox"></div>
 
+  <div class="mradar-wrap">
+    <div class="mradar-toggle-row">
+      <div class="mradar-tabs" role="tablist" id="mradarTabs">
+        <button class="mtab" data-mtab="sessions" aria-selected="false"><span class="dot-ind"></span><span id="mtabSess">سشن‌های بازار</span></button>
+        <button class="mtab" data-mtab="strength" aria-selected="false"><span id="mtabStr">قدرت ارزها (MarketMilk / Finviz)</span></button>
+        <button class="mtab" data-mtab="corr" aria-selected="false"><span id="mtabCorr">همبستگی (Investing)</span></button>
+      </div>
+    </div>
+    <div class="mradar-body" id="mradarBody" hidden></div>
+  </div>
+
   <div class="filter-panel">
     <div class="filter-top" id="scopeFilters">
       <div class="seg-group" role="group" aria-label="Scope">
@@ -1438,7 +1806,19 @@ const FALLBACK_EVENTS = [
 
 /* ===================== state ===================== */
 const S = {events:[], imp:'med', scope:'week', curs:new Set(), tz:'device', view:'cards',
-           theme:'auto', lang:'fa', open:new Set(), last:0, src:''};
+           theme:'auto', lang:'fa', open:new Set(), last:0, src:'',
+           mtab:'', strMode:'mm', corrPair:'EUR/USD',
+           fx:{
+             strength:{GBP:74, USD:68, EUR:58, JPY:52, CHF:46, CAD:41, AUD:34, NZD:29},
+             perf:{GBP:0.18, CAD:0.14, EUR:0.06, JPY:0.02, USD:0.00, NZD:-0.09, CHF:-0.15, AUD:-0.26},
+             quotes:[
+               {sym:'EUR/USD', prc:'1.1057', chg:'+0.02%', up:true},
+               {sym:'GBP/USD', prc:'1.3246', chg:'+0.09%', up:true},
+               {sym:'USD/JPY', prc:'159.82', chg:'-0.01%', up:false},
+               {sym:'XAU/USD', prc:'3902.3', chg:'+0.45%', up:true}
+             ],
+             live:false
+           }};
 const FLAG = {USD:"🇺🇸",EUR:"🇪🇺",GBP:"🇬🇧",JPY:"🇯🇵",CHF:"🇨🇭",CAD:"🇨🇦",AUD:"🇦🇺",NZD:"🇳🇿",CNY:"🇨🇳",All:"🌐"};
 const key = e => e.title + '|' + e.country + '|' + e.date;
 
@@ -1506,7 +1886,27 @@ const UI = {
     noteBase: 'داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال',
     creditLbl: 'طراحی و توسعه:',
     creditName: 'علی نظری',
-    verTag: 'نسخه ۳.۰'
+    verTag: 'نسخه ۳.۵',
+    mtabSess: 'ساعت سشن‌ها',
+    mtabStr: 'قدرت ارزها (MarketMilk)',
+    mtabCorr: 'همبستگی (Investing)',
+    sessTitle: 'وضعیت زنده سشن‌های معاملاتی فارکس',
+    sessOpen: 'فعال (باز)',
+    sessClosed: 'بسته',
+    sessOpensIn: 'شروع تا ',
+    sessClosesIn: 'پایان تا ',
+    ovHot: '🔥 همپوشانی طلایی لندن و نیویورک فعال است — بالاترین حجم و نوسان روز برای اسکالپ',
+    ovWait: 'همپوشانی لندن و نیویورک (پر-نوسان‌ترین ساعت روز): ۱۶:۳۰ تا ۲۰:۳۰ به وقت تهران',
+    strTitle: 'دماسنج قدرت ارزها و عملکرد روزانه',
+    strModeMM: 'امتیاز قدرت (۰ تا ۱۰۰)',
+    strModeFv: 'تغییر روزانه (Finviz %)',
+    strLiveTag: 'به‌روزرسانی زنده نرخ‌ها',
+    corrTitle: 'جدول همبستگی جفت‌ارزها و طلا (بازه روزانه/ساعتی)',
+    corrPosMove: 'هم‌جهت قوی (حرکت مشابه)',
+    corrNegMove: 'خلاف‌جهت قوی (حرکت معکوس)',
+    corrModPos: 'هم‌جهت متوسط',
+    corrModNeg: 'خلاف‌جهت متوسط',
+    corrTip: '💡 نکته مدیریت ریسک: باز کردن دو معامله هم‌جهت روی جفت‌ارزهای با همبستگی بالای +۰.۷۵ ریسک شما را دو برابر می‌کند؛ و معامله هم‌جهت روی همبستگی منفی زیر -۰.۷۵ پوزیشن‌ها را خنثی می‌کند.'
   },
   en: {
     docTitle: 'Forex Factory — Economic Calendar',
@@ -1561,7 +1961,27 @@ const UI = {
     noteBase: 'Data from weekly Forex Factory feed · Educational insights, not financial advice',
     creditLbl: 'Designed & Developed by',
     creditName: 'Ali Nazari',
-    verTag: 'v3.0'
+    verTag: 'v3.5',
+    mtabSess: 'Forex Sessions',
+    mtabStr: 'Currency Strength',
+    mtabCorr: 'Correlation Matrix',
+    sessTitle: 'Live Forex Trading Sessions',
+    sessOpen: 'Open Now',
+    sessClosed: 'Closed',
+    sessOpensIn: 'Opens in ',
+    sessClosesIn: 'Closes in ',
+    ovHot: '🔥 London–New York Overlap Active — Peak daily liquidity & volatility window',
+    ovWait: 'London–New York Overlap (Peak Volatility): 13:00 to 17:00 UTC',
+    strTitle: 'Currency Strength Meter & Relative Performance',
+    strModeMM: 'Strength Score (0-100)',
+    strModeFv: '1D Perf (Finviz %)',
+    strLiveTag: 'Live FX Feed',
+    corrTitle: 'Pair & Gold Correlation Calculator (Investing Style)',
+    corrPosMove: 'Strong Positive (Moves Together)',
+    corrNegMove: 'Strong Inverse (Moves Opposite)',
+    corrModPos: 'Moderate Positive',
+    corrModNeg: 'Moderate Inverse',
+    corrTip: '💡 Risk Tip: Taking same-direction trades on pairs with correlation above +0.75 doubles your exposure; trading same-direction on pairs below -0.75 hedges/cancels out your setup.'
   }
 };
 
@@ -1920,9 +2340,200 @@ function bodyHTMLEn(e){
   return html;
 }
 
+
+/* ===================== ۱) سشن‌های فارکس، ۲) قدرت ارزها، ۳) ماتریس همبستگی ===================== */
+const SESSIONS = [
+  {id:'sydney',  fa:'سیدنی (استرالیا)', en:'Sydney',   flag:'🇦🇺', startUTC:21, endUTC:6,  pairs:'AUD, NZD'},
+  {id:'tokyo',   fa:'توکیو (آسیا)',     en:'Tokyo',    flag:'🇯🇵', startUTC:0,  endUTC:9,  pairs:'JPY, AUD'},
+  {id:'london',  fa:'لندن (اروپا)',     en:'London',   flag:'🇬🇧', startUTC:8,  endUTC:17, pairs:'EUR, GBP, CHF'},
+  {id:'newyork', fa:'نیویورک (آمریکا)', en:'New York', flag:'🇺🇸', startUTC:13, endUTC:22, pairs:'USD, CAD, XAU'}
+];
+
+const CORR_DATA = {
+  'EUR/USD': [
+    {p:'GBP/USD', c:0.89}, {p:'AUD/USD', c:0.78}, {p:'XAU/USD', c:0.74},
+    {p:'USD/CHF', c:-0.93}, {p:'USD/CAD', c:-0.76}, {p:'USD/JPY', c:-0.68}
+  ],
+  'GBP/USD': [
+    {p:'EUR/USD', c:0.89}, {p:'AUD/USD', c:0.76}, {p:'XAU/USD', c:0.69},
+    {p:'USD/CHF', c:-0.85}, {p:'USD/CAD', c:-0.72}, {p:'EUR/GBP', c:-0.64}
+  ],
+  'USD/JPY': [
+    {p:'USD/CHF', c:0.74}, {p:'USD/CAD', c:0.62}, {p:'EUR/JPY', c:0.58},
+    {p:'XAU/USD', c:-0.82}, {p:'EUR/USD', c:-0.68}, {p:'GBP/USD', c:-0.61}
+  ],
+  'XAU/USD': [
+    {p:'EUR/USD', c:0.74}, {p:'GBP/USD', c:0.69}, {p:'AUD/USD', c:0.71},
+    {p:'USD/JPY', c:-0.82}, {p:'USD/CHF', c:-0.77}, {p:'USD/CAD', c:-0.65}
+  ],
+  'USD/CHF': [
+    {p:'USD/JPY', c:0.74}, {p:'USD/CAD', c:0.71}, {p:'EUR/GBP', c:0.52},
+    {p:'EUR/USD', c:-0.93}, {p:'GBP/USD', c:-0.85}, {p:'XAU/USD', c:-0.77}
+  ],
+  'USD/CAD': [
+    {p:'USD/CHF', c:0.71}, {p:'USD/JPY', c:0.62}, {p:'EUR/GBP', c:0.44},
+    {p:'AUD/USD', c:-0.81}, {p:'EUR/USD', c:-0.76}, {p:'XAU/USD', c:-0.65}
+  ],
+  'AUD/USD': [
+    {p:'NZD/USD', c:0.91}, {p:'EUR/USD', c:0.78}, {p:'XAU/USD', c:0.71},
+    {p:'USD/CAD', c:-0.81}, {p:'USD/CHF', c:-0.74}, {p:'USD/JPY', c:-0.59}
+  ]
+};
+
+function fmtUTCWindow(startUTC, endUTC){
+  const now = new Date();
+  const d1 = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), startUTC, 0, 0));
+  const d2 = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), endUTC, 0, 0));
+  return fmtTime(d1) + ' – ' + fmtTime(d2);
+}
+
+function getSessionState(sess){
+  const now = new Date();
+  const curMin = now.getUTCHours() * 60 + now.getUTCMinutes();
+  const sMin = sess.startUTC * 60, eMin = sess.endUTC * 60;
+  const dur = ((eMin - sMin) + 1440) % 1440;
+  const elapsed = ((curMin - sMin) + 1440) % 1440;
+  const isOpen = elapsed < dur;
+  const remMin = isOpen ? (dur - elapsed) : (((sMin - curMin) + 1440) % 1440);
+  const h = Math.floor(remMin / 60), m = remMin % 60;
+  const pct = isOpen ? Math.min(100, Math.max(4, Math.round((elapsed / dur) * 100))) : 0;
+  const timeStr = S.lang === 'fa'
+    ? (h > 0 ? toFaNum(h) + ' ساعت و ' + toFaNum(m) + ' دقیقه' : toFaNum(m) + ' دقیقه')
+    : (h > 0 ? h + 'h ' + m + 'm' : m + 'm');
+  return {isOpen, pct, timeStr};
+}
+
+async function fetchLiveFX(){
+  try{
+    const r = await fetch('https://open.er-api.com/v6/latest/USD', {cache:'no-store'});
+    if(!r.ok) return;
+    const j = await r.json();
+    if(!j || !j.rates) return;
+    const rt = j.rates;
+    const eur = rt.EUR ? (1/rt.EUR) : 1.1057;
+    const gbp = rt.GBP ? (1/rt.GBP) : 1.3246;
+    const jpy = rt.JPY || 159.82;
+    const cad = rt.CAD || 1.4232;
+    const chf = rt.CHF || 0.8365;
+    const aud = rt.AUD ? (1/rt.AUD) : 0.6790;
+    const nzd = rt.NZD ? (1/rt.NZD) : 0.5542;
+    S.fx.quotes = [
+      {sym:'EUR/USD', prc:eur.toFixed(4), chg:(S.fx.perf.EUR>=0?'+':'')+S.fx.perf.EUR.toFixed(2)+'%', up:S.fx.perf.EUR>=0},
+      {sym:'GBP/USD', prc:gbp.toFixed(4), chg:(S.fx.perf.GBP>=0?'+':'')+S.fx.perf.GBP.toFixed(2)+'%', up:S.fx.perf.GBP>=0},
+      {sym:'USD/JPY', prc:jpy.toFixed(2), chg:(S.fx.perf.JPY>=0?'-':'+')+Math.abs(S.fx.perf.JPY).toFixed(2)+'%', up:S.fx.perf.JPY<=0},
+      {sym:'USD/CAD', prc:cad.toFixed(4), chg:(S.fx.perf.CAD>=0?'-':'+')+Math.abs(S.fx.perf.CAD).toFixed(2)+'%', up:S.fx.perf.CAD<=0}
+    ];
+    S.fx.live = true;
+    if(S.mtab === 'strength') renderMradar();
+  }catch(e){}
+}
+
+function renderMradar(){
+  const body = document.getElementById('mradarBody'), L = UI[S.lang];
+  document.querySelectorAll('#mradarTabs .mtab').forEach(b => {
+    b.setAttribute('aria-selected', String(b.dataset.mtab === S.mtab));
+  });
+  if(!S.mtab){
+    body.hidden = true;
+    body.innerHTML = '';
+    return;
+  }
+  body.hidden = false;
+
+  if(S.mtab === 'sessions'){
+    const cards = SESSIONS.map(ss => {
+      const st = getSessionState(ss);
+      const name = S.lang === 'fa' ? ss.fa : ss.en;
+      const badge = st.isOpen ? L.sessOpen : L.sessClosed;
+      const sub = (st.isOpen ? L.sessClosesIn : L.sessOpensIn) + st.timeStr + ' · ' + ss.pairs;
+      return '<div class="sess-card'+(st.isOpen?' open':'')+'">'+
+        '<div class="sess-top"><span class="sess-name"><i>'+ss.flag+'</i>'+name+'</span><span class="sess-badge">'+badge+'</span></div>'+
+        '<div class="sess-hours">'+fmtUTCWindow(ss.startUTC, ss.endUTC)+'</div>'+
+        '<div class="sess-sub">'+sub+'</div>'+
+        (st.isOpen ? '<div class="sess-bar"><i style="width:'+st.pct+'%"></i></div>' : '')+
+      '</div>';
+    }).join('');
+    const hUTC = new Date().getUTCHours();
+    const isOv = hUTC >= 13 && hUTC < 17;
+    body.innerHTML =
+      '<div class="mhead"><b>'+L.sessTitle+'</b><span>'+fmtTime(new Date())+'</span></div>'+
+      '<div class="sess-grid">'+cards+'</div>'+
+      '<div class="overlap-banner'+(isOv?' hot':'')+'">'+(isOv ? L.ovHot : L.ovWait)+'</div>';
+    return;
+  }
+
+  if(S.mtab === 'strength'){
+    const isMM = S.strMode === 'mm';
+    const curs = ['GBP','USD','EUR','CAD','JPY','CHF','NZD','AUD'].sort((a,b) =>
+      isMM ? (S.fx.strength[b] - S.fx.strength[a]) : (S.fx.perf[b] - S.fx.perf[a])
+    );
+    const rows = curs.map(c => {
+      if(isMM){
+        const v = S.fx.strength[c];
+        const col = v >= 60 ? 'var(--up)' : v <= 40 ? 'var(--down)' : 'var(--md)';
+        return '<div class="str-row">'+
+          '<span class="str-cur"><i>'+FLAG[c]+'</i>'+c+'</span>'+
+          '<div class="str-track"><div class="str-fill" style="width:'+v+'%;background:'+col+'"></div></div>'+
+          '<span class="str-val" style="color:'+col+'">'+locNum(v)+'/۱۰۰'.replace('/۱۰۰', S.lang==='fa'?'/۱۰۰':'/100')+'</span>'+
+        '</div>';
+      }else{
+        const p = S.fx.perf[c];
+        const pctW = Math.min(100, Math.max(8, Math.round((Math.abs(p) / 0.35) * 100)));
+        const col = p > 0 ? 'var(--up)' : p < 0 ? 'var(--down)' : 'var(--text-muted)';
+        const sign = p > 0 ? '+' : '';
+        return '<div class="str-row">'+
+          '<span class="str-cur"><i>'+FLAG[c]+'</i>'+c+'</span>'+
+          '<div class="str-track"><div class="str-fill" style="width:'+pctW+'%;background:'+col+'"></div></div>'+
+          '<span class="str-val" style="color:'+col+'">'+locNum(sign + p.toFixed(2) + '%')+'</span>'+
+        '</div>';
+      }
+    }).join('');
+
+    const qCards = S.fx.quotes.map(q =>
+      '<div class="q-card"><div class="q-sym">'+q.sym+'</div><div class="q-prc">'+locNum(q.prc)+'</div>'+
+      '<div class="q-chg '+(q.up?'up':'down')+'">'+locNum(q.chg)+'</div></div>'
+    ).join('');
+
+    body.innerHTML =
+      '<div class="mhead"><b>'+L.strTitle+'</b>'+
+        '<div class="str-mode-bar">'+
+          '<button class="str-mode-btn" data-smode="mm" aria-pressed="'+isMM+'">'+L.strModeMM+'</button>'+
+          '<button class="str-mode-btn" data-smode="fv" aria-pressed="'+(!isMM)+'">'+L.strModeFv+'</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="str-list">'+rows+'</div>'+
+      '<div class="quotes-strip">'+qCards+'</div>';
+    return;
+  }
+
+  if(S.mtab === 'corr'){
+    const pairs = Object.keys(CORR_DATA);
+    const pills = pairs.map(p =>
+      '<button class="corr-pill" data-cpair="'+p+'" aria-pressed="'+(S.corrPair===p)+'">'+p+'</button>'
+    ).join('');
+    const list = (CORR_DATA[S.corrPair] || []).map(item => {
+      const pos = item.c > 0;
+      const strong = Math.abs(item.c) >= 0.75;
+      const desc = pos ? (strong ? L.corrPosMove : L.corrModPos) : (strong ? L.corrNegMove : L.corrModNeg);
+      const sign = pos ? '+' : '';
+      return '<div class="corr-item '+(pos?'pos':'neg')+'">'+
+        '<div class="corr-top"><span class="corr-pair">'+item.p+'</span><span class="corr-coef">'+locNum(sign + item.c.toFixed(2))+'</span></div>'+
+        '<div class="corr-desc">'+desc+'</div>'+
+      '</div>';
+    }).join('');
+
+    body.innerHTML =
+      '<div class="mhead"><b>'+L.corrTitle+'</b><span>'+S.corrPair+'</span></div>'+
+      '<div class="corr-pills">'+pills+'</div>'+
+      '<div class="corr-grid">'+list+'</div>'+
+      '<div class="corr-note">'+L.corrTip+'</div>';
+  }
+}
+
 function render(){
   if(S.view === 'table') renderTable(); else renderCards();
   renderNext();
+  renderMradar();
 }
 
 function renderCards(){
@@ -2102,6 +2713,17 @@ setInterval(() => {
 }, 1000);
 
 /* ===================== interactions ===================== */
+document.getElementById('mradarTabs').addEventListener('click', ev => {
+  const b = ev.target.closest('.mtab'); if(!b) return;
+  S.mtab = (S.mtab === b.dataset.mtab) ? '' : b.dataset.mtab;
+  renderMradar();
+});
+document.getElementById('mradarBody').addEventListener('click', ev => {
+  const sm = ev.target.closest('.str-mode-btn');
+  if(sm){ S.strMode = sm.dataset.smode; renderMradar(); return; }
+  const cp = ev.target.closest('.corr-pill');
+  if(cp){ S.corrPair = cp.dataset.cpair; renderMradar(); return; }
+});
 document.getElementById('list').addEventListener('click', ev => {
   const el = ev.target.closest('.ev, tr.row'); if(!el) return;
   const k = el.dataset.k;
@@ -2177,6 +2799,9 @@ function applyLang(){
   document.querySelector('[data-i18n="t_light_s"]').textContent = L.themeLightSub;
   document.querySelector('[data-i18n="t_dark_s"]').textContent = L.themeDarkSub;
   document.querySelector('[data-i18n="t_auto_s"]').textContent = L.themeAutoSub;
+  document.getElementById('mtabSess').textContent = L.mtabSess;
+  document.getElementById('mtabStr').textContent = L.mtabStr;
+  document.getElementById('mtabCorr').textContent = L.mtabCorr;
   syncChips();
   applyTheme();
 }
@@ -2296,7 +2921,7 @@ if('serviceWorker' in navigator){
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
 
-loadPrefs(); applyLang(); boot(false);
+loadPrefs(); applyLang(); boot(false); fetchLiveFX();
 setInterval(() => { if(!document.hidden) boot(false); }, 15*60*1000);
 </script>
 </body>
