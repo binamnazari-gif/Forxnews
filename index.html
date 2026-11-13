@@ -928,10 +928,10 @@ table.cal{
   table-layout:fixed;
 }
 table.cal.has-actual{min-width:430px}
-table.cal .w-t{width:54px}
-table.cal .w-c{width:64px}
-table.cal .w-i{width:56px}
-table.cal .w-n{width:60px}
+table.cal .w-t{width:52px}
+table.cal .w-c{width:62px}
+table.cal .w-i{width:68px}
+table.cal .w-n{width:56px}
 table.cal th{
   background:var(--surface-2);
   color:var(--text-sec);
@@ -1073,20 +1073,31 @@ tr.det .body{margin:0;padding:0;border:0}
 .credit{
   font-size:12px;
   color:var(--text-muted);
-  text-align:center;
-  padding:0 8px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:4px 8px 22px;
   margin:0;
+}
+.credit-main{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
 }
 .credit b{color:var(--text-sec);font-weight:700}
 .ver{
+  display:inline-flex;
+  align-items:center;
   font-family:var(--num-font);
   font-size:10.5px;
   font-weight:600;
+  line-height:1.3;
   color:var(--text-sec);
-  margin-inline-start:6px;
   background:var(--surface-2);
   border:1px solid var(--border);
-  padding:1px 7px;
+  padding:2px 8px;
   border-radius:6px;
 }
 
@@ -1206,7 +1217,7 @@ tr.det .body{margin:0;padding:0;border:0}
 
   <div id="list"><div class="state">در حال گرفتن تقویم هفته…</div></div>
   <p class="note"><span id="noteBase">داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال</span><span id="upd"></span></p>
-  <p class="credit"><span id="creditLbl">طراحی و توسعه:</span> <b id="creditName">علی نظری</b><span class="ver" id="verTag">نسخه ۳.۰</span></p>
+  <p class="credit"><span class="credit-main"><span id="creditLbl">طراحی و توسعه:</span> <b id="creditName">علی نظری</b></span><span class="ver" id="verTag">نسخه ۳.۰</span></p>
 </div>
 
 <script>
@@ -1465,6 +1476,11 @@ const UI = {
     allCurs: 'همه ارزها',
     nextNews: 'خبر مهم بعدی',
     nextHoliday: 'تعطیلی بانکی پیش‌رو',
+    nextAny: 'رویداد بعدی تقویم',
+    weekDoneBadge: 'پایان خبرهای مهم هفته',
+    weekDoneTitle: 'تمام خبرهای مهم این هفته منتشر شدند',
+    weekDoneSub: 'آخرین خبر مهم منتشرشده: ',
+    weekDoneStat: 'پایان هفته',
     releasing: 'در حال انتشار',
     day: 'روز',
     hour: 'ساعت',
@@ -1515,6 +1531,11 @@ const UI = {
     allCurs: 'All Currencies',
     nextNews: 'Next Major Event',
     nextHoliday: 'Upcoming Bank Holiday',
+    nextAny: 'Next Scheduled Event',
+    weekDoneBadge: 'Weekly High-Impact Complete',
+    weekDoneTitle: 'All major events for this week have been released',
+    weekDoneSub: 'Last major release: ',
+    weekDoneStat: 'Week Done',
     releasing: 'Releasing Now',
     day: 'Days',
     hour: 'Hrs',
@@ -2016,11 +2037,29 @@ function renderTable(){
 
 function renderNext(){
   const box = document.getElementById('nextBox'), now = Date.now(), L = UI[S.lang];
-  const n = S.events.filter(e => rank(e.impact) >= 2 && new Date(e.date).getTime() > now)
-                    .sort((a,b) => new Date(a.date)-new Date(b.date))[0];
-  if(!n){ box.innerHTML = ''; return; }
+  if(!S.events.length){ box.innerHTML = ''; return; }
+
+  // ۱) اولویت اول: خبر مهم یا متوسط یا تعطیلی بانکی در آینده
+  let n = S.events.filter(e => rank(e.impact) >= 2 && new Date(e.date).getTime() > now)
+                  .sort((a,b) => new Date(a.date)-new Date(b.date))[0];
+  let mode = 'major';
+
+  // ۲) اگر همه خبرهای مهم هفته رد شده بودند (مثلاً عصر جمعه)، رویداد بعدی تقویم را نشان بده
+  if(!n){
+    n = S.events.filter(e => new Date(e.date).getTime() > now)
+                .sort((a,b) => new Date(a.date)-new Date(b.date))[0];
+    mode = 'any';
+  }
+
+  // ۳) اگر کل رویدادهای هفته تمام شده بود (آخر هفته)، آخرین خبر مهم هفته را در کادر نگه دار
+  if(!n){
+    const majors = S.events.filter(e => rank(e.impact) >= 2);
+    n = (majors.length ? majors : S.events).slice(-1)[0];
+    mode = 'done';
+  }
+
   const t = new Date(n.date).getTime(), info = lookup(n.title);
-  const soonCls = (rank(n.impact) === 3 && t-now < 36e5) ? ' soon' : '';
+  const soonCls = (mode !== 'done' && rank(n.impact) === 3 && t-now < 36e5) ? ' soon' : '';
   const dt = new Date(t);
   const r = dayRelLabel(dayKey(dt));
   const dateStr = S.lang === 'fa'
@@ -2028,10 +2067,18 @@ function renderNext(){
     : ((r ? r.txt + ' · ' : '') + dateEnShort(dt) + ' · ' + fmtTime(dt));
   const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : n.title) : n.title;
 
+  const badgeTxt = mode === 'done'
+    ? L.weekDoneBadge
+    : (isHoliday(n.impact) ? L.nextHoliday : (mode === 'any' ? L.nextAny : L.nextNews));
+
+  const sideTimer = mode === 'done'
+    ? '<span class="cd-now">'+L.weekDoneStat+'</span>'
+    : '<div data-cd-big="'+t+'">'+countdownHTML(t-now)+'</div>';
+
   box.innerHTML = '<div class="next '+impClass(n.impact)+soonCls+'">'+
     '<div class="next-info">'+
       '<div class="next-meta">'+
-        '<span class="next-badge">'+(isHoliday(n.impact) ? L.nextHoliday : L.nextNews)+'</span>'+
+        '<span class="next-badge">'+badgeTxt+'</span>'+
         '<span class="next-cur"><i>'+(FLAG[n.country] || '')+'</i>'+esc(n.country)+'</span>'+
         '<span class="next-time">'+dateStr+'</span>'+
       '</div>'+
@@ -2040,7 +2087,7 @@ function renderNext(){
     '</div>'+
     '<div class="next-side">'+
       bullsHTML(n.impact, false)+
-      '<div data-cd-big="'+t+'">'+countdownHTML(t-now)+'</div>'+
+      sideTimer+
     '</div>'+
   '</div>';
 }
