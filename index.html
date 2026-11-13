@@ -543,28 +543,30 @@ header{
   box-shadow:var(--shadow);
 }
 .mradar-tabs{
-  display:flex;
-  align-items:center;
-  gap:5px;
-  overflow-x:auto;
-  scrollbar-width:none;
-  flex:1;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  width:100%;
 }
-.mradar-tabs::-webkit-scrollbar{display:none}
 .mtab{
   background:var(--surface-2);
   border:1px solid var(--border);
   color:var(--text-sec);
   font-family:inherit;
-  font-size:12px;
+  font-size:11.5px;
   font-weight:700;
-  padding:6px 11px;
+  padding:7px 6px;
   border-radius:9px;
   cursor:pointer;
-  display:inline-flex;
+  display:flex;
   align-items:center;
-  gap:6px;
+  justify-content:center;
+  text-align:center;
+  gap:5px;
+  min-width:0;
   white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
   transition:all .15s ease;
 }
 .mtab:hover{color:var(--text);border-color:var(--border-strong)}
