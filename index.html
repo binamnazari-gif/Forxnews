@@ -581,27 +581,47 @@ header{
   z-index:20;
   display:flex;
   align-items:center;
-  gap:9px;
-  padding:12px 0 8px;
-  background:var(--bg);
-}
-.day-badge{
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  margin:14px 0 9px;
   background:var(--surface-2);
   border:1px solid var(--border);
-  padding:2px 10px;
-  border-radius:8px;
-  font-size:12px;
+  border-radius:11px;
+  box-shadow:0 4px 14px -8px rgba(0,0,0,.35);
+}
+.day-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.day-rel{
+  background:var(--accent-soft);
+  color:var(--accent);
+  border:1px solid var(--md-border);
+  padding:1px 8px;
+  border-radius:7px;
+  font-size:11px;
   font-weight:700;
+}
+.day-rel.today{
+  background:var(--hi-bg);
+  color:var(--hi);
+  border-color:var(--hi-border);
+}
+.day-main{
+  font-size:13px;
+  font-weight:800;
   color:var(--text);
 }
-.day span{
-  font-size:11.5px;
+.day-en{
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:600;
   color:var(--text-muted);
-}
-.day i{
-  flex:1;
-  height:1px;
-  background:var(--border-soft);
+  direction:ltr;
+  white-space:nowrap;
 }
 .nowline{
   position:relative;
@@ -871,17 +891,23 @@ table.cal tr.md td:first-child{box-shadow:inset -3px 0 0 var(--md)}
 tr.dayrow td{
   background:var(--surface-2);
   font-weight:700;
-  font-size:12px;
+  font-size:12.5px;
   text-align:start;
-  padding:9px 14px;
+  padding:10px 14px;
   color:var(--text);
   border-bottom:1px solid var(--border);
 }
-tr.dayrow span{
+tr.dayrow .dayrow-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+tr.dayrow .day-en{
+  font-family:var(--mono);
+  font-size:11px;
   color:var(--text-muted);
   font-weight:500;
-  font-size:11px;
-  margin-inline-start:8px;
 }
 td.ttd{
   font-family:var(--mono);
@@ -1293,6 +1319,8 @@ const FALLBACK_EVENTS = [
   {"title":"Core CPI m/m","country":"USD","date":"2026-11-10T08:30:00-05:00","impact":"High","forecast":"0.2%","previous":"0.3%"},
   {"title":"CPI m/m","country":"USD","date":"2026-11-10T08:30:00-05:00","impact":"High","forecast":"0.3%","previous":"0.6%"},
   {"title":"ECB President Lagarde Speaks","country":"EUR","date":"2026-11-11T04:45:00-05:00","impact":"Medium","forecast":"","previous":""},
+  {"title":"French Bank Holiday","country":"EUR","date":"2026-11-11T02:01:00-05:00","impact":"Holiday","forecast":"","previous":""},
+  {"title":"Bank Holiday","country":"USD","date":"2026-11-11T08:00:00-05:00","impact":"Holiday","forecast":"","previous":""},
   {"title":"GDP m/m","country":"GBP","date":"2026-11-12T02:00:00-05:00","impact":"High","forecast":"0.0%","previous":"0.1%"},
   {"title":"Prelim GDP q/q","country":"GBP","date":"2026-11-12T02:00:00-05:00","impact":"Medium","forecast":"0.7%","previous":"0.5%"},
   {"title":"Unemployment Claims","country":"USD","date":"2026-11-12T08:30:00-05:00","impact":"Medium","forecast":"194K","previous":"189K"},
@@ -1388,6 +1416,14 @@ const fmtTime = d => new Intl.DateTimeFormat('en-GB', Object.assign({hour:'2-dig
 const dayKey = d => new Intl.DateTimeFormat('en-CA', Object.assign({year:'numeric',month:'2-digit',day:'2-digit'}, tzOpt())).format(d);
 const weekday = d => new Intl.DateTimeFormat('fa-IR', Object.assign({weekday:'long'}, tzOpt())).format(d);
 const dateFa = d => new Intl.DateTimeFormat('fa-IR-u-nu-latn', Object.assign({day:'numeric',month:'long'}, tzOpt())).format(d);
+const dateEn = d => new Intl.DateTimeFormat('en-GB', Object.assign({weekday:'short',day:'numeric',month:'short'}, tzOpt())).format(d);
+function dayRelLabel(dk){
+  const now = Date.now();
+  if(dk === dayKey(new Date(now))) return {txt:'امروز', cls:'today'};
+  if(dk === dayKey(new Date(now + 864e5))) return {txt:'فردا', cls:''};
+  if(dk === dayKey(new Date(now - 864e5))) return {txt:'دیروز', cls:''};
+  return null;
+}
 
 function relTime(ms){
   const m = Math.round(Math.abs(ms)/60000);
@@ -1421,7 +1457,8 @@ function countdownHTML(ms){
 }
 
 /* ===================== filters ===================== */
-const rank = i => i === 'High' ? 3 : i === 'Medium' ? 2 : 1;
+const isHoliday = i => i === 'Holiday';
+const rank = i => (i === 'High' || isHoliday(i)) ? 3 : i === 'Medium' ? 2 : 1;
 function passes(e){
   const r = rank(e.impact);
   if(S.imp === 'high' && r < 3) return false;
@@ -1433,7 +1470,7 @@ function passes(e){
 
 /* ===================== render ===================== */
 const esc = s => String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-const impClass = i => i === 'High' ? 'hi' : i === 'Medium' ? 'md' : 'lo';
+const impClass = i => (i === 'High' || isHoliday(i)) ? 'hi' : i === 'Medium' ? 'md' : 'lo';
 const num = v => parseFloat(String(v).replace(/[^0-9.\-]/g,''));
 
 function bullsHTML(imp, small){
@@ -1473,7 +1510,9 @@ function bodyHTML(e, info){
               'انحراف از پیش‌بینی است که حرکت می‌سازد، نه خودِ عدد.</p>';
     }
   }
-  if(rank(e.impact) === 3){
+  if(isHoliday(e.impact)){
+    html += '<h4>نکته معاملاتی تعطیلی بانکی</h4><p>در روزهای تعطیلی بانکی نقدشوندگی بازار کاهش می‌یابد، اسپردها ممکن است باز شوند و حرکت‌های قیمت گاهی کم‌رمق یا فریبنده هستند.</p>';
+  }else if(rank(e.impact) === 3){
     html += '<h4>نکته اجرایی</h4><p>در دقایق اطراف این خبر اسپرد باز می‌شود و استاپ‌ها راحت شکار می‌شوند. '+
             'اگر پوزیشن باز داری، حجم و استاپ را قبلش تنظیم کن.</p>';
   }
@@ -1498,8 +1537,11 @@ function renderCards(){
     const d = new Date(e.date), dk = dayKey(d);
     if(dk !== cur){
       cur = dk;
-      const lbl = dk === today ? 'امروز' : dk === tmr ? 'فردا' : weekday(d);
-      html += '<div class="day"><b class="day-badge">'+lbl+'</b><span>'+dateFa(d)+'</span><i></i></div>';
+      const rel = dayRelLabel(dk);
+      const relHtml = rel ? '<span class="day-rel '+rel.cls+'">'+rel.txt+'</span>' : '';
+      html += '<div class="day"><div class="day-right">'+relHtml+
+        '<span class="day-main">'+weekday(d)+'، '+dateFa(d)+'</span></div>'+
+        '<span class="day-en">'+dateEn(d)+'</span></div>';
     }
     if(!nowIns && dk === today && d.getTime() > now){
       html += '<div class="nowline"><b data-now>اکنون '+fmtTime(new Date())+'</b><i></i></div>';
@@ -1539,8 +1581,11 @@ function renderTable(){
     const d = new Date(e.date), dk = dayKey(d);
     if(dk !== cur){
       cur = dk;
-      const lbl = dk === today ? 'امروز' : dk === tmr ? 'فردا' : weekday(d);
-      rows += '<tr class="dayrow"><td colspan="'+cols+'">'+lbl+'<span>'+dateFa(d)+'</span></td></tr>';
+      const rel = dayRelLabel(dk);
+      const relHtml = rel ? '<span class="day-rel '+rel.cls+'">'+rel.txt+'</span> ' : '';
+      rows += '<tr class="dayrow"><td colspan="'+cols+'"><div class="dayrow-wrap">'+
+        '<div>'+relHtml+'<span>'+weekday(d)+'، '+dateFa(d)+'</span></div>'+
+        '<span class="day-en">'+dateEn(d)+'</span></div></td></tr>';
     }
     const k = key(e), info = lookup(e.title), diff = d.getTime()-now;
     let actTd = '';
@@ -1587,9 +1632,9 @@ function renderNext(){
   box.innerHTML = '<div class="next '+impClass(n.impact)+soonCls+'">'+
     '<div class="next-info">'+
       '<div class="next-meta">'+
-        '<span class="next-badge">خبر مهم بعدی</span>'+
+        '<span class="next-badge">'+(isHoliday(n.impact) ? 'تعطیلی بانکی پیش‌رو' : 'خبر مهم بعدی')+'</span>'+
         '<span class="next-cur"><i>'+(FLAG[n.country] || '')+'</i>'+esc(n.country)+'</span>'+
-        '<span class="next-time">'+fmtTime(new Date(t))+'</span>'+
+        '<span class="next-time">'+(function(dt){ const r=dayRelLabel(dayKey(dt)); return (r?r.txt+' · ':'')+weekday(dt)+' '+dateFa(dt)+' · '+fmtTime(dt); })(new Date(t))+'</span>'+
       '</div>'+
       '<div class="next-title">'+esc(info ? info.fa : n.title)+'</div>'+
       (info ? '<div class="next-en">'+esc(n.title)+'</div>' : '')+
