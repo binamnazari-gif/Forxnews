@@ -808,6 +808,282 @@ header{
 }
 .overlap-banner b{color:var(--md);font-weight:800}
 
+
+/* ---------- نمودار ۲۴ ساعته سشن‌ها و منحنی حجم (سبک BabyPips) ---------- */
+.bp-chart{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+  direction:ltr;
+  user-select:none;
+}
+.bp-stage{
+  position:relative;
+  padding-top:52px;
+}
+.bp-axis-row{
+  display:grid;
+  grid-template-columns:76px 1fr;
+  align-items:end;
+  margin-bottom:6px;
+}
+.bp-axis{
+  position:relative;
+  height:18px;
+}
+.bp-tick{
+  position:absolute;
+  bottom:0;
+  transform:translateX(-50%);
+  font-family:var(--num-font);
+  font-size:10px;
+  font-weight:700;
+  color:var(--text-muted);
+  font-variant-numeric:tabular-nums;
+}
+.bp-tick.edge-l{transform:translateX(0)}
+.bp-tick.edge-r{transform:translateX(-100%)}
+.bp-rows{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.bp-row{
+  display:grid;
+  grid-template-columns:76px 1fr;
+  background:var(--surface-2);
+  border:1px solid var(--border-soft);
+  border-radius:10px;
+  overflow:hidden;
+  min-height:60px;
+}
+.bp-side{
+  padding:6px 6px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border-right:1px solid var(--border-soft);
+  background:var(--surface);
+  gap:1px;
+}
+.bp-side-top{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  font-weight:800;
+  color:var(--text);
+}
+.bp-side-top i{font-style:normal;font-size:13px;line-height:1}
+.bp-side-time{
+  font-family:var(--num-font);
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-sec);
+  font-variant-numeric:tabular-nums;
+}
+.bp-side-utc{
+  font-size:9px;
+  font-weight:600;
+  color:var(--text-muted);
+  white-space:nowrap;
+}
+.bp-track{
+  position:relative;
+  padding:20px 0 8px;
+  overflow:hidden;
+}
+.bp-grid{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.bp-vline{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:var(--border-soft);
+  opacity:.75;
+}
+.bp-status{
+  position:absolute;
+  top:4px;
+  left:8px;
+  right:8px;
+  font-size:9.5px;
+  font-weight:800;
+  letter-spacing:.2px;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  z-index:1;
+}
+.bp-bar{
+  position:absolute;
+  top:21px;
+  bottom:8px;
+  border-radius:5px;
+  z-index:1;
+  opacity:.92;
+  box-shadow:0 2px 6px rgba(0,0,0,.16);
+}
+.bp-bar.closed{opacity:.82}
+
+/* خط عمودی بنفش زمان فعلی و پین ساعت */
+.bp-now-overlay{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:76px;
+  right:0;
+  pointer-events:none;
+  z-index:10;
+}
+.bp-now-line{
+  position:absolute;
+  top:44px;
+  bottom:0;
+  width:2px;
+  background:#7C3AED;
+  transform:translateX(-50%);
+}
+.bp-pin{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%);
+  background:#7C3AED;
+  color:#fff;
+  border-radius:18px 18px 4px 4px;
+  padding:4px 8px 5px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-width:60px;
+  box-shadow:0 4px 12px rgba(124,58,237,.35);
+}
+.bp-pin::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;
+  left:50%;
+  transform:translateX(-50%);
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-top:6px solid #7C3AED;
+}
+.bp-clock-ico{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:2px;
+}
+.bp-clock-ico svg{width:14px;height:14px}
+.bp-pin-time{
+  font-family:var(--num-font);
+  font-size:11px;
+  font-weight:800;
+  line-height:1.1;
+  font-variant-numeric:tabular-nums;
+}
+.bp-pin-day{
+  font-size:9px;
+  font-weight:600;
+  opacity:.92;
+  line-height:1.15;
+}
+
+/* ردیف منحنی حجم در پایین */
+.bp-vol-row{
+  display:grid;
+  grid-template-columns:76px 1fr;
+  align-items:center;
+  margin-top:8px;
+  min-height:48px;
+}
+.bp-vol-label{
+  padding:0 4px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:4px;
+}
+.bp-vol-label span.ttl{
+  font-size:9.5px;
+  font-weight:700;
+  color:var(--text-sec);
+  line-height:1.25;
+}
+.bp-vol-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:99px;
+  padding:2px 8px;
+  font-size:10px;
+  font-weight:800;
+  color:var(--text);
+}
+.bp-vol-pill i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  display:inline-block;
+}
+.bp-vol-track{
+  position:relative;
+  height:48px;
+  background:var(--surface-2);
+  border:1px solid var(--border-soft);
+  border-radius:10px;
+  overflow:hidden;
+}
+.bp-vol-track svg{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.bp-traffic{
+  position:absolute;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:99px;
+  padding:3px 3px;
+  display:flex;
+  flex-direction:column;
+  gap:2.5px;
+  box-shadow:0 2px 6px rgba(0,0,0,.22);
+  z-index:11;
+}
+.bp-traffic i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--surface-3);
+  display:block;
+}
+.bp-traffic i.on-g{background:#22C55E;box-shadow:0 0 5px #22C55E}
+.bp-traffic i.on-y{background:#F59E0B;box-shadow:0 0 5px #F59E0B}
+.bp-traffic i.on-r{background:#EF4444;box-shadow:0 0 5px #EF4444}
+@media (max-width:480px){
+  .bp-axis-row,.bp-row,.bp-vol-row{grid-template-columns:66px 1fr}
+  .bp-now-overlay{left:66px}
+  .bp-side-utc{font-size:8px}
+}
+
 /* ۲) دماسنج قدرت ارزها (MarketMilk) + عملکرد روزانه (Finviz) */
 .str-mode-bar{
   display:inline-flex;
@@ -2048,6 +2324,12 @@ const UI = {
     sessClosesIn: 'پایان تا ',
     ovHot: '🔥 همپوشانی طلایی لندن و نیویورک فعال است — بالاترین حجم و نوسان روز برای اسکالپ',
     ovWait: 'همپوشانی لندن و نیویورک (پر-نوسان‌ترین ساعت روز): ۱۶:۳۰ تا ۲۰:۳۰ به وقت تهران',
+    bpOpenSuffix: 'باز است',
+    bpClosedSuffix: 'بسته است',
+    bpVolTitle: 'حجم معمول بازار',
+    bpVolHigh: 'بالا',
+    bpVolMed: 'متوسط',
+    bpVolLow: 'کم',
     strTitle: 'دماسنج قدرت ارزها و عملکرد روزانه',
     strModeMM: 'امتیاز قدرت (۰ تا ۱۰۰)',
     strModeFv: 'تغییر روزانه (Finviz %)',
@@ -2135,6 +2417,12 @@ const UI = {
     sessClosesIn: 'Closes in ',
     ovHot: '🔥 London–New York Overlap Active — Peak daily liquidity & volatility window',
     ovWait: 'London–New York Overlap (Peak Volatility): 13:00 to 17:00 UTC',
+    bpOpenSuffix: 'SESSION OPEN',
+    bpClosedSuffix: 'SESSION CLOSED',
+    bpVolTitle: 'Typically Volume is',
+    bpVolHigh: 'High',
+    bpVolMed: 'Medium',
+    bpVolLow: 'Low',
     strTitle: 'Currency Strength Meter & Relative Performance',
     strModeMM: 'Strength Score (0-100)',
     strModeFv: '1D Perf (Finviz %)',
@@ -2508,10 +2796,10 @@ function bodyHTMLEn(e){
 
 /* ===================== ۱) سشن‌های فارکس، ۲) قدرت ارزها، ۳) ماتریس همبستگی ===================== */
 const SESSIONS = [
-  {id:'sydney',  fa:'سیدنی (استرالیا)', en:'Sydney',   flag:'🇦🇺', startUTC:21, endUTC:6,  pairs:'AUD, NZD'},
-  {id:'tokyo',   fa:'توکیو (آسیا)',     en:'Tokyo',    flag:'🇯🇵', startUTC:0,  endUTC:9,  pairs:'JPY, AUD'},
-  {id:'london',  fa:'لندن (اروپا)',     en:'London',   flag:'🇬🇧', startUTC:8,  endUTC:17, pairs:'EUR, GBP, CHF'},
-  {id:'newyork', fa:'نیویورک (آمریکا)', en:'New York', flag:'🇺🇸', startUTC:13, endUTC:22, pairs:'USD, CAD, XAU'}
+  {id:'sydney',  fa:'سیدنی (استرالیا)', shortFa:'سیدنی',   en:'Sydney',   shortEn:'Sydney', flag:'🇦🇺', tz:'Australia/Sydney', startUTC:21, endUTC:6,  pairs:'AUD, NZD',      color:'#2563EB'},
+  {id:'tokyo',   fa:'توکیو (آسیا)',     shortFa:'توکیو',   en:'Tokyo',    shortEn:'Tokyo',  flag:'🇯🇵', tz:'Asia/Tokyo',       startUTC:0,  endUTC:9,  pairs:'JPY, AUD',      color:'#C026D3'},
+  {id:'london',  fa:'لندن (اروپا)',     shortFa:'لندن',    en:'London',   shortEn:'London', flag:'🇬🇧', tz:'Europe/London',    startUTC:8,  endUTC:17, pairs:'EUR, GBP, CHF', color:'#0284C7'},
+  {id:'newyork', fa:'نیویورک (آمریکا)', shortFa:'نیویورک', en:'New York', shortEn:'NY',     flag:'🇺🇸', tz:'America/New_York', startUTC:13, endUTC:22, pairs:'USD, CAD, XAU', color:'#16A34A'}
 ];
 
 const CORR_DATA = {
@@ -2566,6 +2854,161 @@ function getSessionState(sess){
     ? (h > 0 ? toFaNum(h) + ' ساعت و ' + toFaNum(m) + ' دقیقه' : toFaNum(m) + ' دقیقه')
     : (h > 0 ? h + 'h ' + m + 'm' : m + 'm');
   return {isOpen, pct, timeStr};
+}
+
+
+function getLocalOffsetMin(){
+  if(S.tz === 'tehran') return 210; // UTC+3:30
+  return -new Date().getTimezoneOffset();
+}
+
+function fmtTzMeta(tzName){
+  const now = new Date();
+  const timeStr = locNum(new Intl.DateTimeFormat('en-GB', {timeZone:tzName, hour:'2-digit', minute:'2-digit', hour12:false}).format(now));
+  const dayStr = S.lang === 'fa'
+    ? new Intl.DateTimeFormat('fa-IR', {timeZone:tzName, weekday:'short'}).format(now)
+    : new Intl.DateTimeFormat('en-US', {timeZone:tzName, weekday:'short'}).format(now);
+  let off = '';
+  try{
+    const parts = new Intl.DateTimeFormat('en-US', {timeZone:tzName, timeZoneName:'shortOffset'}).formatToParts(now);
+    const tzp = parts.find(p => p.type === 'timeZoneName');
+    if(tzp) off = tzp.value.replace('GMT','UTC');
+  }catch(e){}
+  return {timeStr, sub: dayStr + (off ? ' (' + locNum(off) + ')' : '')};
+}
+
+function sessionSegmentsLocal(startUTC, endUTC, offsetMin){
+  const s = ((startUTC * 60 + offsetMin) % 1440 + 1440) % 1440;
+  const e = ((endUTC * 60 + offsetMin) % 1440 + 1440) % 1440;
+  if(e > s) return [[s / 1440 * 100, (e - s) / 1440 * 100]];
+  return [[s / 1440 * 100, (1440 - s) / 1440 * 100], [0, e / 1440 * 100]];
+}
+
+function volumeScoreAtUTC(utcHour){
+  // منحنی حجم معمول بازار بر اساس همپوشانی سشن‌های توکیو، لندن و نیویورک (مقدار ۰ تا ۱)
+  const dist = (a, b) => {
+    const d = Math.abs(((a - b) % 24 + 24) % 24);
+    return Math.min(d, 24 - d);
+  };
+  const g = (c, w) => Math.exp(-Math.pow(dist(utcHour, c) / w, 2));
+  const v = 0.14 + 0.36 * g(3.5, 3.8) + 0.62 * g(10.5, 3.2) + 0.88 * g(14.8, 2.8);
+  return Math.min(1, v);
+}
+
+function renderBabyPipsChart(){
+  const L = UI[S.lang];
+  const offMin = getLocalOffsetMin();
+  const now = new Date();
+  const utcH = now.getUTCHours() + now.getUTCMinutes() / 60;
+  const localMin = ((now.getUTCHours() * 60 + now.getUTCMinutes() + offMin) % 1440 + 1440) % 1440;
+  const nowPct = (localMin / 1440) * 100;
+
+  // ساعت عقربه‌ای پین بنفش
+  const localH12 = (localMin / 60) % 12;
+  const localM = localMin % 60;
+  const hAngle = localH12 * 30;
+  const mAngle = localM * 6;
+  const pinTime = fmtTime(now);
+  const pinDay = S.lang === 'fa' ? weekdayFa(now) : new Intl.DateTimeFormat('en-US', Object.assign({weekday:'long'}, tzOpt())).format(now);
+
+  // محور ساعت ۰ تا ۲۴
+  let ticks = '';
+  for(let h = 2; h <= 24; h += 2){
+    const pct = (h / 24) * 100;
+    const cls = h === 24 ? ' edge-r' : '';
+    ticks += '<span class="bp-tick'+cls+'" style="left:'+pct+'%">'+locNum(h)+'</span>';
+  }
+  let vlines = '';
+  for(let h = 1; h < 24; h++){
+    vlines += '<i class="bp-vline" style="left:'+((h/24)*100)+'%"></i>';
+  }
+
+  // ۴ ردیف سشن‌ها
+  const rows = SESSIONS.map(ss => {
+    const st = getSessionState(ss);
+    const meta = fmtTzMeta(ss.tz);
+    const shortName = S.lang === 'fa' ? ss.shortFa : ss.shortEn;
+    const statusTxt = S.lang === 'fa'
+      ? ('سشن ' + ss.shortFa + ' ' + (st.isOpen ? L.bpOpenSuffix : L.bpClosedSuffix))
+      : (ss.en.toUpperCase() + ' ' + (st.isOpen ? L.bpOpenSuffix : L.bpClosedSuffix));
+    const segs = sessionSegmentsLocal(ss.startUTC, ss.endUTC, offMin).map(([left, width]) =>
+      '<div class="bp-bar'+(st.isOpen ? '' : ' closed')+'" style="left:'+left.toFixed(2)+'%;width:'+width.toFixed(2)+'%;background:'+ss.color+'"></div>'
+    ).join('');
+    return '<div class="bp-row">'+
+      '<div class="bp-side">'+
+        '<div class="bp-side-top"><i>'+ss.flag+'</i><span>'+shortName+'</span></div>'+
+        '<div class="bp-side-time">'+meta.timeStr+'</div>'+
+        '<div class="bp-side-utc">'+meta.sub+'</div>'+
+      '</div>'+
+      '<div class="bp-track">'+
+        '<div class="bp-grid">'+vlines+'</div>'+
+        '<div class="bp-status" style="color:'+ss.color+'">'+statusTxt+'</div>'+
+        segs+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  // منحنی حجم SVG across 0..24 local hours
+  const pts = [];
+  const steps = 48;
+  for(let i = 0; i <= steps; i++){
+    const localH = (i / steps) * 24;
+    const uH = ((localH - offMin / 60) % 24 + 24) % 24;
+    const score = volumeScoreAtUTC(uH);
+    const x = (i / steps) * 1000;
+    const y = 112 - score * 94;
+    pts.push([x, y, score]);
+  }
+  const lineD = pts.map((p, idx) => (idx === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const areaD = lineD + ' L1000,120 L0,120 Z';
+
+  // گرادیانت خط منحنی بر اساس نقاط حجم در تایم‌زون فعلی
+  const gradStops = [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48].map(i => {
+    const sc = pts[i][2];
+    const col = sc >= 0.65 ? '#22C55E' : sc >= 0.42 ? '#F59E0B' : '#E11D48';
+    return '<stop offset="'+(i/steps*100).toFixed(1)+'%" stop-color="'+col+'"/>';
+  }).join('');
+
+  const curVol = volumeScoreAtUTC(utcH);
+  const volState = curVol >= 0.65 ? {lbl:L.bpVolHigh, dot:'#22C55E', cls:'on-g', idx:0}
+                 : curVol >= 0.42 ? {lbl:L.bpVolMed,  dot:'#F59E0B', cls:'on-y', idx:1}
+                 :                  {lbl:L.bpVolLow,  dot:'#EF4444', cls:'on-r', idx:2};
+
+  return '<div class="bp-chart">'+
+    '<div class="bp-stage">'+
+      '<div class="bp-now-overlay">'+
+        '<div class="bp-pin" style="left:'+nowPct.toFixed(2)+'%">'+
+          '<div class="bp-clock-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#7C3AED" stroke-width="2"/><line x1="12" y1="12" x2="12" y2="7" stroke="#475569" stroke-width="2.2" stroke-linecap="round" transform="rotate('+hAngle+' 12 12)"/><line x1="12" y1="12" x2="12" y2="5" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round" transform="rotate('+mAngle+' 12 12)"/></svg></div>'+
+          '<span class="bp-pin-time" data-bp-time>'+pinTime+'</span>'+
+          '<span class="bp-pin-day">'+pinDay+'</span>'+
+        '</div>'+
+        '<div class="bp-now-line" style="left:'+nowPct.toFixed(2)+'%"></div>'+
+      '</div>'+
+      '<div class="bp-axis-row"><div></div><div class="bp-axis">'+ticks+'</div></div>'+
+      '<div class="bp-rows">'+rows+'</div>'+
+      '<div class="bp-vol-row">'+
+        '<div class="bp-vol-label">'+
+          '<span class="ttl">'+L.bpVolTitle+'</span>'+
+          '<span class="bp-vol-pill"><i style="background:'+volState.dot+'"></i>'+volState.lbl+'</span>'+
+        '</div>'+
+        '<div class="bp-vol-track">'+
+          '<svg viewBox="0 0 1000 120" preserveAspectRatio="none">'+
+            '<defs>'+
+              '<linearGradient id="bpVolStroke" x1="0%" y1="0%" x2="100%" y2="0%">'+gradStops+'</linearGradient>'+
+              '<linearGradient id="bpVolFill" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="var(--text-muted)" stop-opacity="0.22"/><stop offset="100%" stop-color="var(--text-muted)" stop-opacity="0.02"/></linearGradient>'+
+            '</defs>'+
+            '<path d="'+areaD+'" fill="url(#bpVolFill)"/>'+
+            '<path d="'+lineD+'" fill="none" stroke="url(#bpVolStroke)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>'+
+          '</svg>'+
+          '<div class="bp-traffic" style="left:'+nowPct.toFixed(2)+'%">'+
+            '<i class="'+(volState.idx===2?'on-r':'')+'"></i>'+
+            '<i class="'+(volState.idx===1?'on-y':'')+'"></i>'+
+            '<i class="'+(volState.idx===0?'on-g':'')+'"></i>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
 }
 
 async function fetchLiveFX(){
@@ -2623,7 +3066,8 @@ function renderMradar(){
     body.innerHTML =
       '<div class="mhead"><b>'+L.sessTitle+'</b><span>'+fmtTime(new Date())+'</span></div>'+
       '<div class="sess-grid">'+cards+'</div>'+
-      '<div class="overlap-banner'+(isOv?' hot':'')+'">'+(isOv ? L.ovHot : L.ovWait)+'</div>';
+      '<div class="overlap-banner'+(isOv?' hot':'')+'">'+(isOv ? L.ovHot : L.ovWait)+'</div>'+
+      renderBabyPipsChart();
     return;
   }
 
@@ -2962,6 +3406,8 @@ setInterval(() => {
   if(b) b.innerHTML = countdownHTML(+b.dataset.cdBig - now);
   const nw = document.querySelector('[data-now]');
   if(nw) nw.textContent = L.now + ' ' + fmtTime(new Date());
+  const bpt = document.querySelector('[data-bp-time]');
+  if(bpt) bpt.textContent = fmtTime(new Date());
   checkNewsAlerts();
 }, 1000);
 
