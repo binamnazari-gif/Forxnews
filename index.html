@@ -2138,8 +2138,59 @@ const QUAL = {prelim:"مقدماتی",flash:"اولیه",final:"نهایی",revi
   "second estimate":"برآورد دوم","third estimate":"برآورد سوم",monthly:"ماهانه",weekly:"هفتگی",annual:"سالانه"};
 const PERIOD = {"m/m":"ماهانه","y/y":"سالانه","q/q":"فصلی","q/y":"فصلی-سالانه","w/w":"هفتگی"};
 
-function lookup(title){
-  let t = title.toLowerCase().trim();
+const HOLIDAY_LOC = {
+  USD: {fa:'آمریکا (نیویورک)',       en:'US (New York)',        sessFa:'سشن نیویورک',  sessEn:'New York session',   pairsFa:'USD و طلا (XAUUSD)', pairsEn:'USD pairs & Gold (XAUUSD)'},
+  EUR: {fa:'منطقه یورو (اروپا)',     en:'Eurozone (Frankfurt)', sessFa:'سشن اروپا',    sessEn:'European session',   pairsFa:'EUR',                pairsEn:'EUR pairs'},
+  GBP: {fa:'بریتانیا (لندن)',        en:'UK (London)',          sessFa:'سشن لندن',     sessEn:'London session',     pairsFa:'GBP',                pairsEn:'GBP pairs'},
+  JPY: {fa:'ژاپن (توکیو)',           en:'Japan (Tokyo)',        sessFa:'سشن توکیو',    sessEn:'Tokyo session',      pairsFa:'JPY',                pairsEn:'JPY pairs'},
+  CHF: {fa:'سوئیس (زوریخ)',          en:'Switzerland (Zurich)', sessFa:'سشن اروپا',    sessEn:'European session',   pairsFa:'CHF',                pairsEn:'CHF pairs'},
+  CAD: {fa:'کانادا (تورنتو)',        en:'Canada (Toronto)',     sessFa:'سشن نیویورک',  sessEn:'New York session',   pairsFa:'CAD',                pairsEn:'CAD pairs'},
+  AUD: {fa:'استرالیا (سیدنی)',       en:'Australia (Sydney)',   sessFa:'سشن سیدنی',    sessEn:'Sydney session',     pairsFa:'AUD',                pairsEn:'AUD pairs'},
+  NZD: {fa:'نیوزیلند (ولینگتون)',    en:'New Zealand',          sessFa:'سشن سیدنی',    sessEn:'Sydney session',     pairsFa:'NZD',                pairsEn:'NZD pairs'},
+  CNY: {fa:'چین (شانگهای و پکن)',    en:'China',                sessFa:'سشن آسیا',     sessEn:'Asian session',      pairsFa:'CNY و کامودیتی‌ها',  pairsEn:'CNY & commodities'}
+};
+
+function holidayInfo(title, country){
+  const t = String(title || '').toLowerCase().trim();
+  const loc = HOLIDAY_LOC[country] || null;
+  let regFa = '', regEn = '';
+  for(const r in REGION){
+    if(t.startsWith(r + ' ')){
+      regFa = REGION[r];
+      regEn = r.charAt(0).toUpperCase() + r.slice(1);
+      break;
+    }
+  }
+  const placeFa = regFa ? (regFa + (loc ? ' (' + loc.fa.split(' (')[0] + ')' : '')) : (loc ? loc.fa : (country || ''));
+  const placeEn = regEn ? regEn : (loc ? loc.en : (country || ''));
+  const sessFa = loc ? loc.sessFa : 'سشن مربوطه';
+  const sessEn = loc ? loc.sessEn : 'this session';
+  const pairsFa = loc ? loc.pairsFa : (country || 'ارز مربوطه');
+  const pairsEn = loc ? loc.pairsEn : (country || 'related pairs');
+
+  const faTitle = placeFa ? ('تعطیلی بانک‌های ' + placeFa) : 'تعطیلی بانکی';
+  const enTitle = regEn ? title : (loc ? (loc.en + ' ' + title) : title);
+  return {
+    fa: faTitle,
+    en: enTitle,
+    placeFa, placeEn, sessFa, sessEn, pairsFa, pairsEn,
+    why: 'بانک‌ها و بازارهای مالی ' + (placeFa || 'این کشور') + ' امروز تعطیل هستند؛ نقدشوندگی در ' + sessFa + ' و روی جفت‌ارزهای ' + pairsFa + ' کاهش می‌یابد.',
+    eff: 'حجم معاملات کم و اسپرد ممکن است باز شود؛ نوسان‌های فریبنده محتمل است.'
+  };
+}
+
+function eventTitleEn(e){
+  if(isHoliday(e.impact) || /holiday$/i.test(String(e.title || '').trim())){
+    return holidayInfo(e.title, e.country).en;
+  }
+  return e.title;
+}
+
+function lookup(title, country, impact){
+  let t = String(title || '').toLowerCase().trim();
+  if(impact === 'Holiday' || /holiday$/.test(t)){
+    return holidayInfo(title, country);
+  }
   let pre = [], per = "";
 
   const pm = t.match(/\s(m\/m|y\/y|q\/q|q\/y|w\/w)$/);
@@ -2163,11 +2214,6 @@ function lookup(title){
     return {fa:"حراج اوراق قرضه" + (pre.length ? " " + pre.join(" ") : ""),
             why:"بازده و تقاضای اوراق دولتی؛ سنجه اشتهای ریسک و انتظار تورم.",
             eff:"بازده بالاتر → فشار روی طلا و سهام."};
-  }
-  if(!hit && /holiday$/.test(t)){
-    return {fa:"تعطیلی بازار" + (pre.length ? " " + pre.join(" ") : ""),
-            why:"بازار آن کشور تعطیل است؛ نقدشوندگی پایین و اسپرد بالا.",
-            eff:"نوسان‌های بی‌پشتوانه محتمل است؛ معامله محتاطانه."};
   }
   if(!hit) return null;
 
@@ -2296,7 +2342,7 @@ const UI = {
     noteBase: 'داده از فید هفتگی Forex Factory · توضیح‌ها آموزشی‌اند، نه سیگنال',
     creditLbl: 'طراحی و توسعه:',
     creditName: 'علی نظری',
-    verTag: 'نسخه ۳.۶',
+    verTag: 'نسخه ۳.۷',
     alertTitle: 'هشدار خبر مهم (High)',
     alertOn: 'فعال',
     alertOff: 'خاموش',
@@ -2389,7 +2435,7 @@ const UI = {
     noteBase: 'Data from weekly Forex Factory feed · Educational insights, not financial advice',
     creditLbl: 'Designed & Developed by',
     creditName: 'Ali Nazari',
-    verTag: 'v3.6',
+    verTag: 'v3.7',
     alertTitle: 'High-Impact News Alert',
     alertOn: 'Active',
     alertOff: 'Off',
@@ -2659,8 +2705,9 @@ function bodyHTML(e, info){
   html += '<h4>انتظار بازار و اثر روی قیمت</h4>';
 
   if(isHoliday(e.impact)){
-    html += '<p>در روزهای تعطیلی بانکی عدد پیش‌بینی یا واقعی منتشر نمی‌شود؛ مهم‌ترین اثر آن کاهش نقدشوندگی و حجم معاملات در سشن مربوط به <b>'+cur+'</b> است.</p>';
-    html += '<div class="scen-list"><div class="scen"><b>رفتار معمول قیمت:</b> بازار معمولاً کم‌رمق یا رِنج می‌شود، اما به دلیل خالی بودن دفتر سفارش‌ها، ممکن است اسپایک‌های ناگهانی و اسپرد بالا دیده شود.</div></div>';
+    const hi = holidayInfo(e.title, e.country);
+    html += '<p>امروز <b>بانک‌های '+esc(hi.placeFa)+'</b> تعطیل هستند و عددی منتشر نمی‌شود. مهم‌ترین اثر این تعطیلی، کاهش شدید نقدشوندگی و حجم معاملات در <b>'+esc(hi.sessFa)+'</b> و روی جفت‌ارزهای <b>'+esc(hi.pairsFa)+'</b> است.</p>';
+    html += '<div class="scen-list"><div class="scen"><b>رفتار معمول قیمت:</b> در زمان تعطیلی بانک‌های '+esc(hi.placeFa)+'، بازار معمولاً کم‌رمق یا رِنج می‌شود؛ اما به دلیل کم بودن عمق بازار، ممکن است اسپایک‌های فریبنده و افزایش اسپرد دیده شود.</div></div>';
   }else if(/\bspeaks$|symposium|minutes|statement|press conference|bulletin|opinions|deliberations|meetings/.test(tLow)){
     html += '<p>این رویداد عددی نیست و بازار به <b>لحن کلام و جهت‌گیری سیاست پولی</b> واکنش نشان می‌دهد (نه به پیش‌بینی عددی).</p>';
     html += '<div class="scen-list">'+
@@ -2713,7 +2760,8 @@ function bodyHTML(e, info){
   }
 
   if(isHoliday(e.impact)){
-    html += '<h4>نکته معاملاتی</h4><p>در زمان تعطیلی بانکی از ورود به معاملات اسکالپ روی جفت‌ارزهای <b>'+cur+'</b> خودداری کنید یا حد ضرر را با احتیاط تنظیم کنید.</p>';
+    const hi = holidayInfo(e.title, e.country);
+    html += '<h4>نکته معاملاتی</h4><p>به دلیل تعطیلی بانک‌های <b>'+esc(hi.placeFa)+'</b>، در <b>'+esc(hi.sessFa)+'</b> روی جفت‌ارزهای <b>'+esc(hi.pairsFa)+'</b> با حجم کمتر معامله کنید یا از اسکالپ پرهیز کنید.</p>';
   }else if(rank(e.impact) === 3){
     html += '<h4>نکته اجرایی</h4><p>در دقایق قبل و بعد از انتشار این خبر، اسپرد بروکرها باز می‌شود و نوسان رفت‌وبرگشتی (شکار استاپ) زیاد است؛ پیش از خبر حجم و حد ضرر خود را مدیریت کنید.</p>';
   }
@@ -2727,7 +2775,8 @@ function bodyHTMLEn(e){
 
   html += '<h4>What Is This Event?</h4>';
   if(isHoliday(e.impact)){
-    html += '<p>Banks and local financial markets in <b>'+cur+'</b> are closed for a public holiday, reducing liquidity during this session.</p>';
+    const hi = holidayInfo(e.title, e.country);
+    html += '<p>Banks and financial markets in <b>'+esc(hi.placeEn)+'</b> are closed for a public holiday, significantly reducing liquidity during the <b>'+esc(hi.sessEn)+'</b> for <b>'+esc(hi.pairsEn)+'</b>.</p>';
   }else if(/cpi|pce|ppi|wpi|inflation/.test(tLow)){
     html += '<p><b>'+esc(e.title)+'</b> measures price changes and inflationary pressure for <b>'+cur+'</b>. Central banks closely watch inflation data when deciding interest rate policy.</p>';
   }else if(/employment|unemployment|payrolls|job|claimant|earnings|wage/.test(tLow)){
@@ -3189,8 +3238,8 @@ function checkNewsAlerts(){
       if(S.alerted.has(k)) continue;
       S.alerted.add(k);
       const minsLeft = Math.max(1, Math.ceil(diff / 60000));
-      const info = lookup(e.title);
-      const evName = S.lang === 'fa' ? (info ? info.fa : e.title) : e.title;
+      const info = lookup(e.title, e.country, e.impact);
+      const evName = S.lang === 'fa' ? (info ? info.fa : e.title) : eventTitleEn(e);
       const msgTitle = S.lang === 'fa'
         ? ('🔔 هشدار خبر مهم (' + e.country + ') تا ' + toFaNum(minsLeft) + ' دقیقه دیگر')
         : ('🔔 High-Impact Alert (' + e.country + ') in ' + minsLeft + ' min');
@@ -3252,9 +3301,9 @@ function renderCards(){
       html += '<div class="nowline"><b data-now>'+L.now+' '+fmtTime(new Date())+'</b><i></i></div>';
       nowIns = true;
     }
-    const k = key(e), info = lookup(e.title), open = S.open.has(k), diff = d.getTime()-now;
+    const k = key(e), info = lookup(e.title, e.country, e.impact), open = S.open.has(k), diff = d.getTime()-now;
     const soon = rank(e.impact) === 3 && diff > 0 && diff < 60*60*1000 ? ' soon' : '';
-    const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : e.title) : e.title;
+    const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : e.title) : eventTitleEn(e);
     const showEnSub = S.lang === 'fa' && info;
     const whyTxt = S.lang === 'fa' && info ? '<div class="why">'+esc(toFaNum(info.why))+'</div>' : '';
 
@@ -3298,7 +3347,7 @@ function renderTable(){
         '<div>'+relHtml+'<span>'+mainDate+'</span></div>'+
         '<span class="day-sub">'+subDate+'</span></div></td></tr>';
     }
-    const k = key(e), info = lookup(e.title), diff = d.getTime()-now;
+    const k = key(e), info = lookup(e.title, e.country, e.impact), diff = d.getTime()-now;
     let actTd = '';
     if(hasActual){
       let cls = '';
@@ -3308,7 +3357,7 @@ function renderTable(){
       }
       actTd = '<td class="numtd'+cls+'">'+esc(e.actual ? locNum(e.actual) : '–')+'</td>';
     }
-    const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : e.title) : e.title;
+    const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : e.title) : eventTitleEn(e);
     const subEn = (S.lang === 'fa' && info) ? '<small>'+esc(e.title)+'</small>' : '';
 
     rows += '<tr class="row '+impClass(e.impact)+
@@ -3360,14 +3409,14 @@ function renderNext(){
     mode = 'done';
   }
 
-  const t = new Date(n.date).getTime(), info = lookup(n.title);
+  const t = new Date(n.date).getTime(), info = lookup(n.title, n.country, n.impact);
   const soonCls = (mode !== 'done' && rank(n.impact) === 3 && t-now < 36e5) ? ' soon' : '';
   const dt = new Date(t);
   const r = dayRelLabel(dayKey(dt));
   const dateStr = S.lang === 'fa'
     ? ((r ? r.txt + ' · ' : '') + weekdayFa(dt) + ' ' + dateFa(dt) + ' · ' + fmtTime(dt))
     : ((r ? r.txt + ' · ' : '') + dateEnShort(dt) + ' · ' + fmtTime(dt));
-  const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : n.title) : n.title;
+  const titleMain = S.lang === 'fa' ? (info ? toFaNum(info.fa) : n.title) : eventTitleEn(n);
 
   const badgeTxt = mode === 'done'
     ? L.weekDoneBadge
